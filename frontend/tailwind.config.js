@@ -7,17 +7,13 @@ export default {
     ],
     theme: {
         extend: {
-            /* ── Colors ── */
             colors: {
-                /* Background / Foreground via CSS vars */
                 background: 'hsl(var(--background))',
                 foreground: 'hsl(var(--foreground))',
 
-                /* Brand */
                 primary: {
                     DEFAULT: 'hsl(var(--primary))',
                     foreground: 'hsl(var(--primary-foreground))',
-                    // Direct-access shades
                     400: '#9A2E65',
                     500: '#7E2553',
                     600: '#6B1F46',
@@ -36,7 +32,6 @@ export default {
                     600: '#6D8A97',
                 },
 
-                /* Semantic */
                 success: {
                     DEFAULT: 'hsl(var(--success))',
                     400: '#22C55E',
@@ -59,7 +54,6 @@ export default {
                     500: '#DC2626',
                 },
 
-                /* Surfaces */
                 card: {
                     DEFAULT: 'hsl(var(--card))',
                     foreground: 'hsl(var(--card-foreground))',
@@ -77,18 +71,15 @@ export default {
                     foreground: 'hsl(var(--accent-foreground))',
                 },
 
-                /* Borders & inputs */
                 border: 'hsl(var(--border))',
                 input: 'hsl(var(--input))',
                 ring: 'hsl(var(--ring))',
 
-                /* Direct access to theme raw colors */
                 'screek-bg-light': '#E9D8C8',
                 'screek-bg-dark': '#190207',
                 'screek-text-light': '#190207',
                 'screek-text-dark': '#E9D8C8',
 
-                /* Legacy aliases — backward compat with existing components */
                 surface: {
                     dark: {
                         800: '#2A0C14',
@@ -102,7 +93,6 @@ export default {
                 },
             },
 
-            /* ── Typography ── */
             fontFamily: {
                 sans: ['Inter', 'system-ui', 'sans-serif'],
                 display: ['Outfit', 'system-ui', 'sans-serif'],
@@ -127,8 +117,6 @@ export default {
                 '5xl': ['48px', { lineHeight: '56px' }],
                 '6xl': ['56px', { lineHeight: '64px' }],
             },
-
-            /* ── Spacing (8px grid) ── */
             spacing: {
                 '0': '0px',
                 '1': '8px',
@@ -145,14 +133,12 @@ export default {
                 '16': '128px',
             },
 
-            /* ── Border Radius — Brutalist ── */
             borderRadius: {
                 lg: 'var(--radius)',
                 md: 'var(--radius)',
                 sm: 'var(--radius)',
             },
 
-            /* ── Border Width ── */
             borderWidth: {
                 DEFAULT: '2px',
                 '0': '0px',

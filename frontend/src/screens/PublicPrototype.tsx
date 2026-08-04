@@ -12,7 +12,6 @@ export default function PublicPrototype() {
     const [view, setView] = useState<'feed' | 'detail'>('feed');
     const [selectedSession, setSelectedSession] = useState<any>(null);
 
-    // Mock Data inspired by the user's movie list
     const sessions = [
         {
             id: 1,
