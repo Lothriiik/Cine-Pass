@@ -41,3 +41,12 @@ type Follow struct {
 	FolloweeID uuid.UUID `json:"followee_id"`
 	CreatedAt  time.Time `json:"created_at"`
 }
+
+type PostSessionData struct {
+	SessionID  int
+	MovieTitle string
+	PosterURL  string
+	StartTime  string
+	RoomName   string
+	CinemaName string
+}

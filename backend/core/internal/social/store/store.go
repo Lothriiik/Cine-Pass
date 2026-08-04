@@ -5,8 +5,6 @@ import (
 	"errors"
 
 	"github.com/StartLivin/screek/backend/internal/social"
-	"github.com/StartLivin/screek/backend/internal/users"
-	userstore "github.com/StartLivin/screek/backend/internal/users/store"
 	"github.com/google/uuid"
 
 	"gorm.io/gorm"
@@ -163,22 +161,20 @@ func (s *Store) GetPostWithReplies(ctx context.Context, postID uint) (*social.Po
 	return ToPostDomain(&record), ToPostList(replyRecords), err
 }
 
-func (s *Store) GetFollowers(ctx context.Context, userID uuid.UUID) ([]users.User, error) {
-	var userRecords []userstore.UserRecord
+func (s *Store) GetFollowers(ctx context.Context, userID uuid.UUID) ([]uuid.UUID, error) {
+	var results []uuid.UUID
 	err := s.db.WithContext(ctx).
-		Table("users").
-		Joins("JOIN follows ON follows.follower_id = users.id").
-		Where("follows.followee_id = ?", userID).
-		Find(&userRecords).Error
-	return userstore.ToUserList(userRecords), err
+		Model(&FollowRecord{}).
+		Where("followee_id = ?", userID).
+		Pluck("follower_id", &results).Error
+	return results, err
 }
 
-func (s *Store) GetFollowing(ctx context.Context, userID uuid.UUID) ([]users.User, error) {
-	var userRecords []userstore.UserRecord
+func (s *Store) GetFollowing(ctx context.Context, userID uuid.UUID) ([]uuid.UUID, error) {
+	var results []uuid.UUID
 	err := s.db.WithContext(ctx).
-		Table("users").
-		Joins("JOIN follows ON follows.followee_id = users.id").
-		Where("follows.follower_id = ?", userID).
-		Find(&userRecords).Error
-	return userstore.ToUserList(userRecords), err
+		Model(&FollowRecord{}).
+		Where("follower_id = ?", userID).
+		Pluck("followee_id", &results).Error
+	return results, err
 }

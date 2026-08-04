@@ -8,4 +8,5 @@ var (
 	ErrLogNotFound        = errors.New("registro de atividade não encontrado")
 	ErrMovieNotFoundLocal = errors.New("filme não encontrado na base do catálogo")
 	ErrAddMovieToList     = errors.New("não foi possível adicionar o filme à lista")
+	ErrPrivateList        = errors.New("esta lista é privada") 
 )

@@ -12,10 +12,10 @@ import (
 )
 
 type Handler struct {
-	svc social.Service
+	svc *social.SocialService
 }
 
-func NewHandler(svc social.Service) *Handler {
+func NewHandler(svc *social.SocialService) *Handler {
 	return &Handler{svc: svc}
 }
 
@@ -63,13 +63,34 @@ func (h *Handler) CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	postResponse, err := h.svc.CreatePost(r.Context(), userID, req)
+	post, err := h.svc.CreatePost(r.Context(), userID, social.CreatePostRequest{
+		PostType:    req.PostType,
+		Content:     req.Content,
+		IsSpoiler:   req.IsSpoiler,
+		ReferenceID: req.ReferenceID,
+	})
 	if err != nil {
 		httputil.WriteJSON(w, http.StatusBadRequest, httputil.ErrorResponse{Error: err.Error()})
 		return
 	}
 
-	httputil.WriteJSON(w, http.StatusCreated, postResponse)
+	author := "Usuário Desconhecido"
+	if user, err := h.svc.UserProvider().GetUserByID(r.Context(), post.UserID); err == nil && user != nil {
+		author = user.Username
+	}
+
+	response := PostResponseDTO{
+		ID:           post.ID,
+		Author:       author,
+		PostType:     string(post.PostType),
+		Content:      post.Content,
+		IsSpoiler:    post.IsSpoiler,
+		LikesCount:   post.LikesCount,
+		RepliesCount: post.RepliesCount,
+		CreatedAt:    post.CreatedAt.Format("02/01 15:04"),
+	}
+
+	httputil.WriteJSON(w, http.StatusCreated, response)
 }
 
 // @Summary Editar postagem
@@ -131,12 +152,49 @@ func (h *Handler) GetFeed(w http.ResponseWriter, r *http.Request) {
 	cursorID, _ := strconv.Atoi(r.URL.Query().Get("cursor"))
 	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
 
-	res, err := h.svc.GetFeed(r.Context(), userID, uint(cursorID), limit)
+	posts, nextCursor, err := h.svc.GetFeed(r.Context(), userID, uint(cursorID), limit)
 	if err != nil {
 		httputil.WriteJSON(w, http.StatusInternalServerError, httputil.ErrorResponse{Error: err.Error()})
 		return
 	}
-	httputil.WriteJSON(w, http.StatusOK, res)
+
+	dtos := make([]PostResponseDTO, 0, len(posts))
+	for _, p := range posts {
+		author := "Usuário Desconhecido"
+		if user, err := h.svc.UserProvider().GetUserByID(r.Context(), p.UserID); err == nil && user != nil {
+			author = user.Username
+		}
+
+		dto := PostResponseDTO{
+			ID:           p.ID,
+			Author:       author,
+			PostType:     string(p.PostType),
+			Content:      p.Content,
+			IsSpoiler:    p.IsSpoiler,
+			LikesCount:   p.LikesCount,
+			RepliesCount: p.RepliesCount,
+			CreatedAt:    p.CreatedAt.Format("02/01 15:04"),
+		}
+
+		if p.PostType == social.PostTypeSessionShare && p.ReferenceID != nil {
+			if sd, err := h.svc.SessionProvider().GetSessionPostData(r.Context(), *p.ReferenceID); err == nil {
+				dto.SessionData = &PostSessionData{
+					SessionID:  sd.SessionID,
+					MovieTitle: sd.MovieTitle,
+					PosterURL:  sd.PosterURL,
+					StartTime:  sd.StartTime,
+					RoomName:   sd.RoomName,
+					CinemaName: sd.CinemaName,
+				}
+			}
+		}
+		dtos = append(dtos, dto)
+	}
+
+	httputil.WriteJSON(w, http.StatusOK, FeedResponse{
+		Posts:      dtos,
+		NextCursor: nextCursor,
+	})
 }
 
 // @Summary Feed global (Explorar)
@@ -151,12 +209,49 @@ func (h *Handler) GetGlobalFeed(w http.ResponseWriter, r *http.Request) {
 	cursorID, _ := strconv.Atoi(r.URL.Query().Get("cursor"))
 	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
 
-	res, err := h.svc.GetGlobalFeed(r.Context(), uint(cursorID), limit)
+	posts, nextCursor, err := h.svc.GetGlobalFeed(r.Context(), uint(cursorID), limit)
 	if err != nil {
 		httputil.WriteJSON(w, http.StatusInternalServerError, httputil.ErrorResponse{Error: err.Error()})
 		return
 	}
-	httputil.WriteJSON(w, http.StatusOK, res)
+
+	dtos := make([]PostResponseDTO, 0, len(posts))
+	for _, p := range posts {
+		author := "Usuário Desconhecido"
+		if user, err := h.svc.UserProvider().GetUserByID(r.Context(), p.UserID); err == nil && user != nil {
+			author = user.Username
+		}
+
+		dto := PostResponseDTO{
+			ID:           p.ID,
+			Author:       author,
+			PostType:     string(p.PostType),
+			Content:      p.Content,
+			IsSpoiler:    p.IsSpoiler,
+			LikesCount:   p.LikesCount,
+			RepliesCount: p.RepliesCount,
+			CreatedAt:    p.CreatedAt.Format("02/01 15:04"),
+		}
+
+		if p.PostType == social.PostTypeSessionShare && p.ReferenceID != nil {
+			if sd, err := h.svc.SessionProvider().GetSessionPostData(r.Context(), *p.ReferenceID); err == nil {
+				dto.SessionData = &PostSessionData{
+					SessionID:  sd.SessionID,
+					MovieTitle: sd.MovieTitle,
+					PosterURL:  sd.PosterURL,
+					StartTime:  sd.StartTime,
+					RoomName:   sd.RoomName,
+					CinemaName: sd.CinemaName,
+				}
+			}
+		}
+		dtos = append(dtos, dto)
+	}
+
+	httputil.WriteJSON(w, http.StatusOK, FeedResponse{
+		Posts:      dtos,
+		NextCursor: nextCursor,
+	})
 }
 
 // @Summary Responder postagem
@@ -201,7 +296,7 @@ func (h *Handler) ToggleLike(w http.ResponseWriter, r *http.Request) {
 		httputil.WriteJSON(w, http.StatusInternalServerError, httputil.ErrorResponse{Error: err.Error()})
 		return
 	}
-	httputil.WriteJSON(w, http.StatusOK, social.ToggleLikeResponse{Message: "Ok", Liked: liked})
+	httputil.WriteJSON(w, http.StatusOK, ToggleLikeResponse{Message: "Ok", Liked: liked})
 }
 
 // @Summary Seguir/Deixar de seguir
@@ -215,12 +310,18 @@ func (h *Handler) ToggleFollow(w http.ResponseWriter, r *http.Request) {
 	target := chi.URLParam(r, "username")
 	userID, _ := r.Context().Value(httputil.UserIDKey).(uuid.UUID)
 
-	followed, err := h.svc.ToggleFollow(r.Context(), userID, target)
+	targetUser, err := h.svc.UserProvider().GetUserByUsername(r.Context(), target)
+	if err != nil {
+		httputil.WriteJSON(w, http.StatusNotFound, httputil.ErrorResponse{Error: "usuário não encontrado"})
+		return
+	}
+
+	followed, err := h.svc.ToggleFollow(r.Context(), userID, targetUser.ID)
 	if err != nil {
 		httputil.WriteJSON(w, http.StatusBadRequest, httputil.ErrorResponse{Error: err.Error()})
 		return
 	}
-	httputil.WriteJSON(w, http.StatusOK, social.ToggleFollowResponse{Message: "Ok", IsFollowing: followed})
+	httputil.WriteJSON(w, http.StatusOK, ToggleFollowResponse{Message: "Ok", IsFollowing: followed})
 }
 
 // @Summary Detalhes da postagem
@@ -233,12 +334,65 @@ func (h *Handler) ToggleFollow(w http.ResponseWriter, r *http.Request) {
 // @Router /social/posts/{id} [get]
 func (h *Handler) GetPostDetail(w http.ResponseWriter, r *http.Request) {
 	postID, _ := strconv.Atoi(chi.URLParam(r, "id"))
-	res, err := h.svc.GetPostDetail(r.Context(), uint(postID))
+	post, replies, err := h.svc.GetPostDetail(r.Context(), uint(postID))
 	if err != nil {
 		httputil.WriteJSON(w, http.StatusNotFound, httputil.ErrorResponse{Error: err.Error()})
 		return
 	}
-	httputil.WriteJSON(w, http.StatusOK, res)
+
+	author := "Usuário Desconhecido"
+	if user, err := h.svc.UserProvider().GetUserByID(r.Context(), post.UserID); err == nil && user != nil {
+		author = user.Username
+	}
+
+	postDTO := PostResponseDTO{
+		ID:           post.ID,
+		Author:       author,
+		PostType:     string(post.PostType),
+		Content:      post.Content,
+		IsSpoiler:    post.IsSpoiler,
+		LikesCount:   post.LikesCount,
+		RepliesCount: post.RepliesCount,
+		CreatedAt:    post.CreatedAt.Format("02/01 15:04"),
+	}
+
+	if post.PostType == social.PostTypeSessionShare && post.ReferenceID != nil {
+		if sd, err := h.svc.SessionProvider().GetSessionPostData(r.Context(), *post.ReferenceID); err == nil {
+			postDTO.SessionData = &PostSessionData{
+				SessionID:  sd.SessionID,
+				MovieTitle: sd.MovieTitle,
+				PosterURL:  sd.PosterURL,
+				StartTime:  sd.StartTime,
+				RoomName:   sd.RoomName,
+				CinemaName: sd.CinemaName,
+			}
+		}
+	}
+
+	repliesDTO := make([]PostResponseDTO, 0, len(replies))
+	for _, reply := range replies {
+		rAuthor := "Usuário Desconhecido"
+		if rUser, err := h.svc.UserProvider().GetUserByID(r.Context(), reply.UserID); err == nil && rUser != nil {
+			rAuthor = rUser.Username
+		}
+
+		dt := PostResponseDTO{
+			ID:           reply.ID,
+			Author:       rAuthor,
+			PostType:     string(reply.PostType),
+			Content:      reply.Content,
+			IsSpoiler:    reply.IsSpoiler,
+			LikesCount:   reply.LikesCount,
+			RepliesCount: reply.RepliesCount,
+			CreatedAt:    reply.CreatedAt.Format("02/01 15:04"),
+		}
+		repliesDTO = append(repliesDTO, dt)
+	}
+
+	httputil.WriteJSON(w, http.StatusOK, PostDetailResponseDTO{
+		Post:    postDTO,
+		Replies: repliesDTO,
+	})
 }
 
 // @Summary Listar seguidores
@@ -255,12 +409,29 @@ func (h *Handler) GetFollowers(w http.ResponseWriter, r *http.Request) {
 		httputil.WriteJSON(w, http.StatusBadRequest, httputil.ErrorResponse{Error: "ID de usuário inválido"})
 		return
 	}
-	res, err := h.svc.GetFollowers(r.Context(), userID)
+	ids, err := h.svc.GetFollowers(r.Context(), userID)
 	if err != nil {
 		httputil.WriteJSON(w, http.StatusInternalServerError, httputil.ErrorResponse{Error: err.Error()})
 		return
 	}
-	httputil.WriteJSON(w, http.StatusOK, res)
+
+	dtos := make([]UserFollowResponseDTO, 0, len(ids))
+	for _, id := range ids {
+		username := "Usuário"
+		avatarURL := ""
+		if user, err := h.svc.UserProvider().GetUserByID(r.Context(), id); err == nil && user != nil {
+			username = user.Username
+			avatarURL = user.AvatarURL
+		}
+
+		dtos = append(dtos, UserFollowResponseDTO{
+			UserID:    id.String(),
+			Username:  username,
+			AvatarURL: avatarURL,
+		})
+	}
+
+	httputil.WriteJSON(w, http.StatusOK, dtos)
 }
 
 // @Summary Listar seguindo
@@ -277,10 +448,27 @@ func (h *Handler) GetFollowing(w http.ResponseWriter, r *http.Request) {
 		httputil.WriteJSON(w, http.StatusBadRequest, httputil.ErrorResponse{Error: "ID de usuário inválido"})
 		return
 	}
-	res, err := h.svc.GetFollowing(r.Context(), userID)
+	ids, err := h.svc.GetFollowing(r.Context(), userID)
 	if err != nil {
 		httputil.WriteJSON(w, http.StatusInternalServerError, httputil.ErrorResponse{Error: err.Error()})
 		return
 	}
-	httputil.WriteJSON(w, http.StatusOK, res)
+
+	dtos := make([]UserFollowResponseDTO, 0, len(ids))
+	for _, id := range ids {
+		username := "Usuário"
+		avatarURL := ""
+		if user, err := h.svc.UserProvider().GetUserByID(r.Context(), id); err == nil && user != nil {
+			username = user.Username
+			avatarURL = user.AvatarURL
+		}
+
+		dtos = append(dtos, UserFollowResponseDTO{
+			UserID:    id.String(),
+			Username:  username,
+			AvatarURL: avatarURL,
+		})
+	}
+
+	httputil.WriteJSON(w, http.StatusOK, dtos)
 }

@@ -1,6 +1,7 @@
 package events
 
 import (
+	"log/slog"
 	"sync"
 )
 
@@ -43,7 +44,16 @@ func (eb *EventBus) Publish(eventType EventType, payload any) {
 
 	if handlers, ok := eb.handlers[eventType]; ok {
 		for _, handler := range handlers {
-			go handler(payload)
+			go func(h Handler) {
+				defer func() { 
+					if r := recover(); r != nil {
+						slog.Error("[EventBus] panic in handler", 
+						"error", string(eventType),
+						"panic", r)
+					}
+				}()
+				h(payload)
+			}(handler)
 		}
 	}
 }

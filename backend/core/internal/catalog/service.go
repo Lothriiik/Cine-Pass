@@ -2,7 +2,6 @@ package catalog
 
 import (
 	"context"
-	"errors"
 
 	"github.com/google/uuid"
 )
@@ -115,11 +114,11 @@ func (s *CatalogService) CreateMovieList(ctx context.Context, userID uuid.UUID, 
 func (s *CatalogService) UpdateMovieList(ctx context.Context, userID uuid.UUID, listID uint, req CreateMovieListRequest) error {
 	list, err := s.repo.GetMovieListByID(ctx, listID)
 	if err != nil {
-		return errors.New("Lista não encontrada")
+		return ErrListNotFound
 	}
 
 	if list.UserID != userID {
-		return errors.New("Você não tem permissão para editar esta lista")
+		return ErrPermissionDenied
 	}
 
 	list.Title = req.Title
@@ -156,7 +155,7 @@ func (s *CatalogService) GetMovieListDetail(ctx context.Context, listID uint, re
 	}
 
 	if !list.IsPublic && list.UserID != requesterID {
-		return nil, errors.New("Esta lista é privada")
+		return nil, ErrPrivateList
 	}
 
 	return list, nil
@@ -165,10 +164,10 @@ func (s *CatalogService) GetMovieListDetail(ctx context.Context, listID uint, re
 func (s *CatalogService) AddMovieToList(ctx context.Context, userID uuid.UUID, listID uint, movieID uint) error {
 	list, err := s.repo.GetMovieListByID(ctx, listID)
 	if err != nil {
-		return errors.New("Lista não encontrada")
+		return ErrListNotFound
 	}
 	if list.UserID != userID {
-		return errors.New("Você não tem permissão para editar esta lista")
+		return ErrPermissionDenied
 	}
 	return s.repo.AddMovieToList(ctx, listID, movieID)
 }
@@ -176,10 +175,10 @@ func (s *CatalogService) AddMovieToList(ctx context.Context, userID uuid.UUID, l
 func (s *CatalogService) RemoveMovieFromList(ctx context.Context, userID uuid.UUID, listID uint, movieID uint) error {
 	list, err := s.repo.GetMovieListByID(ctx, listID)
 	if err != nil {
-		return errors.New("Lista não encontrada")
+		return ErrListNotFound
 	}
 	if list.UserID != userID {
-		return errors.New("Você não tem permissão para editar esta lista")
+		return ErrPermissionDenied
 	}
 	return s.repo.RemoveMovieFromList(ctx, listID, movieID)
 }
@@ -187,10 +186,10 @@ func (s *CatalogService) RemoveMovieFromList(ctx context.Context, userID uuid.UU
 func (s *CatalogService) DeleteMovieList(ctx context.Context, userID uuid.UUID, listID uint) error {
 	list, err := s.repo.GetMovieListByID(ctx, listID)
 	if err != nil {
-		return errors.New("Lista não encontrada")
+		return ErrListNotFound
 	}
 	if list.UserID != userID {
-		return errors.New("Você não tem permissão para excluir esta lista")
+		return ErrPermissionDenied
 	}
 	return s.repo.DeleteMovieList(ctx, listID)
 }

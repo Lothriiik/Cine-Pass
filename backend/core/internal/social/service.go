@@ -2,54 +2,29 @@ package social
 
 import (
 	"context"
-	"errors"
 
 	"github.com/StartLivin/screek/backend/internal/shared/events"
 	"github.com/StartLivin/screek/backend/internal/shared/httputil"
-	"github.com/StartLivin/screek/backend/internal/users"
 	"github.com/google/uuid"
 )
 
-type UserProvider interface {
-	GetUserByID(ctx context.Context, id uuid.UUID) (*users.User, error)
-	GetUserByUsername(ctx context.Context, username string) (*users.User, error)
-}
-
-type SessionProvider interface {
-	GetSessionPostData(ctx context.Context, sessionID uint) (*PostSessionData, error)
-}
-
-type Service interface {
-	CreatePost(ctx context.Context, userID uuid.UUID, req CreatePostRequest) (*PostResponseDTO, error)
-	UpdatePost(ctx context.Context, userID uuid.UUID, postID uint, req UpdatePostRequest) error
-	DeletePost(ctx context.Context, userID uuid.UUID, postID uint, role httputil.Role) error
-	GetFeed(ctx context.Context, userID uuid.UUID, cursorID uint, limit int) (*FeedResponse, error)
-	GetGlobalFeed(ctx context.Context, cursorID uint, limit int) (*FeedResponse, error)
-	ReplyToPost(ctx context.Context, userID uuid.UUID, parentID uint, req ReplyRequest) error
-	ToggleLike(ctx context.Context, userID uuid.UUID, postID uint) (bool, error)
-	ToggleFollow(ctx context.Context, followerID uuid.UUID, targetUsername string) (bool, error)
-	GetPostDetail(ctx context.Context, postID uint) (*PostDetailResponseDTO, error)
-	GetFollowers(ctx context.Context, userID uuid.UUID) ([]UserFollowResponseDTO, error)
-	GetFollowing(ctx context.Context, userID uuid.UUID) ([]UserFollowResponseDTO, error)
-}
-
-type socialService struct {
+type SocialService struct {
 	store           SocialRepository
-	userProvider    UserProvider
 	events          *events.EventBus
+	userProvider    UserProvider
 	sessionProvider SessionProvider
 }
 
-func NewService(store SocialRepository, userProvider UserProvider, eventBus *events.EventBus, sessionProvider SessionProvider) Service {
-	return &socialService{
+func NewService(store SocialRepository, eventBus *events.EventBus, userProvider UserProvider, sessionProvider SessionProvider) *SocialService {
+	return &SocialService{
 		store:           store,
-		userProvider:    userProvider,
 		events:          eventBus,
+		userProvider:    userProvider,
 		sessionProvider: sessionProvider,
 	}
 }
 
-func (s *socialService) CreatePost(ctx context.Context, userID uuid.UUID, req CreatePostRequest) (*PostResponseDTO, error) {
+func (s *SocialService) CreatePost(ctx context.Context, userID uuid.UUID, req CreatePostRequest) (*Post, error) {
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
@@ -66,32 +41,17 @@ func (s *socialService) CreatePost(ctx context.Context, userID uuid.UUID, req Cr
 		return nil, err
 	}
 
-	user, _ := s.userProvider.GetUserByID(ctx, userID)
-	username := "Usuário Desconhecido"
-	if user != nil {
-		username = user.Username
-	}
-
-	return &PostResponseDTO{
-		ID:           post.ID,
-		Author:       username,
-		PostType:     string(post.PostType),
-		Content:      post.Content,
-		IsSpoiler:    post.IsSpoiler,
-		LikesCount:   0,
-		RepliesCount: 0,
-		CreatedAt:    "agora",
-	}, nil
+	return post, nil
 }
 
-func (s *socialService) UpdatePost(ctx context.Context, userID uuid.UUID, postID uint, req UpdatePostRequest) error {
+func (s *SocialService) UpdatePost(ctx context.Context, userID uuid.UUID, postID uint, req UpdatePostRequest) error {
 	post, err := s.store.GetPostByID(ctx, postID)
 	if err != nil {
-		return errors.New("post não encontrado")
+		return ErrPostNotFound
 	}
 
 	if post.UserID != userID {
-		return errors.New("você só pode editar seus próprios posts")
+		return ErrNotPostAuthor
 	}
 
 	post.Content = req.Content
@@ -100,50 +60,28 @@ func (s *socialService) UpdatePost(ctx context.Context, userID uuid.UUID, postID
 	return s.store.UpdatePost(ctx, post)
 }
 
-func (s *socialService) DeletePost(ctx context.Context, userID uuid.UUID, postID uint, role httputil.Role) error {
+func (s *SocialService) DeletePost(ctx context.Context, userID uuid.UUID, postID uint, role httputil.Role) error {
 	post, err := s.store.GetPostByID(ctx, postID)
 	if err != nil {
-		return errors.New("post não encontrado")
+		return ErrPostNotFound
 	}
 
 	isAdmin := role == httputil.RoleAdmin
 	if post.UserID != userID && !isAdmin {
-		return errors.New("sem permissão para apagar este post")
+		return ErrNoPermission
 	}
 
 	return s.store.DeletePost(ctx, postID)
 }
 
-func (s *socialService) GetFeed(ctx context.Context, userID uuid.UUID, cursorID uint, limit int) (*FeedResponse, error) {
+func (s *SocialService) GetFeed(ctx context.Context, userID uuid.UUID, cursorID uint, limit int) ([]Post, uint, error) {
 	if limit <= 0 || limit > 50 {
 		limit = 20
 	}
 
 	posts, err := s.store.GetFollowingFeed(ctx, userID, cursorID, limit)
 	if err != nil {
-		return nil, err
-	}
-
-	return s.formatFeedResponse(ctx, posts, limit), nil
-}
-
-func (s *socialService) GetGlobalFeed(ctx context.Context, cursorID uint, limit int) (*FeedResponse, error) {
-	if limit <= 0 || limit > 50 {
-		limit = 20
-	}
-
-	posts, err := s.store.GetGlobalFeed(ctx, cursorID, limit)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.formatFeedResponse(ctx, posts, limit), nil
-}
-
-func (s *socialService) formatFeedResponse(ctx context.Context, posts []Post, limit int) *FeedResponse {
-	var dtos []PostResponseDTO
-	for _, p := range posts {
-		dtos = append(dtos, *s.mapToPostDTO(ctx, &p))
+		return nil, 0, err
 	}
 
 	var nextCursor uint
@@ -151,41 +89,28 @@ func (s *socialService) formatFeedResponse(ctx context.Context, posts []Post, li
 		nextCursor = posts[len(posts)-1].ID
 	}
 
-	return &FeedResponse{
-		Posts:      dtos,
-		NextCursor: nextCursor,
-	}
+	return posts, nextCursor, nil
 }
 
-func (s *socialService) mapToPostDTO(ctx context.Context, p *Post) *PostResponseDTO {
-	username := "Usuário Desconhecido"
-	user, err := s.userProvider.GetUserByID(ctx, p.UserID)
-	if err == nil && user != nil {
-		username = user.Username
+func (s *SocialService) GetGlobalFeed(ctx context.Context, cursorID uint, limit int) ([]Post, uint, error) {
+	if limit <= 0 || limit > 50 {
+		limit = 20
 	}
 
-	dto := &PostResponseDTO{
-		ID:           p.ID,
-		Author:       username,
-		PostType:     string(p.PostType),
-		Content:      p.Content,
-		IsSpoiler:    p.IsSpoiler,
-		LikesCount:   p.LikesCount,
-		RepliesCount: p.RepliesCount,
-		CreatedAt:    p.CreatedAt.Format("02/01 15:04"),
+	posts, err := s.store.GetGlobalFeed(ctx, cursorID, limit)
+	if err != nil {
+		return nil, 0, err
 	}
 
-	if p.PostType == PostTypeSessionShare && p.ReferenceID != nil {
-		sessionData, err := s.sessionProvider.GetSessionPostData(ctx, *p.ReferenceID)
-		if err == nil {
-			dto.SessionData = sessionData
-		}
+	var nextCursor uint
+	if len(posts) == limit {
+		nextCursor = posts[len(posts)-1].ID
 	}
 
-	return dto
+	return posts, nextCursor, nil
 }
 
-func (s *socialService) ReplyToPost(ctx context.Context, userID uuid.UUID, parentID uint, req ReplyRequest) error {
+func (s *SocialService) ReplyToPost(ctx context.Context, userID uuid.UUID, parentID uint, req ReplyRequest) error {
 	if err := req.Validate(); err != nil {
 		return err
 	}
@@ -193,109 +118,66 @@ func (s *socialService) ReplyToPost(ctx context.Context, userID uuid.UUID, paren
 	if err == nil {
 		parent, _ := s.store.GetPostByID(ctx, parentID)
 		if parent != nil && parent.UserID != userID {
-			replier, _ := s.userProvider.GetUserByID(ctx, userID)
-			if replier != nil {
-				s.events.Publish(events.EventCommentAdded, events.CommentAddedEvent{
-					PostID:        parentID,
-					UserID:        userID,
-					UserName:      replier.Username,
-					ParentID:      parentID,
-					ParentOwnerID: parent.UserID,
-				})
-			}
+			s.events.Publish(events.EventCommentAdded, events.CommentAddedEvent{
+				PostID:        parentID,
+				UserID:        userID,
+				ParentID:      parentID,
+				ParentOwnerID: parent.UserID,
+			})
 		}
 	}
 	return err
 }
 
-func (s *socialService) ToggleLike(ctx context.Context, userID uuid.UUID, postID uint) (bool, error) {
+func (s *SocialService) ToggleLike(ctx context.Context, userID uuid.UUID, postID uint) (bool, error) {
 	liked, err := s.store.ToggleLike(ctx, userID, postID)
 	if err == nil && liked {
 		post, err := s.store.GetPostByID(ctx, postID)
 		if err == nil && post.UserID != userID {
-			liker, _ := s.userProvider.GetUserByID(ctx, userID)
-			if liker != nil {
-				s.events.Publish(events.EventPostLiked, events.PostLikedEvent{
-					PostID:    postID,
-					OwnerID:   post.UserID,
-					LikerID:   userID,
-					LikerName: liker.Username,
-				})
-			}
+			s.events.Publish(events.EventPostLiked, events.PostLikedEvent{
+				PostID:  postID,
+				OwnerID: post.UserID,
+				LikerID: userID,
+			})
 		}
 	}
 	return liked, err
 }
 
-func (s *socialService) ToggleFollow(ctx context.Context, followerID uuid.UUID, targetUsername string) (bool, error) {
-	followee, err := s.userProvider.GetUserByUsername(ctx, targetUsername)
-	if err != nil {
-		return false, errors.New("usuário não encontrado")
+func (s *SocialService) ToggleFollow(ctx context.Context, followerID, followeeID uuid.UUID) (bool, error) {
+	followed, err := s.store.ToggleFollow(ctx, followerID, followeeID)
+	if err == nil && followed {
+		s.events.Publish(events.EventUserFollowed, events.UserFollowedEvent{
+			FollowerID: followerID,
+			FolloweeID: followeeID,
+		})
 	}
-
-	isFollowing, err := s.store.ToggleFollow(ctx, followerID, followee.ID)
-	if err == nil && isFollowing {
-		follower, _ := s.userProvider.GetUserByID(ctx, followerID)
-		if follower != nil {
-			s.events.Publish(events.EventUserFollowed, events.UserFollowedEvent{
-				FollowerID:   followerID,
-				FollowerName: follower.Username,
-				FolloweeID:   followee.ID,
-			})
-		}
-	}
-
-	return isFollowing, err
+	return followed, err
 }
 
-func (s *socialService) GetPostDetail(ctx context.Context, postID uint) (*PostDetailResponseDTO, error) {
+func (s *SocialService) GetPostDetail(ctx context.Context, postID uint) (*Post, []Post, error) {
 	post, replies, err := s.store.GetPostWithReplies(ctx, postID)
 	if err != nil {
-		return nil, errors.New("postagem não encontrada")
+		return nil, nil, ErrPostNotFound
 	}
 
-	postDTO := s.mapToPostDTO(ctx, post)
-	var repliesDTO []PostResponseDTO
-	for _, r := range replies {
-		repliesDTO = append(repliesDTO, *s.mapToPostDTO(ctx, &r))
-	}
-
-	return &PostDetailResponseDTO{
-		Post:    *postDTO,
-		Replies: repliesDTO,
-	}, nil
+	return post, replies, nil
 }
 
-func (s *socialService) GetFollowers(ctx context.Context, userID uuid.UUID) ([]UserFollowResponseDTO, error) {
-	followers, err := s.store.GetFollowers(ctx, userID)
-	if err != nil {
-		return nil, err
-	}
-
-	var dtos []UserFollowResponseDTO
-	for _, f := range followers {
-		dtos = append(dtos, UserFollowResponseDTO{
-			UserID:    f.ID.String(),
-			Username:  f.Username,
-			AvatarURL: f.AvatarURL,
-		})
-	}
-	return dtos, nil
+func (s *SocialService) GetFollowers(ctx context.Context, userID uuid.UUID) ([]uuid.UUID, error) {
+	return s.store.GetFollowers(ctx, userID)
 }
 
-func (s *socialService) GetFollowing(ctx context.Context, userID uuid.UUID) ([]UserFollowResponseDTO, error) {
-	following, err := s.store.GetFollowing(ctx, userID)
-	if err != nil {
-		return nil, err
-	}
+func (s *SocialService) GetFollowing(ctx context.Context, userID uuid.UUID) ([]uuid.UUID, error) {
+	return s.store.GetFollowing(ctx, userID)
+}
 
-	var dtos []UserFollowResponseDTO
-	for _, f := range following {
-		dtos = append(dtos, UserFollowResponseDTO{
-			UserID:    f.ID.String(),
-			Username:  f.Username,
-			AvatarURL: f.AvatarURL,
-		})
-	}
-	return dtos, nil
+// UserProvider returns the configured UserProvider for adapters/handlers that need user data.
+func (s *SocialService) UserProvider() UserProvider {
+	return s.userProvider
+}
+
+// SessionProvider returns the configured SessionProvider for adapters/handlers that need session post data.
+func (s *SocialService) SessionProvider() SessionProvider {
+	return s.sessionProvider
 }

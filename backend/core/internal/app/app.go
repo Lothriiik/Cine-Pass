@@ -70,7 +70,7 @@ type Application struct {
 	jobs      *jobs.JobRunner
 	events    *events.EventBus
 	userSvc   *users.UserService
-	socialSvc social.Service
+	socialSvc *social.SocialService
 }
 
 func NewApplication(cfg config.Config) *Application {
@@ -143,36 +143,32 @@ func (app *Application) mount() {
 	resendClient := email.NewResendClient(app.config.ResendKey)
 	paymentSvc := payment.NewStripeService(app.config.StripeKey, app.config.StripeWebhookSecret)
 
-	userAdapter := &userSearchAdapter{}
+	// listAdapter é inicializado em duas fases por causa de uma
+	// dependência circular: movieService → listAdapter → catalogSvc → movieService
 	listAdapter := &listSearchAdapter{}
-	sessionAdapter := &sessionSearchAdapter{}
+
+	userService := users.NewService(userStore, movieStore)
+	notifService := notifications.NewService(notifStore, app.hub)
 
 	movieService := movies.NewService(
 		tmdbClient,
 		movieStore,
-		userAdapter,
+		&userSearchAdapter{svc: userService},
 		listAdapter,
 	)
-
-	userService := users.NewService(userStore, movieStore)
-	notifService := notifications.NewService(notifStore, app.hub)
 
 	authSvc := auth.NewAuthService(userStore, jwtService, app.redis, resendClient)
 	mgmtSvc := cinema.NewService(mgmtStore, &cinemaMovieAdapter{svc: movieService}, app.events)
 	analyticsSvc := analytics.NewService(analyticsStore, movieService, mgmtSvc)
 	catalogSvc := catalog.NewService(catalogStore, &catalogUserAdapter{svc: userService}, &catalogMovieAdapter{svc: movieService})
-	socialSvc := social.NewService(socialStore, userStore, app.events, sessionAdapter)
 	bookingSvc := bookings.NewService(bookingStore, app.redis, paymentSvc, resendClient, movieService, userService, app.events)
+	socialSvc := social.NewService(socialStore, app.events, &userSearchAdapter{svc: userService}, &sessionSearchAdapter{svc: bookingSvc, movieSvc: movieService, mgmtSvc: mgmtSvc})
 
 	app.userSvc = userService
 	app.socialSvc = socialSvc
 
-	userAdapter.svc = userService
 	listAdapter.catalogSvc = catalogSvc
 	listAdapter.userSvc = userService
-	sessionAdapter.svc = bookingSvc
-	sessionAdapter.movieSvc = movieService
-	sessionAdapter.mgmtSvc = mgmtSvc
 
 	authHandler := authhandler.NewHandler(authSvc)
 	authAdminHandler := authhandler.NewAdminHandler(authSvc)
@@ -228,33 +224,36 @@ func (app *Application) Run() error {
 	app.db = db
 	app.redis = redis.InitRedis(app.config.RedisURL)
 
-	slog.Info("Executando migrações automáticas...")
-	if err := userstore.AutoMigrate(app.db); err != nil {
-		return err
+	if app.config.RunMigrations {
+		slog.Info("Executando migrações automáticas...")
+		if err := userstore.AutoMigrate(app.db); err != nil {
+			return err
+		}
+		if err := movies.AutoMigrate(app.db); err != nil {
+			return err
+		}
+		if err := cinemastore.AutoMigrate(app.db); err != nil {
+			return err
+		}
+		if err := bookingstore.AutoMigrate(app.db); err != nil {
+			return err
+		}
+		if err := catalogstore.AutoMigrate(app.db); err != nil {
+			return err
+		}
+		if err := socialstore.AutoMigrate(app.db); err != nil {
+			return err
+		}
+		if err := analyticalstore.AutoMigrate(app.db); err != nil {
+			return err
+		}
+		if err := notifstore.AutoMigrate(app.db); err != nil {
+			return err
+		}
+		slog.Info("Migrações executadas com sucesso!", "db", "postgres")
+	} else {
+		slog.Info("Migrações automáticas desativadas (RUN_MIGRATIONS=false)")
 	}
-	if err := movies.AutoMigrate(app.db); err != nil {
-		return err
-	}
-	if err := cinemastore.AutoMigrate(app.db); err != nil {
-		return err
-	}
-	if err := bookingstore.AutoMigrate(app.db); err != nil {
-		return err
-	}
-	if err := catalogstore.AutoMigrate(app.db); err != nil {
-		return err
-	}
-	if err := socialstore.AutoMigrate(app.db); err != nil {
-		return err
-	}
-	if err := analyticalstore.AutoMigrate(app.db); err != nil {
-		return err
-	}
-	if err := notifstore.AutoMigrate(app.db); err != nil {
-		return err
-	}
-
-	slog.Info("Sistema iniciado - Rodando migrações...", "db", "postgres")
 
 	go app.hub.Run()
 
@@ -310,91 +309,6 @@ func (app *Application) Run() error {
 	return nil
 }
 
-type userSearchAdapter struct {
-	svc *users.UserService
-}
-
-func (a *userSearchAdapter) SearchUsers(ctx context.Context, query string) ([]movies.UserSearchResult, error) {
-	usersList, err := a.svc.SearchUsers(ctx, query)
-	if err != nil {
-		return nil, err
-	}
-	var results []movies.UserSearchResult
-	for _, u := range usersList {
-		results = append(results, movies.UserSearchResult{
-			ID:        u.ID.String(),
-			Username:  u.Username,
-			Name:      u.Name,
-			AvatarURL: u.AvatarURL,
-		})
-	}
-	return results, nil
-}
-
-type listSearchAdapter struct {
-	catalogSvc *catalog.CatalogService
-	userSvc    *users.UserService
-}
-
-func (a *listSearchAdapter) SearchLists(ctx context.Context, query string) ([]movies.ListSearchResult, error) {
-	lists, err := a.catalogSvc.SearchLists(ctx, query)
-	if err != nil {
-		return nil, err
-	}
-	var results []movies.ListSearchResult
-	for _, l := range lists {
-		username := "Usuário Desconhecido"
-		if user, err := a.userSvc.GetUserByID(ctx, l.UserID); err == nil && user != nil {
-			username = user.Username
-		}
-
-		results = append(results, movies.ListSearchResult{
-			ID:          l.ID,
-			Title:       l.Title,
-			Description: l.Description,
-			Username:    username,
-		})
-	}
-	return results, nil
-}
-
-type sessionSearchAdapter struct {
-	svc      bookings.Service
-	movieSvc *movies.MovieService
-	mgmtSvc  *cinema.CinemaService
-}
-
-func (a *sessionSearchAdapter) GetSessionPostData(ctx context.Context, sessionID uint) (*social.PostSessionData, error) {
-	if a.svc == nil {
-		return nil, errors.New("bookings service not initialized in adapter")
-	}
-	session, err := a.svc.GetSessionByID(ctx, int(sessionID))
-	if err != nil {
-		return nil, err
-	}
-
-	movieTitle := "Desconhecido"
-	posterURL := ""
-	if m, err := a.movieSvc.GetMovieDetails(ctx, session.MovieID); err == nil && m != nil {
-		movieTitle = m.Title
-		posterURL = m.PosterURL
-	}
-
-	cinemaName := "Desconhecido"
-	if c, err := a.mgmtSvc.GetCinemaByID(ctx, session.Room.CinemaID); err == nil && c != nil {
-		cinemaName = c.Name
-	}
-
-	return &social.PostSessionData{
-		SessionID:  session.ID,
-		MovieTitle: movieTitle,
-		PosterURL:  posterURL,
-		StartTime:  session.StartTime.Format("02/01 15:04"),
-		RoomName:   session.Room.Name,
-		CinemaName: cinemaName,
-	}, nil
-}
-
 func (app *Application) buildRoutes(
 	authH *authhandler.Handler,
 	authAdminH *authhandler.AdminHandler,
@@ -427,25 +341,53 @@ func (app *Application) buildRoutes(
 	return r
 }
 
-func (app *Application) registerEventHandlers(notifSvc *notifications.NotificationService, mgmtSvc *cinema.CinemaService, socialSvc social.Service) {
+func (app *Application) registerEventHandlers(notifSvc *notifications.NotificationService, mgmtSvc *cinema.CinemaService, socialSvc *social.SocialService) {
 	app.events.Subscribe(events.EventPostLiked, func(payload any) {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
 		evt := payload.(events.PostLikedEvent)
-		notifSvc.Notify(context.Background(), evt.OwnerID, "LIKE", "Novo Like", evt.LikerName+" curtiu seu post!", fmt.Sprintf("/posts/%d", evt.PostID))
+		likerName := "Alguém"
+
+		if user, err := app.userSvc.GetUserByID(ctx, evt.LikerID); err == nil && user != nil {
+			likerName = user.Username
+		}
+		notifSvc.Notify(context.Background(), evt.OwnerID, "LIKE", "Novo Like", likerName+" curtiu seu post!", fmt.Sprintf("/posts/%d", evt.PostID))
 	})
 
 	app.events.Subscribe(events.EventUserFollowed, func(payload any) {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
 		evt := payload.(events.UserFollowedEvent)
-		notifSvc.Notify(context.Background(), evt.FolloweeID, "FOLLOW", "Novo Seguidor", evt.FollowerName+" começou a seguir você", fmt.Sprintf("/u/%s", evt.FollowerName))
+		followerName := "Alguém"
+
+		if user, err := app.userSvc.GetUserByID(ctx, evt.FollowerID); err == nil && user != nil {
+			followerName = user.Username
+		}
+		notifSvc.Notify(context.Background(), evt.FolloweeID, "FOLLOW", "Novo Seguidor", followerName+" começou a seguir você", fmt.Sprintf("/u/%s", followerName))
 	})
 
 	app.events.Subscribe(events.EventCommentAdded, func(payload any) {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
 		evt := payload.(events.CommentAddedEvent)
-		notifSvc.Notify(context.Background(), evt.ParentOwnerID, "COMMENT", "Novo Comentário", evt.UserName+" respondeu ao seu post", fmt.Sprintf("/posts/%d", evt.PostID))
+		userName := "Alguém"
+
+		if user, err := app.userSvc.GetUserByID(ctx, evt.UserID); err == nil && user != nil {
+			userName = user.Username
+		}
+		notifSvc.Notify(context.Background(), evt.ParentOwnerID, "COMMENT", "Novo Comentário", userName+" respondeu ao seu post", fmt.Sprintf("/posts/%d", evt.PostID))
 	})
 
 	app.events.Subscribe(events.EventSessionScheduled, func(payload any) {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
 		evt := payload.(events.SessionScheduledEvent)
-		matches, err := mgmtSvc.GetWatchlistMatchesForSession(context.Background(), evt.SessionID)
+		matches, err := mgmtSvc.GetWatchlistMatchesForSession(ctx, evt.SessionID)
+
 		if err != nil {
 			return
 		}
@@ -454,18 +396,18 @@ func (app *Application) registerEventHandlers(notifSvc *notifications.Notificati
 	})
 
 	app.events.Subscribe(events.EventTicketPurchased, func(payload any) {
-		evt := payload.(events.TicketPurchasedEvent)
-
-		bgCtx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
+
+		evt := payload.(events.TicketPurchasedEvent)
 
 		for _, t := range evt.Tickets {
 			if app.config.ResendKey != "" {
 				resend := email.NewResendClient(app.config.ResendKey)
-				resend.SendTicketEmail(bgCtx, evt.UserEmail, evt.UserName, t.QRCode)
+				resend.SendTicketEmail(ctx, evt.UserEmail, evt.UserName, t.QRCode)
 			}
 		}
 
-		notifSvc.Notify(bgCtx, evt.UserID, "PURCHASE", "Compra Confirmada", "Seus ingressos já estão disponíveis!", "/users/me/tickets")
+		notifSvc.Notify(ctx, evt.UserID, "PURCHASE", "Compra Confirmada", "Seus ingressos já estão disponíveis!", "/users/me/tickets")
 	})
 }

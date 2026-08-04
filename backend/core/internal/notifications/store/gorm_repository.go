@@ -8,6 +8,8 @@ import (
 	"gorm.io/gorm"
 )
 
+var _ notifications.NotificationRepository = (*Store)(nil)
+
 type Store struct {
 	db *gorm.DB
 }

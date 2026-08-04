@@ -20,23 +20,20 @@ type TicketPurchasedItem struct {
 }
 
 type PostLikedEvent struct {
-	PostID    uint      `json:"post_id"`
-	OwnerID   uuid.UUID `json:"owner_id"`
-	LikerID   uuid.UUID `json:"liker_id"`
-	LikerName string    `json:"liker_name"`
+	PostID  uint      `json:"post_id"`
+	OwnerID uuid.UUID `json:"owner_id"`
+	LikerID uuid.UUID `json:"liker_id"`
 }
 
 type UserFollowedEvent struct {
-	FollowerID   uuid.UUID `json:"follower_id"`
-	FollowerName string    `json:"follower_name"`
-	FolloweeID   uuid.UUID `json:"followee_id"`
+	FollowerID uuid.UUID `json:"follower_id"`
+	FolloweeID uuid.UUID `json:"followee_id"`
 }
 
 type CommentAddedEvent struct {
 	PostID        uint      `json:"post_id"`
 	ParentID      uint      `json:"parent_id"`
 	UserID        uuid.UUID `json:"user_id"`
-	UserName      string    `json:"user_name"`
 	ParentOwnerID uuid.UUID `json:"parent_owner_id"`
 }
 

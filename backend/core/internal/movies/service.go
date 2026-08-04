@@ -4,8 +4,13 @@ import (
 	"context"
 	"errors"
 	"time"
+	"fmt"
 
 	movietmdb "github.com/StartLivin/screek/backend/internal/movies/tmdb"
+)
+
+var (
+    ErrMovieMatchNotFound = errors.New("filme não encontrado por título/ano")
 )
 
 type UserSearchProvider interface {
@@ -49,7 +54,7 @@ func NewService(tmdb TMDBService, store MoviesRepository, userSearch UserSearchP
 func (s *MovieService) SearchMovies(ctx context.Context, query string) ([]Movie, error) {
 	tmdbMovies, err := s.tmdb.SearchMovies(ctx, query, 0)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("falha ao buscar filmes no TMDB: %w", err)
 	}
 
 	var localMovies []Movie
@@ -75,12 +80,12 @@ func (s *MovieService) SearchMovies(ctx context.Context, query string) ([]Movie,
 func (s *MovieService) GetMovieDetails(ctx context.Context, tmdbID int) (*Movie, error) {
 	localMovie, err := s.store.GetMovieByTMDBID(ctx, tmdbID)
 	if err == nil && localMovie != nil {
-		return localMovie, nil
+		return localMovie, fmt.Errorf("falha nos detalhes do filme no TMDB/store: %w", err)
 	}
 
 	tmdbDetails, err := s.tmdb.GetMovieDetails(ctx, tmdbID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("falha nos detalhes do filme no TMDB/store: %w", err)
 	}
 
 	savedMovie, err := s.store.SaveMovieDetails(ctx, tmdbDetails)
@@ -97,7 +102,7 @@ func (s *MovieService) MatchMovieByTitleAndYear(ctx context.Context, title strin
 
 	tmdbResults, err := s.tmdb.SearchMovies(ctx, title, year)
 	if err != nil || len(tmdbResults) == 0 {
-		return nil, errors.New("filme não encontrado por título/ano")
+		return nil, ErrMovieMatchNotFound
 	}
 
 	return s.GetMovieDetails(ctx, tmdbResults[0].ID)

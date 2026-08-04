@@ -7,6 +7,15 @@ import (
 	"github.com/google/uuid"
 )
 
+type MovieDTO struct {
+	ID            int    `json:"id"`
+	TMDBID        int    `json:"tmdb_id"`
+	Title         string `json:"title"`
+	PosterURL     string `json:"poster_url"`
+	IsPremiere    bool   `json:"is_premiere"`
+	IsRescreening bool   `json:"is_rescreening"`
+}
+
 type SessionResponseDTO struct {
 	ID          int       `json:"id"`
 	StartTime   time.Time `json:"start_time"`

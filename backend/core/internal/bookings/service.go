@@ -18,8 +18,12 @@ import (
 )
 
 var (
-	ErrSeatLockFailed      = errors.New("uma ou mais cadeiras foram compradas por outro usuário")
-	ErrInvalidTicketStatus = errors.New("query param 'status' inválido")
+    ErrSeatLockFailed        = errors.New("uma ou mais cadeiras foram compradas por outro usuário")
+    ErrInvalidTicketStatus   = errors.New("query param 'status' inválido")
+    ErrInvalidSeatID         = errors.New("SeatID deve ser um número positivo")
+    ErrSessionNotFound       = errors.New("sessão não encontrada")
+    ErrTransactionNotFound   = errors.New("transação não encontrada, não pertence a você ou já paga")
+    ErrTransactionNotPending = errors.New("esta transação não está mais pendente")
 )
 
 type Mailer interface {
@@ -40,7 +44,7 @@ type SimpleRedisClient interface {
 }
 
 type Service interface {
-	GetMoviesPlaying(ctx context.Context, city, date string) ([]movies.MovieDTO, error)
+	GetMoviesPlaying(ctx context.Context, city, date string) ([]MovieDTO, error)
 	GetMovieSessionsGroupedByCinema(ctx context.Context, movieID int, city, date string) ([]CinemaSessionsResponseDTO, error)
 	GetSeatsBySession(ctx context.Context, sessionID int) ([]cinema.Seat, error)
 	GetSessionByID(ctx context.Context, sessionID int) (*cinema.Session, error)
@@ -81,7 +85,7 @@ func NewService(store BookingsRepository, redis SimpleRedisClient, payment payme
 	}
 }
 
-func (s *bookingsService) GetMoviesPlaying(ctx context.Context, city, date string) ([]movies.MovieDTO, error) {
+func (s *bookingsService) GetMoviesPlaying(ctx context.Context, city, date string) ([]MovieDTO, error) {
 	moviesList, err := s.store.GetMoviesPlaying(ctx, city, date)
 	if err != nil {
 		return nil, err
@@ -97,10 +101,10 @@ func (s *bookingsService) GetMoviesPlaying(ctx context.Context, city, date strin
 		statusMap = make(map[int]map[string]bool)
 	}
 
-	var response []movies.MovieDTO
+	var response []MovieDTO
 	for _, m := range moviesList {
 		status := statusMap[m.ID]
-		response = append(response, movies.MovieDTO{
+		response = append(response, MovieDTO{
 			ID:            m.ID,
 			TMDBID:        m.TMDBID,
 			Title:         m.Title,
@@ -181,7 +185,7 @@ func (s *bookingsService) ReserveSeats(ctx context.Context, userID uuid.UUID, se
 
 	for _, tReq := range ticketsReq {
 		if tReq.SeatID <= 0 {
-			return nil, errors.New("SeatID deve ser um número positivo")
+			return nil, ErrInvalidSeatID
 		}
 		seat := fmt.Sprintf("seat:%d:%d", sessionID, tReq.SeatID)
 		res := s.redisClient.SetNX(ctx, seat, userID, 10*time.Minute)
@@ -204,7 +208,7 @@ func (s *bookingsService) ReserveSeats(ctx context.Context, userID uuid.UUID, se
 		for _, lockedAsset := range lockedAssets {
 			s.redisClient.Del(ctx, lockedAsset)
 		}
-		return nil, errors.New("sessão não encontrada")
+		return nil, ErrSessionNotFound
 	}
 
 	basePrice := session.Price
@@ -254,10 +258,10 @@ func (s *bookingsService) ReserveSeats(ctx context.Context, userID uuid.UUID, se
 func (s *bookingsService) PayReservation(ctx context.Context, transactionID uuid.UUID, userID uuid.UUID, method string, idempotencyKey string) (string, error) {
 	transaction, err := s.store.GetTransactionByID(ctx, transactionID, userID)
 	if err != nil {
-		return "", errors.New("transação não encontrada, não pertence a você ou já paga")
+		return "", ErrTransactionNotFound
 	}
 	if transaction.Status != TicketStatusPending {
-		return "", errors.New("esta transação não está mais pendente")
+		return "", ErrTransactionNotPending
 	}
 
 	metadata := map[string]string{

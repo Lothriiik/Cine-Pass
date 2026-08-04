@@ -11,6 +11,8 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+var _ cinema.CinemaRepository = (*Store)(nil)
+
 type Store struct {
 	db *gorm.DB
 }

@@ -23,6 +23,5 @@ type SessionRecord struct {
 	Price       int         `json:"price" gorm:"not null"`
 	SessionType SessionType `json:"session_type" gorm:"type:varchar(20);not null;default:'REGULAR'"`
 	IsFree      bool        `json:"is_free" gorm:"default:false"`
-	Movie       *int        `json:"movie" gorm:"foreignKey:MovieID"`
 	Room        RoomRecord  `json:"room" gorm:"foreignKey:RoomID"`
 }

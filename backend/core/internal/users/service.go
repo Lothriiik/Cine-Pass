@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log/slog"
 	"time"
+	"fmt"
 
 	"github.com/StartLivin/screek/backend/internal/movies"
 	"github.com/StartLivin/screek/backend/internal/shared/crypto"
@@ -44,7 +45,7 @@ func (s *UserService) CreateUser(ctx context.Context, user *User) error {
 
 	hashedPassword, err := crypto.HashPassword(user.Password)
 	if err != nil {
-		return errors.New("erro ao processar senha")
+		return fmt.Errorf("erro ao processar senha: %w", err)
 	}
 	user.Password = hashedPassword
 	return s.repo.CreateUser(ctx, user)
@@ -96,7 +97,7 @@ func (s *UserService) GetUserByUsername(ctx context.Context, username string) (*
 func (s *UserService) GetIDByUsername(ctx context.Context, username string) (uuid.UUID, error) {
 	user, err := s.repo.GetUserByUsername(ctx, username)
 	if err != nil {
-		return uuid.Nil, errors.New("Usuário não encontrado")
+		return uuid.Nil, ErrUserNotFound
 	}
 	return user.ID, nil
 }
@@ -124,7 +125,24 @@ func (s *UserService) IncrementStats(ctx context.Context, userID uuid.UUID, movi
 	}
 
 	go func() {
-		_ = s.RecalculateTopGenre(context.Background(), userID)
+		defer func() {
+			if r := recover(); r != nil {
+				slog.Error("panic recovered in RecalculateTopGenre",
+					"user_id", userID,
+					"panic", r,
+				)
+			}
+		}()
+
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		if err := s.RecalculateTopGenre(ctx, userID); err != nil {
+			slog.Warn("failed to recalculate top genre",
+				"user_id", userID,
+				"error", err,
+			)
+		}
 	}()
 
 	return nil

@@ -17,6 +17,7 @@ type Config struct {
 	StripeKey           string
 	StripeWebhookSecret string
 	ResendKey           string
+	RunMigrations 		bool
 }
 
 func LoadConfig() (Config, error) {
@@ -45,6 +46,9 @@ func LoadConfig() (Config, error) {
 		redisURL = "localhost:6379"
 	}
 
+	runMigrationsEnv := os.Getenv("RUN_MIGRATIONS")
+	runMigrations := runMigrationsEnv != "false"
+
 	return Config{
 		DatabaseURL:         DatabaseURL,
 		Port:                port,
@@ -54,5 +58,6 @@ func LoadConfig() (Config, error) {
 		StripeKey:           os.Getenv("STRIPE_KEY"),
 		StripeWebhookSecret: os.Getenv("STRIPE_WEBHOOK_SECRET"),
 		ResendKey:           os.Getenv("RESEND_KEY"),
+		RunMigrations:       runMigrations,
 	}, nil
 }

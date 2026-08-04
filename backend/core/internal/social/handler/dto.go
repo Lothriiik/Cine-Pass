@@ -1,4 +1,4 @@
-package social
+package handler
 
 import (
 	"errors"
@@ -48,16 +48,6 @@ type ReplyRequest struct {
 	Content string `json:"content" validate:"required,max=280"`
 }
 
-type ToggleLikeResponse struct {
-	Message string `json:"message"`
-	Liked   bool   `json:"liked"`
-}
-
-type ToggleFollowResponse struct {
-	Message     string `json:"message"`
-	IsFollowing bool   `json:"is_following"`
-}
-
 type PostDetailResponseDTO struct {
 	Post    PostResponseDTO   `json:"post"`
 	Replies []PostResponseDTO `json:"replies"`
@@ -67,6 +57,16 @@ type UserFollowResponseDTO struct {
 	UserID    string `json:"user_id"`
 	Username  string `json:"username"`
 	AvatarURL string `json:"avatar_url,omitempty"`
+}
+
+type ToggleLikeResponse struct {
+	Message string `json:"message"`
+	Liked   bool   `json:"liked"`
+}
+
+type ToggleFollowResponse struct {
+	Message     string `json:"message"`
+	IsFollowing bool   `json:"is_following"`
 }
 
 func (dto *ReplyRequest) Validate() error {
