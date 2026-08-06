@@ -13,13 +13,10 @@ export const MainLayout = () => {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans">
       
-      {/* AuthModal montado globalmente */}
       <AuthModal />
 
-      {/* HEADER / NAVBAR BRUTALISTA */}
       <header className="sticky top-0 z-40 bg-background border-b-4 border-border px-4 lg:px-8 py-3 flex items-center justify-between">
         
-        {/* Logo */}
         <Link to="/" className="flex items-center gap-2 group">
           <FilmStrip size={32} className="text-secondary group-hover:scale-110 transition-transform" weight="fill" />
           <span className="font-display font-black text-2xl tracking-wider text-foreground uppercase">
@@ -27,7 +24,6 @@ export const MainLayout = () => {
           </span>
         </Link>
 
-        {/* Links de Navegação Principal */}
         <nav className="hidden md:flex items-center gap-6 font-bold text-xs uppercase tracking-wider">
           <Link to="/" className="hover:text-secondary transition-colors">
             Em Cartaz
@@ -40,10 +36,7 @@ export const MainLayout = () => {
           </Link>
         </nav>
 
-        {/* Ações da Direita (Busca, Notificações, User/Login) */}
         <div className="flex items-center gap-3">
-          
-          {/* Botão de Busca Rápida */}
           <button
             onClick={() => navigate('/search')}
             className="p-2 border-2 border-border bg-card hover:bg-secondary hover:text-foreground transition-all cursor-pointer"
@@ -52,7 +45,6 @@ export const MainLayout = () => {
             <MagnifyingGlass size={20} weight="bold" />
           </button>
 
-          {/* Botão de Notificações (Sininho) */}
           <button
             onClick={() => user ? navigate('/notifications') : openModal('login')}
             className="p-2 border-2 border-border bg-card hover:bg-secondary hover:text-foreground transition-all cursor-pointer relative"
@@ -61,7 +53,6 @@ export const MainLayout = () => {
             <Bell size={20} weight="bold" />
           </button>
 
-          {/* Usuário Logado vs Botão Entrar */}
           {user ? (
             <div className="flex items-center gap-2">
               <Link
@@ -91,12 +82,10 @@ export const MainLayout = () => {
         </div>
       </header>
 
-      {/* CONTEÚDO PRINCIPAL DA PÁGINA */}
       <main className="flex-1">
         <Outlet />
       </main>
 
-      {/* FOOTER BRUTALISTA */}
       <footer className="border-t-4 border-border bg-card py-6 px-4 text-center text-xs text-muted-foreground">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="font-display font-extrabold uppercase text-foreground">

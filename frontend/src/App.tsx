@@ -14,14 +14,12 @@ export default function App() {
       <Toaster position="top-right" richColors theme="dark" />
 
       <Routes>
-        {/* Páginas de Autenticação com Logo e Rodapé Fixos */}
         <Route element={<AuthLayout />}>
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
         </Route>
 
-        {/* Rotas Principais */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         

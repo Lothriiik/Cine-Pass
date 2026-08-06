@@ -46,8 +46,8 @@ func (h *Handler) RegisterRoutes(r chi.Router, authMiddleware func(http.Handler)
 // @Tags Social
 // @Accept json
 // @Produce json
-// @Param request body social.CreatePostRequest true "Dados do post"
-// @Success 201 {object} social.PostResponseDTO
+// @Param request body CreatePostRequest true "Dados do post"
+// @Success 201 {object} PostResponseDTO
 // @Security BearerAuth
 // @Router /social/posts [post]
 func (h *Handler) CreatePost(w http.ResponseWriter, r *http.Request) {
@@ -98,7 +98,7 @@ func (h *Handler) CreatePost(w http.ResponseWriter, r *http.Request) {
 // @Tags Social
 // @Accept json
 // @Param id path int true "ID do Post"
-// @Param request body social.UpdatePostRequest true "Novo conteúdo"
+// @Param request body UpdatePostRequest true "Novo conteúdo"
 // @Success 200 {object} httputil.MessageResponse
 // @Security BearerAuth
 // @Router /social/posts/{id} [put]
@@ -144,7 +144,7 @@ func (h *Handler) DeletePost(w http.ResponseWriter, r *http.Request) {
 // @Param cursor query int false "ID do último post visto (para paginação)"
 // @Param limit query int false "Quantidade de itens"
 // @Produce json
-// @Success 200 {object} social.FeedResponse
+// @Success 200 {object} FeedResponse
 // @Security BearerAuth
 // @Router /social/feed [get]
 func (h *Handler) GetFeed(w http.ResponseWriter, r *http.Request) {
@@ -202,7 +202,7 @@ func (h *Handler) GetFeed(w http.ResponseWriter, r *http.Request) {
 // @Tags Social
 // @Param cursor query int false "Pagination cursor"
 // @Produce json
-// @Success 200 {object} social.FeedResponse
+// @Success 200 {object} FeedResponse
 // @Security BearerAuth
 // @Router /social/feed/global [get]
 func (h *Handler) GetGlobalFeed(w http.ResponseWriter, r *http.Request) {
@@ -259,7 +259,7 @@ func (h *Handler) GetGlobalFeed(w http.ResponseWriter, r *http.Request) {
 // @Tags Social
 // @Accept json
 // @Param id path int true "ID do Post Pai"
-// @Param request body social.ReplyRequest true "Conteúdo da resposta"
+// @Param request body ReplyRequest true "Conteúdo da resposta"
 // @Success 201 {object} httputil.MessageResponse
 // @Security BearerAuth
 // @Router /social/posts/{id}/reply [post]
@@ -284,7 +284,7 @@ func (h *Handler) ReplyToPost(w http.ResponseWriter, r *http.Request) {
 // @Description Alterna o estado de curtida de um post
 // @Tags Social
 // @Param id path int true "ID do Post"
-// @Success 200 {object} social.ToggleLikeResponse
+// @Success 200 {object} ToggleLikeResponse
 // @Security BearerAuth
 // @Router /social/posts/{id}/like [post]
 func (h *Handler) ToggleLike(w http.ResponseWriter, r *http.Request) {
@@ -303,7 +303,7 @@ func (h *Handler) ToggleLike(w http.ResponseWriter, r *http.Request) {
 // @Description Alterna o estado de acompanhamento de um usuário pelo username
 // @Tags Social
 // @Param username path string true "Username do alvo"
-// @Success 200 {object} social.ToggleFollowResponse
+// @Success 200 {object} ToggleFollowResponse
 // @Security BearerAuth
 // @Router /social/users/{username}/follow [post]
 func (h *Handler) ToggleFollow(w http.ResponseWriter, r *http.Request) {
@@ -329,7 +329,7 @@ func (h *Handler) ToggleFollow(w http.ResponseWriter, r *http.Request) {
 // @Tags Social
 // @Produce json
 // @Param id path int true "ID do Post"
-// @Success 200 {object} social.PostDetailResponseDTO
+// @Success 200 {object} PostDetailResponseDTO
 // @Security BearerAuth
 // @Router /social/posts/{id} [get]
 func (h *Handler) GetPostDetail(w http.ResponseWriter, r *http.Request) {
@@ -400,7 +400,7 @@ func (h *Handler) GetPostDetail(w http.ResponseWriter, r *http.Request) {
 // @Tags Social
 // @Produce json
 // @Param id path string true "UUID do usuário"
-// @Success 200 {array} social.UserFollowResponseDTO
+// @Success 200 {array} UserFollowResponseDTO
 // @Security BearerAuth
 // @Router /social/users/{id}/followers [get]
 func (h *Handler) GetFollowers(w http.ResponseWriter, r *http.Request) {
@@ -439,7 +439,7 @@ func (h *Handler) GetFollowers(w http.ResponseWriter, r *http.Request) {
 // @Tags Social
 // @Produce json
 // @Param id path string true "UUID do usuário"
-// @Success 200 {array} social.UserFollowResponseDTO
+// @Success 200 {array} UserFollowResponseDTO
 // @Security BearerAuth
 // @Router /social/users/{id}/following [get]
 func (h *Handler) GetFollowing(w http.ResponseWriter, r *http.Request) {
