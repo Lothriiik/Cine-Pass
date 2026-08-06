@@ -1,40 +1,35 @@
-import { useState } from 'react'
-import PublicPrototype from './screens/PublicPrototype'
-import PublicPrototypeV2 from './screens/PublicPrototypeV2'
-import PublicPrototypeV3 from './screens/PublicPrototypeV3'
-import SystemDesign from './screens/SystemDesign'
-import UIKitReference from './screens/UIKitReference'
-
-type View = 'home' | 'v1' | 'v2' | 'v3' | 'sys' | 'uikit'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'sonner';
+import { Login } from './pages/Login';
+import { Register } from './pages/Register';
+import { ForgotPassword } from './pages/ForgotPassword';
+import { ResetPassword } from './pages/ResetPassword';
+import { AuthLayout } from './layouts/AuthLayout';
+import { MainLayout } from './layouts/MainLayout';
+import { PrivateRoute } from './components/PrivateRoute';
 
 export default function App() {
-  const [view, setView] = useState<View>('home');
-
-  const btnClass = (v: View) =>
-    `px-3 py-1.5 font-bold text-xs backdrop-blur border transition-colors shadow-xl ${
-      view === v
-        ? 'bg-primary-500 text-white border-primary-500'
-        : 'bg-black/80 text-white/60 border-white/10 hover:text-white'
-    }`
-
   return (
-    <div>
-      <div className="fixed bottom-4 right-4 z-[100] flex flex-col gap-2 items-end">
-        <div className="flex gap-1.5 flex-wrap justify-end">
-          <button onClick={() => setView('home')} className={btnClass('home')}>HOME</button>
-          <button onClick={() => setView('v1')} className={btnClass('v1')}>V1</button>
-          <button onClick={() => setView('v2')} className={btnClass('v2')}>V2</button>
-          <button onClick={() => setView('v3')} className={btnClass('v3')}>V3</button>
-          <button onClick={() => setView('sys')} className={btnClass('sys')}>SYS</button>
-          <button onClick={() => setView('uikit')} className={btnClass('uikit')}>UIKIT</button>
-        </div>
-      </div>
+    <BrowserRouter>
+      <Toaster position="top-right" richColors theme="dark" />
 
-      {view === 'v1' && <PublicPrototype />}
-      {view === 'v2' && <PublicPrototypeV2 />}
-      {view === 'v3' && <PublicPrototypeV3 />}
-      {view === 'sys' && <SystemDesign />}
-      {view === 'uikit' && <UIKitReference />}
-    </div>
-  )
+      <Routes>
+        {/* Páginas de Autenticação com Logo e Rodapé Fixos */}
+        <Route element={<AuthLayout />}>
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+        </Route>
+
+        {/* Rotas Principais */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        
+        <Route path="/" element={<Navigate to="/login" replace />} />
+
+        <Route element={<PrivateRoute />}>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }

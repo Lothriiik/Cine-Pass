@@ -3,79 +3,52 @@
 @tailwind utilities;
 
 @layer base {
-    /* ===== LIGHT MODE (default) ===== */
-    :root {
-        /* Backgrounds & Text */
-        --background: 24 33% 85%;       /* #E9D8C8 */
-        --foreground: 335 100% 5%;      /* #190207 */
-
-        /* Brand */
-        --primary: 333 54% 32%;         /* #7E2553 */
-        --primary-foreground: 24 33% 85%;
-        --secondary: 347 100% 68%;      /* #FF5C80 */
-        --secondary-foreground: 335 100% 5%;
-        --tertiary: 201 22% 61%;        /* #85A3B2 */
-
-        /* Semantic */
-        --success: 142 72% 37%;         /* #16A34A */
-        --info: 217 91% 60%;            /* #3B82F6 */
-        --warning: 45 82% 47%;          /* #DBA212 */
-        --destructive: 0 72% 51%;       /* #DC2626 */
-        --destructive-foreground: 0 0% 100%;
-
-        /* Surfaces */
-        --card: 24 33% 85%;
-        --card-foreground: 335 100% 5%;
-        --popover: 24 33% 85%;
-        --popover-foreground: 335 100% 5%;
-        --muted: 24 20% 78%;
-        --muted-foreground: 335 30% 30%;
-        --accent: 24 20% 78%;
-        --accent-foreground: 335 100% 5%;
-
-        /* Borders & Inputs */
-        --border: 335 100% 5% / 0.4;    /* #190207 40% */
-        --input: 335 100% 5% / 0.4;
-        --ring: 333 54% 32%;
-
-        /* Border Radius - Brutalist */
-        --radius: 0px;
-    }
-
-    /* ===== DARK MODE ===== */
-    .dark {
-        /* Backgrounds & Text */
-        --background: 335 100% 5%;      /* #190207 */
-        --foreground: 24 33% 85%;       /* #E9D8C8 */
-
-        /* Brand — same across modes */
-        --primary: 333 54% 32%;         /* #7E2553 */
-        --primary-foreground: 24 33% 85%;
-        --secondary: 347 100% 68%;      /* #FF5C80 */
-        --secondary-foreground: 24 33% 85%;
-
-        /* Semantic — same across modes */
-        --success: 142 72% 37%;
-        --info: 217 91% 60%;
-        --warning: 45 82% 47%;
-        --destructive: 0 72% 51%;
-        --destructive-foreground: 0 0% 100%;
-
-        /* Surfaces */
-        --card: 335 80% 8%;
-        --card-foreground: 24 33% 85%;
-        --popover: 335 80% 8%;
-        --popover-foreground: 24 33% 85%;
-        --muted: 335 40% 14%;
-        --muted-foreground: 24 20% 65%;
-        --accent: 335 40% 14%;
-        --accent-foreground: 24 33% 85%;
-
-        /* Borders & Inputs */
-        --border: 24 33% 85% / 0.4;     /* #E9D8C8 40% */
-        --input: 24 33% 85% / 0.4;
-        --ring: 333 54% 32%;
-    }
+  /* ===== LIGHT MODE ===== */
+  :root {
+    /* RGB da paleta exata */
+    --background-rgb: 233 216 200;      /* #E9D8C8 */
+    --foreground-rgb: 25 2 7;           /* #190207 */
+    --primary-rgb: 126 37 83;           /* #7E2553 */
+    --primary-hover-rgb: 99 27 64;
+    --secondary-rgb: 255 92 128;        /* #FF5C80 */
+    --secondary-hover-rgb: 229 69 106;
+    --tertiary-rgb: 26 39 68;           /* #1A2744 */
+    --tertiary-hover-rgb: 17 26 46;
+    /* Semânticas */
+    --success-rgb: 22 163 74;           /* #16A34A */
+    --info-rgb: 59 130 246;             /* #3B82F6 */
+    --warning-rgb: 219 162 18;          /* #DBA212 */
+    --destructive-rgb: 220 38 38;       /* #DC2626 */
+    /* Surfaces */
+    --card-rgb: 242 229 215;
+    --popover-rgb: 247 236 225;
+    --muted-rgb: 222 203 185;
+    --accent-rgb: 213 194 176;
+    --border-rgb: 25 2 7;
+    --radius: 0px;
+  }
+  /* ===== DARK MODE ===== */
+  .dark {
+    --background-rgb: 25 2 7;           /* #190207 */
+    --foreground-rgb: 233 216 200;      /* #E9D8C8 */
+    --primary-rgb: 126 37 83;           /* #7E2553 */
+    --primary-hover-rgb: 152 48 103;
+    --secondary-rgb: 255 92 128;        /* #FF5C80 */
+    --secondary-hover-rgb: 255 123 153;
+    --tertiary-rgb: 26 39 68;           /* #1A2744 */
+    --tertiary-hover-rgb: 41 59 97;
+    /* Semânticas */
+    --success-rgb: 22% 163% 74;
+    --info-rgb: 59 130 246;
+    --warning-rgb: 219 162 18;
+    --destructive-rgb: 220 38 38;
+    /* Surfaces */
+    --card-rgb: 37 4 12;
+    --popover-rgb: 44 5 14;
+    --muted-rgb: 56 8 20;
+    --accent-rgb: 69 11 27;
+    --border-rgb: 233 216 200;
+  }
 }
 
 @layer base {
