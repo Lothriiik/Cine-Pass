@@ -353,7 +353,7 @@ func (h *Handler) RemoveFavorite(w http.ResponseWriter, r *http.Request) {
 // @Accept json
 // @Produce json
 // @Param id path string true "ID do Usuário (UUID)"
-// @Success 200 {object} users.UserStats
+// @Success 200 {object} UserStatsDTO
 // @Failure 404 {string} string "Estatísticas não encontradas"
 // @Router /users/{id}/stats [get]
 func (h *Handler) GetStats(w http.ResponseWriter, r *http.Request) {

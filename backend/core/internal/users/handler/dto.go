@@ -95,3 +95,9 @@ func (dto *ChangePasswordDTO) Validate() error {
 func (dto *UpdateRoleDTO) Validate() error {
 	return validation.Validate.Struct(dto)
 }
+
+type UserStatsDTO struct {
+	TotalMovies  int    `json:"total_movies"`
+	TotalMinutes int    `json:"total_minutes"`
+	TopGenreName string `json:"top_genre_name"`
+}

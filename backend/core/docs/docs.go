@@ -59,7 +59,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_analytics.GenreStatsResponseDTO"
+                                "$ref": "#/definitions/handler.GenreStatsResponseDTO"
                             }
                         }
                     }
@@ -101,7 +101,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_analytics.MovieStatsDTO"
+                                "$ref": "#/definitions/handler.MovieStatsDTO"
                             }
                         }
                     }
@@ -147,7 +147,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_analytics.AnalyticsSummaryResponseDTO"
+                            "$ref": "#/definitions/handler.AnalyticsSummaryResponseDTO"
                         }
                     }
                 }
@@ -174,7 +174,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_cinema_handler.CinemaAdminResponseDTO"
+                                "$ref": "#/definitions/handler.CinemaAdminResponseDTO"
                             }
                         }
                     }
@@ -201,7 +201,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_cinema_handler.CreateCinemaRequestDTO"
+                            "$ref": "#/definitions/handler.CreateCinemaRequestDTO"
                         }
                     }
                 ],
@@ -209,7 +209,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -243,7 +243,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/internal_cinema_handler.CinemaResponseDTO"
+                            "$ref": "#/definitions/handler.CinemaResponseDTO"
                         }
                     }
                 }
@@ -276,7 +276,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_cinema_handler.CreateCinemaRequestDTO"
+                            "$ref": "#/definitions/handler.CreateCinemaRequestDTO"
                         }
                     }
                 ],
@@ -284,7 +284,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -313,7 +313,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -348,7 +348,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_cinema_handler.CreateRoomRequestDTO"
+                            "$ref": "#/definitions/handler.CreateRoomRequestDTO"
                         }
                     }
                 ],
@@ -356,7 +356,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -391,7 +391,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_cinema_handler.CreateRoomRequestDTO"
+                            "$ref": "#/definitions/handler.CreateRoomRequestDTO"
                         }
                     }
                 ],
@@ -399,7 +399,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -428,7 +428,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -470,7 +470,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_cinema_handler.SessionAdminResponseDTO"
+                                "$ref": "#/definitions/handler.SessionAdminResponseDTO"
                             }
                         }
                     }
@@ -497,7 +497,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_cinema_handler.CreateSessionRequestDTO"
+                            "$ref": "#/definitions/handler.CreateSessionRequestDTO"
                         }
                     }
                 ],
@@ -505,7 +505,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -540,7 +540,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_cinema_handler.CreateSessionRequestDTO"
+                            "$ref": "#/definitions/handler.CreateSessionRequestDTO"
                         }
                     }
                 ],
@@ -548,7 +548,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -577,7 +577,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -607,7 +607,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_auth.UpdateRoleDTO"
+                            "$ref": "#/definitions/internal_auth_handler.UpdateRoleDTO"
                         }
                     }
                 ],
@@ -615,7 +615,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -643,7 +643,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_auth.ChangePasswordRequest"
+                            "$ref": "#/definitions/handler.ChangePasswordRequest"
                         }
                     }
                 ],
@@ -651,7 +651,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -674,7 +674,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_auth.ForgotPasswordRequest"
+                            "$ref": "#/definitions/handler.ForgotPasswordRequest"
                         }
                     }
                 ],
@@ -682,7 +682,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -708,7 +708,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_auth.LoginRequest"
+                            "$ref": "#/definitions/handler.LoginRequest"
                         }
                     }
                 ],
@@ -716,7 +716,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_auth.AuthTokenResponse"
+                            "$ref": "#/definitions/handler.AuthTokenResponse"
                         }
                     }
                 }
@@ -738,7 +738,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -764,7 +764,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_auth.RefreshRequest"
+                            "$ref": "#/definitions/handler.RefreshRequest"
                         }
                     }
                 ],
@@ -772,7 +772,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_auth.AuthTokenResponse"
+                            "$ref": "#/definitions/handler.AuthTokenResponse"
                         }
                     }
                 }
@@ -795,7 +795,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_auth.ResetPasswordRequest"
+                            "$ref": "#/definitions/handler.ResetPasswordRequest"
                         }
                     }
                 ],
@@ -803,7 +803,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -834,7 +834,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -870,7 +870,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_bookings.TicketResponseDTO"
+                                "$ref": "#/definitions/handler.TicketResponseDTO"
                             }
                         }
                     }
@@ -902,7 +902,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -940,7 +940,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_bookings_handler.MovieResponseDTO"
+                                "$ref": "#/definitions/handler.MovieResponseDTO"
                             }
                         }
                     }
@@ -973,7 +973,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_bookings_handler.SeatResponseDTO"
+                                "$ref": "#/definitions/handler.SeatResponseDTO"
                             }
                         }
                     }
@@ -1005,7 +1005,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_bookings.ReserveRequestDTO"
+                            "$ref": "#/definitions/handler.ReserveRequestDTO"
                         }
                     }
                 ],
@@ -1013,7 +1013,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_bookings.ReserveResponseDTO"
+                            "$ref": "#/definitions/handler.ReserveResponseDTO"
                         }
                     }
                 }
@@ -1047,7 +1047,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_bookings.TicketResponseDTO"
+                            "$ref": "#/definitions/handler.TicketResponseDTO"
                         }
                     }
                 }
@@ -1078,7 +1078,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -1123,7 +1123,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_bookings.PayRequestDTO"
+                            "$ref": "#/definitions/handler.PayRequestDTO"
                         }
                     }
                 ],
@@ -1131,7 +1131,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_bookings.PayResponseDTO"
+                            "$ref": "#/definitions/handler.PayResponseDTO"
                         }
                     }
                 }
@@ -1166,7 +1166,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_bookings.TicketResponseDTO"
+                                "$ref": "#/definitions/handler.TicketResponseDTO"
                             }
                         }
                     }
@@ -1212,7 +1212,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_bookings.CinemaSessionsResponseDTO"
+                                "$ref": "#/definitions/handler.CinemaSessionsResponseDTO"
                             }
                         }
                     }
@@ -1251,7 +1251,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_catalog_handler.CreateMovieListRequestDTO"
+                            "$ref": "#/definitions/handler.CreateMovieListRequestDTO"
                         }
                     }
                 ],
@@ -1259,7 +1259,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -1290,7 +1290,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/internal_catalog_handler.MovieDetailResponseDTO"
+                            "$ref": "#/definitions/handler.MovieDetailResponseDTO"
                         }
                     }
                 }
@@ -1317,7 +1317,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_catalog_handler.MovieLogResponseDTO"
+                                "$ref": "#/definitions/handler.MovieLogResponseDTO"
                             }
                         }
                     }
@@ -1349,7 +1349,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_catalog_handler.CreateMovieListRequestDTO"
+                            "$ref": "#/definitions/handler.CreateMovieListRequestDTO"
                         }
                     }
                 ],
@@ -1357,7 +1357,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/internal_catalog_handler.MovieListResponseDTO"
+                            "$ref": "#/definitions/handler.MovieListResponseDTO"
                         }
                     }
                 }
@@ -1384,7 +1384,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_catalog_handler.MovieListResponseDTO"
+                                "$ref": "#/definitions/handler.MovieListResponseDTO"
                             }
                         }
                     }
@@ -1419,7 +1419,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/internal_catalog_handler.MovieListResponseDTO"
+                            "$ref": "#/definitions/handler.MovieListResponseDTO"
                         }
                     }
                 }
@@ -1448,7 +1448,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -1483,7 +1483,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_catalog_handler.AddMovieToListRequestDTO"
+                            "$ref": "#/definitions/handler.AddMovieToListRequestDTO"
                         }
                     }
                 ],
@@ -1491,7 +1491,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -1529,7 +1529,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -1568,14 +1568,14 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_movies.Movie"
+                                "$ref": "#/definitions/movies.Movie"
                             }
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_movies.ErrorResponse"
+                            "$ref": "#/definitions/httputil.ErrorResponse"
                         }
                     }
                 }
@@ -1616,14 +1616,14 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_movies.Movie"
+                                "$ref": "#/definitions/movies.Movie"
                             }
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_movies.ErrorResponse"
+                            "$ref": "#/definitions/httputil.ErrorResponse"
                         }
                     }
                 }
@@ -1655,13 +1655,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_movies.Movie"
+                            "$ref": "#/definitions/movies.Movie"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_movies.ErrorResponse"
+                            "$ref": "#/definitions/httputil.ErrorResponse"
                         }
                     }
                 }
@@ -1699,7 +1699,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_catalog_handler.LogMovieRequestDTO"
+                            "$ref": "#/definitions/handler.LogMovieRequestDTO"
                         }
                     }
                 ],
@@ -1707,7 +1707,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -1741,14 +1741,14 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_movies.TMDBMovie"
+                                "$ref": "#/definitions/tmdb.TMDBMovie"
                             }
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_movies.ErrorResponse"
+                            "$ref": "#/definitions/httputil.ErrorResponse"
                         }
                     }
                 }
@@ -1775,7 +1775,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_notifications.Notification"
+                                "$ref": "#/definitions/handler.NotificationResponseDTO"
                             }
                         }
                     }
@@ -1797,7 +1797,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -1827,7 +1827,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -1859,13 +1859,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_movies.Person"
+                            "$ref": "#/definitions/movies.Person"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_movies.ErrorResponse"
+                            "$ref": "#/definitions/httputil.ErrorResponse"
                         }
                     }
                 }
@@ -1899,14 +1899,14 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_movies.TMDBPersonMovieCast"
+                                "$ref": "#/definitions/tmdb.TMDBPersonMovieCast"
                             }
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_movies.ErrorResponse"
+                            "$ref": "#/definitions/httputil.ErrorResponse"
                         }
                     }
                 }
@@ -1945,7 +1945,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/internal_social_handler.FeedResponse"
+                            "$ref": "#/definitions/handler.FeedResponse"
                         }
                     }
                 }
@@ -1978,7 +1978,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/internal_social_handler.FeedResponse"
+                            "$ref": "#/definitions/handler.FeedResponse"
                         }
                     }
                 }
@@ -2009,7 +2009,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_social_handler.CreatePostRequest"
+                            "$ref": "#/definitions/handler.CreatePostRequest"
                         }
                     }
                 ],
@@ -2017,7 +2017,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/internal_social_handler.PostResponseDTO"
+                            "$ref": "#/definitions/handler.PostResponseDTO"
                         }
                     }
                 }
@@ -2051,7 +2051,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/internal_social_handler.PostDetailResponseDTO"
+                            "$ref": "#/definitions/handler.PostDetailResponseDTO"
                         }
                     }
                 }
@@ -2084,7 +2084,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_social_handler.UpdatePostRequest"
+                            "$ref": "#/definitions/handler.UpdatePostRequest"
                         }
                     }
                 ],
@@ -2092,7 +2092,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -2121,7 +2121,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -2152,7 +2152,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/internal_social_handler.ToggleLikeResponse"
+                            "$ref": "#/definitions/handler.ToggleLikeResponse"
                         }
                     }
                 }
@@ -2187,7 +2187,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_social_handler.ReplyRequest"
+                            "$ref": "#/definitions/handler.ReplyRequest"
                         }
                     }
                 ],
@@ -2195,7 +2195,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -2231,7 +2231,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_social_handler.UserFollowResponseDTO"
+                                "$ref": "#/definitions/handler.UserFollowResponseDTO"
                             }
                         }
                     }
@@ -2268,7 +2268,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_social_handler.UserFollowResponseDTO"
+                                "$ref": "#/definitions/handler.UserFollowResponseDTO"
                             }
                         }
                     }
@@ -2300,7 +2300,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/internal_social_handler.ToggleFollowResponse"
+                            "$ref": "#/definitions/handler.ToggleFollowResponse"
                         }
                     }
                 }
@@ -2328,7 +2328,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_users.UserMeDetailsDTO"
+                            "$ref": "#/definitions/handler.UserMeDetailsDTO"
                         }
                     },
                     "401": {
@@ -2363,7 +2363,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_users.UpdateUserDTO"
+                            "$ref": "#/definitions/handler.UpdateUserDTO"
                         }
                     }
                 ],
@@ -2371,7 +2371,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     },
                     "401": {
@@ -2414,7 +2414,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     },
                     "401": {
@@ -2512,7 +2512,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_users.CreateUserDTO"
+                            "$ref": "#/definitions/handler.CreateUserDTO"
                         }
                     }
                 ],
@@ -2520,7 +2520,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_users.UserDTO"
+                            "$ref": "#/definitions/handler.UserDTO"
                         }
                     },
                     "400": {
@@ -2560,7 +2560,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_users.UserDTO"
+                                "$ref": "#/definitions/handler.UserDTO"
                             }
                         }
                     },
@@ -2599,7 +2599,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_users.UserDetailsDTO"
+                            "$ref": "#/definitions/handler.UserDetailsDTO"
                         }
                     },
                     "404": {
@@ -2637,7 +2637,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_users.UserStats"
+                            "$ref": "#/definitions/handler.UserStatsDTO"
                         }
                     },
                     "404": {
@@ -2670,7 +2670,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_catalog_handler.WatchlistItemResponseDTO"
+                                "$ref": "#/definitions/handler.WatchlistItemResponseDTO"
                             }
                         }
                     }
@@ -2697,7 +2697,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_catalog_handler.AddWatchlistRequestDTO"
+                            "$ref": "#/definitions/handler.AddWatchlistRequestDTO"
                         }
                     }
                 ],
@@ -2705,7 +2705,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -2736,7 +2736,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse"
+                            "$ref": "#/definitions/httputil.MessageResponse"
                         }
                     }
                 }
@@ -2759,324 +2759,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "github_com_StartLivin_screek_backend_internal_analytics.AnalyticsSummaryResponseDTO": {
-            "type": "object",
-            "properties": {
-                "end_date": {
-                    "type": "string"
-                },
-                "global_revenue": {
-                    "type": "number"
-                },
-                "global_tickets": {
-                    "type": "integer"
-                },
-                "start_date": {
-                    "type": "string"
-                },
-                "stats_by_cinema": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_analytics.DailyCinemaStatsResponseDTO"
-                    }
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_analytics.DailyCinemaStatsResponseDTO": {
-            "type": "object",
-            "properties": {
-                "cinema_name": {
-                    "type": "string"
-                },
-                "date": {
-                    "type": "string"
-                },
-                "occupancy_rate": {
-                    "type": "number"
-                },
-                "tickets_sold": {
-                    "type": "integer"
-                },
-                "total_revenue": {
-                    "type": "number"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_analytics.GenreStatsResponseDTO": {
-            "type": "object",
-            "properties": {
-                "genre_name": {
-                    "type": "string"
-                },
-                "total_revenue": {
-                    "type": "number"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_analytics.MovieStatsDTO": {
-            "type": "object",
-            "properties": {
-                "movie_id": {
-                    "type": "integer"
-                },
-                "movie_title": {
-                    "type": "string"
-                },
-                "tickets_sold": {
-                    "type": "integer"
-                },
-                "total_revenue": {
-                    "type": "number"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_auth.AuthTokenResponse": {
-            "type": "object",
-            "properties": {
-                "access_token": {
-                    "type": "string"
-                },
-                "refresh_token": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_auth.ChangePasswordRequest": {
-            "type": "object",
-            "required": [
-                "new_password",
-                "old_password"
-            ],
-            "properties": {
-                "new_password": {
-                    "type": "string",
-                    "minLength": 6
-                },
-                "old_password": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_auth.ForgotPasswordRequest": {
-            "type": "object",
-            "required": [
-                "email"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_auth.LoginRequest": {
-            "type": "object",
-            "required": [
-                "password",
-                "username"
-            ],
-            "properties": {
-                "password": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_auth.RefreshRequest": {
-            "type": "object",
-            "required": [
-                "refresh_token"
-            ],
-            "properties": {
-                "refresh_token": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_auth.ResetPasswordRequest": {
-            "type": "object",
-            "required": [
-                "new_password",
-                "token"
-            ],
-            "properties": {
-                "new_password": {
-                    "type": "string",
-                    "minLength": 6
-                },
-                "token": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_auth.UpdateRoleDTO": {
-            "type": "object",
-            "required": [
-                "role"
-            ],
-            "properties": {
-                "role": {
-                    "type": "string",
-                    "enum": [
-                        "USER",
-                        "MANAGER",
-                        "ADMIN"
-                    ]
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_bookings.CinemaSessionsResponseDTO": {
-            "type": "object",
-            "properties": {
-                "cinema_city": {
-                    "type": "string"
-                },
-                "cinema_id": {
-                    "type": "integer"
-                },
-                "cinema_name": {
-                    "type": "string"
-                },
-                "sessions": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_bookings.SessionResponseDTO"
-                    }
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_bookings.PayRequestDTO": {
-            "type": "object",
-            "required": [
-                "payment_method"
-            ],
-            "properties": {
-                "payment_method": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_bookings.PayResponseDTO": {
-            "type": "object",
-            "properties": {
-                "client_secret": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_bookings.ReserveRequestDTO": {
-            "type": "object",
-            "required": [
-                "session_id",
-                "tickets_request"
-            ],
-            "properties": {
-                "session_id": {
-                    "type": "integer"
-                },
-                "tickets_request": {
-                    "type": "array",
-                    "minItems": 1,
-                    "items": {
-                        "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_bookings.TicketRequest"
-                    }
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_bookings.ReserveResponseDTO": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "transaction_id": {
-                    "type": "string"
-                },
-                "valor_total_centavos": {
-                    "type": "integer"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_bookings.SessionResponseDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "price": {
-                    "type": "integer"
-                },
-                "room_type": {
-                    "type": "string"
-                },
-                "session_type": {
-                    "type": "string"
-                },
-                "start_time": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_bookings.TicketRequest": {
-            "type": "object",
-            "required": [
-                "type"
-            ],
-            "properties": {
-                "seat_id": {
-                    "type": "integer"
-                },
-                "type": {
-                    "enum": [
-                        "STANDARD",
-                        "HALF",
-                        "FREE"
-                    ],
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_bookings.TicketType"
-                        }
-                    ]
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_bookings.TicketResponseDTO": {
-            "type": "object",
-            "properties": {
-                "cinema": {
-                    "type": "string"
-                },
-                "date": {
-                    "type": "string"
-                },
-                "movie_name": {
-                    "type": "string"
-                },
-                "qr_code": {
-                    "type": "string"
-                },
-                "room": {
-                    "type": "string"
-                },
-                "seat": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "ticket_id": {
-                    "type": "string"
-                },
-                "user": {
-                    "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_bookings.UserBookingDTO"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_bookings.TicketType": {
+        "bookings.TicketType": {
             "type": "string",
             "enum": [
                 "STANDARD",
@@ -3089,21 +2772,7 @@ const docTemplate = `{
                 "TicketTypeFree"
             ]
         },
-        "github_com_StartLivin_screek_backend_internal_bookings.UserBookingDTO": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_cinema.Room": {
+        "cinema.Room": {
             "type": "object",
             "properties": {
                 "capacity": {
@@ -3121,15 +2790,15 @@ const docTemplate = `{
                 "seats": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_cinema.Seat"
+                        "$ref": "#/definitions/cinema.Seat"
                     }
                 },
                 "type": {
-                    "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_cinema.RoomType"
+                    "$ref": "#/definitions/cinema.RoomType"
                 }
             }
         },
-        "github_com_StartLivin_screek_backend_internal_cinema.RoomType": {
+        "cinema.RoomType": {
             "type": "string",
             "enum": [
                 "STANDARD",
@@ -3142,7 +2811,7 @@ const docTemplate = `{
                 "RoomTypeVIP"
             ]
         },
-        "github_com_StartLivin_screek_backend_internal_cinema.Seat": {
+        "cinema.Seat": {
             "type": "object",
             "properties": {
                 "id": {
@@ -3171,211 +2840,294 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_StartLivin_screek_backend_internal_movies.ErrorResponse": {
+        "handler.AddMovieToListRequestDTO": {
             "type": "object",
+            "required": [
+                "movie_id"
+            ],
             "properties": {
-                "error": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_movies.Genre": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "tmdb_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_movies.Movie": {
-            "type": "object",
-            "properties": {
-                "backdrop_url": {
-                    "type": "string"
-                },
-                "credits": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_movies.MovieCredit"
-                    }
-                },
-                "genres": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_movies.Genre"
-                    }
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "original_language": {
-                    "type": "string"
-                },
-                "overview": {
-                    "type": "string"
-                },
-                "poster_url": {
-                    "type": "string"
-                },
-                "release_date": {
-                    "type": "string"
-                },
-                "runtime": {
-                    "type": "integer"
-                },
-                "spoken_languages": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "tmdb_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_movies.MovieCredit": {
-            "type": "object",
-            "properties": {
-                "character": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
                 "movie_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "handler.AddWatchlistRequestDTO": {
+            "type": "object",
+            "required": [
+                "movie_id"
+            ],
+            "properties": {
+                "movie_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "handler.AnalyticsSummaryResponseDTO": {
+            "type": "object",
+            "properties": {
+                "end_date": {
+                    "type": "string"
                 },
-                "person": {
-                    "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_movies.Person"
+                "global_revenue": {
+                    "type": "number"
                 },
-                "person_id": {
+                "global_tickets": {
                     "type": "integer"
                 },
-                "role": {
+                "start_date": {
+                    "type": "string"
+                },
+                "stats_by_cinema": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handler.DailyCinemaStatsResponseDTO"
+                    }
+                }
+            }
+        },
+        "handler.AuthTokenResponse": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
                     "type": "string"
                 }
             }
         },
-        "github_com_StartLivin_screek_backend_internal_movies.Person": {
+        "handler.ChangePasswordRequest": {
+            "type": "object",
+            "required": [
+                "new_password",
+                "old_password"
+            ],
+            "properties": {
+                "new_password": {
+                    "type": "string",
+                    "minLength": 6
+                },
+                "old_password": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.CinemaAdminResponseDTO": {
             "type": "object",
             "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "city": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.CinemaResponseDTO": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "city": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
                 "name": {
                     "type": "string"
                 },
-                "profile_url": {
+                "phone": {
                     "type": "string"
                 },
-                "tmdb_id": {
-                    "type": "integer"
+                "rooms": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/cinema.Room"
+                    }
+                },
+                "updatedAt": {
+                    "type": "string"
                 }
             }
         },
-        "github_com_StartLivin_screek_backend_internal_movies.TMDBMovie": {
+        "handler.CinemaSessionsResponseDTO": {
             "type": "object",
             "properties": {
-                "id": {
+                "cinema_city": {
+                    "type": "string"
+                },
+                "cinema_id": {
                     "type": "integer"
                 },
-                "original_language": {
+                "cinema_name": {
                     "type": "string"
                 },
-                "overview": {
-                    "type": "string"
-                },
-                "poster_path": {
-                    "type": "string"
-                },
-                "release_date": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "vote_average": {
-                    "type": "number"
+                "sessions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handler.SessionResponseDTO"
+                    }
                 }
             }
         },
-        "github_com_StartLivin_screek_backend_internal_movies.TMDBPersonMovieCast": {
+        "handler.CreateCinemaRequestDTO": {
             "type": "object",
+            "required": [
+                "address",
+                "city",
+                "email",
+                "name",
+                "phone"
+            ],
             "properties": {
-                "character": {
+                "address": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "integer"
-                },
-                "original_title": {
+                "city": {
                     "type": "string"
                 },
-                "overview": {
+                "email": {
                     "type": "string"
                 },
-                "poster_path": {
+                "name": {
                     "type": "string"
                 },
-                "release_date": {
+                "phone": {
                     "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "vote_average": {
-                    "type": "number"
                 }
             }
         },
-        "github_com_StartLivin_screek_backend_internal_notifications.Notification": {
+        "handler.CreateMovieListRequestDTO": {
             "type": "object",
+            "required": [
+                "title"
+            ],
             "properties": {
-                "created_at": {
+                "description": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "integer"
-                },
-                "is_read": {
+                "is_public": {
                     "type": "boolean"
                 },
-                "link": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
+                "movie_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 },
                 "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.CreatePostRequest": {
+            "type": "object",
+            "required": [
+                "content",
+                "post_type"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string",
+                    "maxLength": 280
+                },
+                "is_spoiler": {
+                    "type": "boolean"
+                },
+                "post_type": {
+                    "type": "string",
+                    "enum": [
+                        "TEXT",
+                        "REVIEW",
+                        "SESSION_SHARE",
+                        "REPOST"
+                    ]
+                },
+                "reference_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "handler.CreateRoomRequestDTO": {
+            "type": "object",
+            "required": [
+                "capacity",
+                "cinema_id",
+                "name",
+                "type"
+            ],
+            "properties": {
+                "capacity": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "cinema_id": {
+                    "type": "integer"
+                },
+                "name": {
                     "type": "string"
                 },
                 "type": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                        "STANDARD",
+                        "IMAX",
+                        "VIP"
+                    ]
                 }
             }
         },
-        "github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse": {
+        "handler.CreateSessionRequestDTO": {
             "type": "object",
+            "required": [
+                "movie_id",
+                "price",
+                "room_id",
+                "session_type",
+                "start_time"
+            ],
             "properties": {
-                "message": {
+                "movie_id": {
+                    "type": "integer"
+                },
+                "price": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "room_id": {
+                    "type": "integer"
+                },
+                "session_type": {
+                    "type": "string",
+                    "enum": [
+                        "REGULAR",
+                        "PREMIERE",
+                        "RESCREENING",
+                        "FESTIVAL",
+                        "UNIVERSITY",
+                        "SHOWCASE"
+                    ]
+                },
+                "start_time": {
                     "type": "string"
                 }
             }
         },
-        "github_com_StartLivin_screek_backend_internal_users.CreateUserDTO": {
+        "handler.CreateUserDTO": {
             "type": "object",
             "required": [
                 "email",
@@ -3403,231 +3155,63 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_StartLivin_screek_backend_internal_users.UpdateUserDTO": {
+        "handler.DailyCinemaStatsResponseDTO": {
             "type": "object",
             "properties": {
-                "avatar_url": {
+                "cinema_name": {
                     "type": "string"
                 },
-                "bio": {
+                "date": {
                     "type": "string"
                 },
-                "default_city": {
-                    "type": "string"
+                "occupancy_rate": {
+                    "type": "number"
                 },
-                "name": {
-                    "type": "string"
+                "tickets_sold": {
+                    "type": "integer"
                 },
-                "pronouns": {
-                    "type": "string"
+                "total_revenue": {
+                    "type": "number"
                 }
             }
         },
-        "github_com_StartLivin_screek_backend_internal_users.UserDTO": {
+        "handler.FeedResponse": {
             "type": "object",
             "properties": {
-                "avatar_url": {
-                    "type": "string"
+                "next_cursor": {
+                    "type": "integer"
                 },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_StartLivin_screek_backend_internal_users.UserDetailsDTO": {
-            "type": "object",
-            "properties": {
-                "avatar_url": {
-                    "type": "string"
-                },
-                "bio": {
-                    "type": "string"
-                },
-                "default_city": {
-                    "type": "string"
-                },
-                "favorite_movies": {
+                "posts": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/handler.PostResponseDTO"
                     }
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "pronouns": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
                 }
             }
         },
-        "github_com_StartLivin_screek_backend_internal_users.UserMeDetailsDTO": {
+        "handler.ForgotPasswordRequest": {
             "type": "object",
+            "required": [
+                "email"
+            ],
             "properties": {
-                "avatar_url": {
-                    "type": "string"
-                },
-                "bio": {
-                    "type": "string"
-                },
-                "default_city": {
-                    "type": "string"
-                },
                 "email": {
                     "type": "string"
-                },
-                "favorite_movies": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "pronouns": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
                 }
             }
         },
-        "github_com_StartLivin_screek_backend_internal_users.UserStats": {
+        "handler.GenreStatsResponseDTO": {
             "type": "object",
             "properties": {
-                "last_recalc_at": {
+                "genre_name": {
                     "type": "string"
                 },
-                "top_genre_id": {
-                    "type": "integer"
-                },
-                "total_minutes": {
-                    "type": "integer"
-                },
-                "total_movies": {
-                    "type": "integer"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "string"
+                "total_revenue": {
+                    "type": "number"
                 }
             }
         },
-        "internal_bookings_handler.MovieResponseDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "is_premiere": {
-                    "type": "boolean"
-                },
-                "is_rescreening": {
-                    "type": "boolean"
-                },
-                "poster_url": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "tmdb_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "internal_bookings_handler.SeatResponseDTO": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "isOccupied": {
-                    "type": "boolean"
-                },
-                "number": {
-                    "type": "integer"
-                },
-                "posX": {
-                    "type": "integer"
-                },
-                "posY": {
-                    "type": "integer"
-                },
-                "roomID": {
-                    "type": "integer"
-                },
-                "row": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                }
-            }
-        },
-        "internal_catalog_handler.AddMovieToListRequestDTO": {
-            "type": "object",
-            "required": [
-                "movie_id"
-            ],
-            "properties": {
-                "movie_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "internal_catalog_handler.AddWatchlistRequestDTO": {
-            "type": "object",
-            "required": [
-                "movie_id"
-            ],
-            "properties": {
-                "movie_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "internal_catalog_handler.CreateMovieListRequestDTO": {
-            "type": "object",
-            "required": [
-                "title"
-            ],
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "is_public": {
-                    "type": "boolean"
-                },
-                "movie_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                },
-                "title": {
-                    "type": "string"
-                }
-            }
-        },
-        "internal_catalog_handler.LogMovieRequestDTO": {
+        "handler.LogMovieRequestDTO": {
             "type": "object",
             "properties": {
                 "liked": {
@@ -3643,7 +3227,22 @@ const docTemplate = `{
                 }
             }
         },
-        "internal_catalog_handler.MovieDetailResponseDTO": {
+        "handler.LoginRequest": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.MovieDetailResponseDTO": {
             "type": "object",
             "properties": {
                 "average_rating": {
@@ -3681,7 +3280,7 @@ const docTemplate = `{
                 }
             }
         },
-        "internal_catalog_handler.MovieListResponseDTO": {
+        "handler.MovieListResponseDTO": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -3704,14 +3303,14 @@ const docTemplate = `{
                 }
             }
         },
-        "internal_catalog_handler.MovieLogResponseDTO": {
+        "handler.MovieLogResponseDTO": {
             "type": "object",
             "properties": {
                 "liked": {
                     "type": "boolean"
                 },
                 "movie": {
-                    "$ref": "#/definitions/internal_catalog_handler.MovieDetailResponseDTO"
+                    "$ref": "#/definitions/handler.MovieDetailResponseDTO"
                 },
                 "movie_id": {
                     "type": "integer"
@@ -3727,7 +3326,47 @@ const docTemplate = `{
                 }
             }
         },
-        "internal_catalog_handler.MovieSummaryDTO": {
+        "handler.MovieResponseDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "is_premiere": {
+                    "type": "boolean"
+                },
+                "is_rescreening": {
+                    "type": "boolean"
+                },
+                "poster_url": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "tmdb_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "handler.MovieStatsDTO": {
+            "type": "object",
+            "properties": {
+                "movie_id": {
+                    "type": "integer"
+                },
+                "movie_title": {
+                    "type": "string"
+                },
+                "tickets_sold": {
+                    "type": "integer"
+                },
+                "total_revenue": {
+                    "type": "number"
+                }
+            }
+        },
+        "handler.MovieSummaryDTO": {
             "type": "object",
             "properties": {
                 "id": {
@@ -3744,241 +3383,72 @@ const docTemplate = `{
                 }
             }
         },
-        "internal_catalog_handler.WatchlistItemResponseDTO": {
+        "handler.NotificationResponseDTO": {
             "type": "object",
             "properties": {
-                "added_at": {
-                    "type": "string"
-                },
-                "movie": {
-                    "$ref": "#/definitions/internal_catalog_handler.MovieSummaryDTO"
-                }
-            }
-        },
-        "internal_cinema_handler.CinemaAdminResponseDTO": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "city": {
+                "created_at": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "internal_cinema_handler.CinemaResponseDTO": {
-            "type": "object",
-            "properties": {
-                "address": {
+                "is_read": {
+                    "type": "boolean"
+                },
+                "link": {
                     "type": "string"
                 },
-                "city": {
+                "message": {
                     "type": "string"
                 },
-                "createdAt": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                },
-                "rooms": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_StartLivin_screek_backend_internal_cinema.Room"
-                    }
-                },
-                "updatedAt": {
-                    "type": "string"
-                }
-            }
-        },
-        "internal_cinema_handler.CreateCinemaRequestDTO": {
-            "type": "object",
-            "required": [
-                "address",
-                "city",
-                "email",
-                "name",
-                "phone"
-            ],
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "city": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                }
-            }
-        },
-        "internal_cinema_handler.CreateRoomRequestDTO": {
-            "type": "object",
-            "required": [
-                "capacity",
-                "cinema_id",
-                "name",
-                "type"
-            ],
-            "properties": {
-                "capacity": {
-                    "type": "integer",
-                    "minimum": 1
-                },
-                "cinema_id": {
-                    "type": "integer"
-                },
-                "name": {
+                "title": {
                     "type": "string"
                 },
                 "type": {
-                    "type": "string",
-                    "enum": [
-                        "STANDARD",
-                        "IMAX",
-                        "VIP"
-                    ]
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
                 }
             }
         },
-        "internal_cinema_handler.CreateSessionRequestDTO": {
+        "handler.PayRequestDTO": {
             "type": "object",
             "required": [
-                "movie_id",
-                "price",
-                "room_id",
-                "session_type",
-                "start_time"
+                "payment_method"
             ],
             "properties": {
-                "movie_id": {
-                    "type": "integer"
-                },
-                "price": {
-                    "type": "integer",
-                    "minimum": 0
-                },
-                "room_id": {
-                    "type": "integer"
-                },
-                "session_type": {
-                    "type": "string",
-                    "enum": [
-                        "REGULAR",
-                        "PREMIERE",
-                        "RESCREENING",
-                        "FESTIVAL",
-                        "UNIVERSITY",
-                        "SHOWCASE"
-                    ]
-                },
-                "start_time": {
+                "payment_method": {
                     "type": "string"
                 }
             }
         },
-        "internal_cinema_handler.SessionAdminResponseDTO": {
+        "handler.PayResponseDTO": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "movie_title": {
+                "client_secret": {
                     "type": "string"
                 },
-                "price": {
-                    "type": "integer"
-                },
-                "room_name": {
-                    "type": "string"
-                },
-                "session_type": {
-                    "type": "string"
-                },
-                "start_time": {
+                "message": {
                     "type": "string"
                 }
             }
         },
-        "internal_social_handler.CreatePostRequest": {
-            "type": "object",
-            "required": [
-                "content",
-                "post_type"
-            ],
-            "properties": {
-                "content": {
-                    "type": "string",
-                    "maxLength": 280
-                },
-                "is_spoiler": {
-                    "type": "boolean"
-                },
-                "post_type": {
-                    "type": "string",
-                    "enum": [
-                        "TEXT",
-                        "REVIEW",
-                        "SESSION_SHARE",
-                        "REPOST"
-                    ]
-                },
-                "reference_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "internal_social_handler.FeedResponse": {
-            "type": "object",
-            "properties": {
-                "next_cursor": {
-                    "type": "integer"
-                },
-                "posts": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/internal_social_handler.PostResponseDTO"
-                    }
-                }
-            }
-        },
-        "internal_social_handler.PostDetailResponseDTO": {
+        "handler.PostDetailResponseDTO": {
             "type": "object",
             "properties": {
                 "post": {
-                    "$ref": "#/definitions/internal_social_handler.PostResponseDTO"
+                    "$ref": "#/definitions/handler.PostResponseDTO"
                 },
                 "replies": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/internal_social_handler.PostResponseDTO"
+                        "$ref": "#/definitions/handler.PostResponseDTO"
                     }
                 }
             }
         },
-        "internal_social_handler.PostResponseDTO": {
+        "handler.PostResponseDTO": {
             "type": "object",
             "properties": {
                 "author": {
@@ -4006,11 +3476,11 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "session_data": {
-                    "$ref": "#/definitions/internal_social_handler.PostSessionData"
+                    "$ref": "#/definitions/handler.PostSessionData"
                 }
             }
         },
-        "internal_social_handler.PostSessionData": {
+        "handler.PostSessionData": {
             "type": "object",
             "properties": {
                 "cinema_name": {
@@ -4033,7 +3503,18 @@ const docTemplate = `{
                 }
             }
         },
-        "internal_social_handler.ReplyRequest": {
+        "handler.RefreshRequest": {
+            "type": "object",
+            "required": [
+                "refresh_token"
+            ],
+            "properties": {
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.ReplyRequest": {
             "type": "object",
             "required": [
                 "content"
@@ -4045,7 +3526,183 @@ const docTemplate = `{
                 }
             }
         },
-        "internal_social_handler.ToggleFollowResponse": {
+        "handler.ReserveRequestDTO": {
+            "type": "object",
+            "required": [
+                "session_id",
+                "tickets_request"
+            ],
+            "properties": {
+                "session_id": {
+                    "type": "integer"
+                },
+                "tickets_request": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": "#/definitions/handler.TicketRequest"
+                    }
+                }
+            }
+        },
+        "handler.ReserveResponseDTO": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "transaction_id": {
+                    "type": "string"
+                },
+                "valor_total_centavos": {
+                    "type": "integer"
+                }
+            }
+        },
+        "handler.ResetPasswordRequest": {
+            "type": "object",
+            "required": [
+                "new_password",
+                "token"
+            ],
+            "properties": {
+                "new_password": {
+                    "type": "string",
+                    "minLength": 6
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.SeatResponseDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "isOccupied": {
+                    "type": "boolean"
+                },
+                "number": {
+                    "type": "integer"
+                },
+                "posX": {
+                    "type": "integer"
+                },
+                "posY": {
+                    "type": "integer"
+                },
+                "roomID": {
+                    "type": "integer"
+                },
+                "row": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.SessionAdminResponseDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "movie_title": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "room_name": {
+                    "type": "string"
+                },
+                "session_type": {
+                    "type": "string"
+                },
+                "start_time": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.SessionResponseDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "room_type": {
+                    "type": "string"
+                },
+                "session_type": {
+                    "type": "string"
+                },
+                "start_time": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.TicketRequest": {
+            "type": "object",
+            "required": [
+                "type"
+            ],
+            "properties": {
+                "seat_id": {
+                    "type": "integer"
+                },
+                "type": {
+                    "enum": [
+                        "STANDARD",
+                        "HALF",
+                        "FREE"
+                    ],
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/bookings.TicketType"
+                        }
+                    ]
+                }
+            }
+        },
+        "handler.TicketResponseDTO": {
+            "type": "object",
+            "properties": {
+                "cinema": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "movie_name": {
+                    "type": "string"
+                },
+                "qr_code": {
+                    "type": "string"
+                },
+                "room": {
+                    "type": "string"
+                },
+                "seat": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "ticket_id": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/handler.UserBookingDTO"
+                }
+            }
+        },
+        "handler.ToggleFollowResponse": {
             "type": "object",
             "properties": {
                 "is_following": {
@@ -4056,7 +3713,7 @@ const docTemplate = `{
                 }
             }
         },
-        "internal_social_handler.ToggleLikeResponse": {
+        "handler.ToggleLikeResponse": {
             "type": "object",
             "properties": {
                 "liked": {
@@ -4067,7 +3724,7 @@ const docTemplate = `{
                 }
             }
         },
-        "internal_social_handler.UpdatePostRequest": {
+        "handler.UpdatePostRequest": {
             "type": "object",
             "required": [
                 "content"
@@ -4082,7 +3739,90 @@ const docTemplate = `{
                 }
             }
         },
-        "internal_social_handler.UserFollowResponseDTO": {
+        "handler.UpdateUserDTO": {
+            "type": "object",
+            "properties": {
+                "avatar_url": {
+                    "type": "string"
+                },
+                "bio": {
+                    "type": "string"
+                },
+                "default_city": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "pronouns": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.UserBookingDTO": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.UserDTO": {
+            "type": "object",
+            "properties": {
+                "avatar_url": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.UserDetailsDTO": {
+            "type": "object",
+            "properties": {
+                "avatar_url": {
+                    "type": "string"
+                },
+                "bio": {
+                    "type": "string"
+                },
+                "default_city": {
+                    "type": "string"
+                },
+                "favorite_movies": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "pronouns": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.UserFollowResponseDTO": {
             "type": "object",
             "properties": {
                 "avatar_url": {
@@ -4093,6 +3833,257 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "handler.UserMeDetailsDTO": {
+            "type": "object",
+            "properties": {
+                "avatar_url": {
+                    "type": "string"
+                },
+                "bio": {
+                    "type": "string"
+                },
+                "default_city": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "favorite_movies": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "pronouns": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.UserStatsDTO": {
+            "type": "object",
+            "properties": {
+                "top_genre_name": {
+                    "type": "string"
+                },
+                "total_minutes": {
+                    "type": "integer"
+                },
+                "total_movies": {
+                    "type": "integer"
+                }
+            }
+        },
+        "handler.WatchlistItemResponseDTO": {
+            "type": "object",
+            "properties": {
+                "added_at": {
+                    "type": "string"
+                },
+                "movie": {
+                    "$ref": "#/definitions/handler.MovieSummaryDTO"
+                }
+            }
+        },
+        "httputil.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "httputil.MessageResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_auth_handler.UpdateRoleDTO": {
+            "type": "object",
+            "required": [
+                "role"
+            ],
+            "properties": {
+                "role": {
+                    "type": "string",
+                    "enum": [
+                        "USER",
+                        "MANAGER",
+                        "ADMIN"
+                    ]
+                }
+            }
+        },
+        "movies.Genre": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "tmdb_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "movies.Movie": {
+            "type": "object",
+            "properties": {
+                "backdrop_url": {
+                    "type": "string"
+                },
+                "credits": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/movies.MovieCredit"
+                    }
+                },
+                "genres": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/movies.Genre"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "original_language": {
+                    "type": "string"
+                },
+                "overview": {
+                    "type": "string"
+                },
+                "poster_url": {
+                    "type": "string"
+                },
+                "release_date": {
+                    "type": "string"
+                },
+                "runtime": {
+                    "type": "integer"
+                },
+                "spoken_languages": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "tmdb_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "movies.MovieCredit": {
+            "type": "object",
+            "properties": {
+                "character": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "movie_id": {
+                    "type": "integer"
+                },
+                "person": {
+                    "$ref": "#/definitions/movies.Person"
+                },
+                "person_id": {
+                    "type": "integer"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "movies.Person": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "profile_url": {
+                    "type": "string"
+                },
+                "tmdb_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "tmdb.TMDBMovie": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "original_language": {
+                    "type": "string"
+                },
+                "overview": {
+                    "type": "string"
+                },
+                "poster_path": {
+                    "type": "string"
+                },
+                "release_date": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "vote_average": {
+                    "type": "number"
+                }
+            }
+        },
+        "tmdb.TMDBPersonMovieCast": {
+            "type": "object",
+            "properties": {
+                "character": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "original_title": {
+                    "type": "string"
+                },
+                "overview": {
+                    "type": "string"
+                },
+                "poster_path": {
+                    "type": "string"
+                },
+                "release_date": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "vote_average": {
+                    "type": "number"
                 }
             }
         }

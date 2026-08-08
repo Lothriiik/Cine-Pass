@@ -1,213 +1,6 @@
 basePath: /
 definitions:
-  github_com_StartLivin_screek_backend_internal_analytics.AnalyticsSummaryResponseDTO:
-    properties:
-      end_date:
-        type: string
-      global_revenue:
-        type: number
-      global_tickets:
-        type: integer
-      start_date:
-        type: string
-      stats_by_cinema:
-        items:
-          $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_analytics.DailyCinemaStatsResponseDTO'
-        type: array
-    type: object
-  github_com_StartLivin_screek_backend_internal_analytics.DailyCinemaStatsResponseDTO:
-    properties:
-      cinema_name:
-        type: string
-      date:
-        type: string
-      occupancy_rate:
-        type: number
-      tickets_sold:
-        type: integer
-      total_revenue:
-        type: number
-    type: object
-  github_com_StartLivin_screek_backend_internal_analytics.GenreStatsResponseDTO:
-    properties:
-      genre_name:
-        type: string
-      total_revenue:
-        type: number
-    type: object
-  github_com_StartLivin_screek_backend_internal_analytics.MovieStatsDTO:
-    properties:
-      movie_id:
-        type: integer
-      movie_title:
-        type: string
-      tickets_sold:
-        type: integer
-      total_revenue:
-        type: number
-    type: object
-  github_com_StartLivin_screek_backend_internal_auth.AuthTokenResponse:
-    properties:
-      access_token:
-        type: string
-      refresh_token:
-        type: string
-    type: object
-  github_com_StartLivin_screek_backend_internal_auth.ChangePasswordRequest:
-    properties:
-      new_password:
-        minLength: 6
-        type: string
-      old_password:
-        type: string
-    required:
-    - new_password
-    - old_password
-    type: object
-  github_com_StartLivin_screek_backend_internal_auth.ForgotPasswordRequest:
-    properties:
-      email:
-        type: string
-    required:
-    - email
-    type: object
-  github_com_StartLivin_screek_backend_internal_auth.LoginRequest:
-    properties:
-      password:
-        type: string
-      username:
-        type: string
-    required:
-    - password
-    - username
-    type: object
-  github_com_StartLivin_screek_backend_internal_auth.RefreshRequest:
-    properties:
-      refresh_token:
-        type: string
-    required:
-    - refresh_token
-    type: object
-  github_com_StartLivin_screek_backend_internal_auth.ResetPasswordRequest:
-    properties:
-      new_password:
-        minLength: 6
-        type: string
-      token:
-        type: string
-    required:
-    - new_password
-    - token
-    type: object
-  github_com_StartLivin_screek_backend_internal_auth.UpdateRoleDTO:
-    properties:
-      role:
-        enum:
-        - USER
-        - MANAGER
-        - ADMIN
-        type: string
-    required:
-    - role
-    type: object
-  github_com_StartLivin_screek_backend_internal_bookings.CinemaSessionsResponseDTO:
-    properties:
-      cinema_city:
-        type: string
-      cinema_id:
-        type: integer
-      cinema_name:
-        type: string
-      sessions:
-        items:
-          $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_bookings.SessionResponseDTO'
-        type: array
-    type: object
-  github_com_StartLivin_screek_backend_internal_bookings.PayRequestDTO:
-    properties:
-      payment_method:
-        type: string
-    required:
-    - payment_method
-    type: object
-  github_com_StartLivin_screek_backend_internal_bookings.PayResponseDTO:
-    properties:
-      client_secret:
-        type: string
-      message:
-        type: string
-    type: object
-  github_com_StartLivin_screek_backend_internal_bookings.ReserveRequestDTO:
-    properties:
-      session_id:
-        type: integer
-      tickets_request:
-        items:
-          $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_bookings.TicketRequest'
-        minItems: 1
-        type: array
-    required:
-    - session_id
-    - tickets_request
-    type: object
-  github_com_StartLivin_screek_backend_internal_bookings.ReserveResponseDTO:
-    properties:
-      message:
-        type: string
-      transaction_id:
-        type: string
-      valor_total_centavos:
-        type: integer
-    type: object
-  github_com_StartLivin_screek_backend_internal_bookings.SessionResponseDTO:
-    properties:
-      id:
-        type: integer
-      price:
-        type: integer
-      room_type:
-        type: string
-      session_type:
-        type: string
-      start_time:
-        type: string
-    type: object
-  github_com_StartLivin_screek_backend_internal_bookings.TicketRequest:
-    properties:
-      seat_id:
-        type: integer
-      type:
-        allOf:
-        - $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_bookings.TicketType'
-        enum:
-        - STANDARD
-        - HALF
-        - FREE
-    required:
-    - type
-    type: object
-  github_com_StartLivin_screek_backend_internal_bookings.TicketResponseDTO:
-    properties:
-      cinema:
-        type: string
-      date:
-        type: string
-      movie_name:
-        type: string
-      qr_code:
-        type: string
-      room:
-        type: string
-      seat:
-        type: string
-      status:
-        type: string
-      ticket_id:
-        type: string
-      user:
-        $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_bookings.UserBookingDTO'
-    type: object
-  github_com_StartLivin_screek_backend_internal_bookings.TicketType:
+  bookings.TicketType:
     enum:
     - STANDARD
     - HALF
@@ -217,16 +10,7 @@ definitions:
     - TicketTypeStandard
     - TicketTypeHalf
     - TicketTypeFree
-  github_com_StartLivin_screek_backend_internal_bookings.UserBookingDTO:
-    properties:
-      email:
-        type: string
-      id:
-        type: string
-      name:
-        type: string
-    type: object
-  github_com_StartLivin_screek_backend_internal_cinema.Room:
+  cinema.Room:
     properties:
       capacity:
         type: integer
@@ -238,12 +22,12 @@ definitions:
         type: string
       seats:
         items:
-          $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_cinema.Seat'
+          $ref: '#/definitions/cinema.Seat'
         type: array
       type:
-        $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_cinema.RoomType'
+        $ref: '#/definitions/cinema.RoomType'
     type: object
-  github_com_StartLivin_screek_backend_internal_cinema.RoomType:
+  cinema.RoomType:
     enum:
     - STANDARD
     - IMAX
@@ -253,7 +37,7 @@ definitions:
     - RoomTypeStandard
     - RoomTypeIMAX
     - RoomTypeVIP
-  github_com_StartLivin_screek_backend_internal_cinema.Seat:
+  cinema.Seat:
     properties:
       id:
         type: integer
@@ -272,390 +56,54 @@ definitions:
       type:
         type: string
     type: object
-  github_com_StartLivin_screek_backend_internal_movies.ErrorResponse:
+  handler.AddMovieToListRequestDTO:
     properties:
-      error:
-        type: string
-    type: object
-  github_com_StartLivin_screek_backend_internal_movies.Genre:
-    properties:
-      id:
-        type: integer
-      name:
-        type: string
-      tmdb_id:
-        type: integer
-    type: object
-  github_com_StartLivin_screek_backend_internal_movies.Movie:
-    properties:
-      backdrop_url:
-        type: string
-      credits:
-        items:
-          $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_movies.MovieCredit'
-        type: array
-      genres:
-        items:
-          $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_movies.Genre'
-        type: array
-      id:
-        type: integer
-      original_language:
-        type: string
-      overview:
-        type: string
-      poster_url:
-        type: string
-      release_date:
-        type: string
-      runtime:
-        type: integer
-      spoken_languages:
-        type: string
-      status:
-        type: string
-      title:
-        type: string
-      tmdb_id:
-        type: integer
-    type: object
-  github_com_StartLivin_screek_backend_internal_movies.MovieCredit:
-    properties:
-      character:
-        type: string
-      id:
-        type: integer
       movie_id:
         type: integer
-      person:
-        $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_movies.Person'
-      person_id:
-        type: integer
-      role:
-        type: string
+    required:
+    - movie_id
     type: object
-  github_com_StartLivin_screek_backend_internal_movies.Person:
+  handler.AddWatchlistRequestDTO:
     properties:
-      id:
+      movie_id:
         type: integer
-      name:
-        type: string
-      profile_url:
-        type: string
-      tmdb_id:
-        type: integer
+    required:
+    - movie_id
     type: object
-  github_com_StartLivin_screek_backend_internal_movies.TMDBMovie:
+  handler.AnalyticsSummaryResponseDTO:
     properties:
-      id:
-        type: integer
-      original_language:
+      end_date:
         type: string
-      overview:
-        type: string
-      poster_path:
-        type: string
-      release_date:
-        type: string
-      title:
-        type: string
-      vote_average:
+      global_revenue:
         type: number
-    type: object
-  github_com_StartLivin_screek_backend_internal_movies.TMDBPersonMovieCast:
-    properties:
-      character:
-        type: string
-      id:
+      global_tickets:
         type: integer
-      original_title:
+      start_date:
         type: string
-      overview:
-        type: string
-      poster_path:
-        type: string
-      release_date:
-        type: string
-      title:
-        type: string
-      vote_average:
-        type: number
+      stats_by_cinema:
+        items:
+          $ref: '#/definitions/handler.DailyCinemaStatsResponseDTO'
+        type: array
     type: object
-  github_com_StartLivin_screek_backend_internal_notifications.Notification:
+  handler.AuthTokenResponse:
     properties:
-      created_at:
+      access_token:
         type: string
-      id:
-        type: integer
-      is_read:
-        type: boolean
-      link:
-        type: string
-      message:
-        type: string
-      title:
-        type: string
-      type:
-        type: string
-      user_id:
+      refresh_token:
         type: string
     type: object
-  github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse:
+  handler.ChangePasswordRequest:
     properties:
-      message:
-        type: string
-    type: object
-  github_com_StartLivin_screek_backend_internal_users.CreateUserDTO:
-    properties:
-      email:
-        type: string
-      name:
-        type: string
-      password:
+      new_password:
         minLength: 6
         type: string
-      password_confirmation:
-        type: string
-      username:
-        minLength: 4
+      old_password:
         type: string
     required:
-    - email
-    - name
-    - password
-    - username
+    - new_password
+    - old_password
     type: object
-  github_com_StartLivin_screek_backend_internal_users.UpdateUserDTO:
-    properties:
-      avatar_url:
-        type: string
-      bio:
-        type: string
-      default_city:
-        type: string
-      name:
-        type: string
-      pronouns:
-        type: string
-    type: object
-  github_com_StartLivin_screek_backend_internal_users.UserDTO:
-    properties:
-      avatar_url:
-        type: string
-      id:
-        type: string
-      name:
-        type: string
-      username:
-        type: string
-    type: object
-  github_com_StartLivin_screek_backend_internal_users.UserDetailsDTO:
-    properties:
-      avatar_url:
-        type: string
-      bio:
-        type: string
-      default_city:
-        type: string
-      favorite_movies:
-        items:
-          type: integer
-        type: array
-      id:
-        type: string
-      name:
-        type: string
-      pronouns:
-        type: string
-      username:
-        type: string
-    type: object
-  github_com_StartLivin_screek_backend_internal_users.UserMeDetailsDTO:
-    properties:
-      avatar_url:
-        type: string
-      bio:
-        type: string
-      default_city:
-        type: string
-      email:
-        type: string
-      favorite_movies:
-        items:
-          type: integer
-        type: array
-      id:
-        type: string
-      name:
-        type: string
-      pronouns:
-        type: string
-      username:
-        type: string
-    type: object
-  github_com_StartLivin_screek_backend_internal_users.UserStats:
-    properties:
-      last_recalc_at:
-        type: string
-      top_genre_id:
-        type: integer
-      total_minutes:
-        type: integer
-      total_movies:
-        type: integer
-      updated_at:
-        type: string
-      user_id:
-        type: string
-    type: object
-  internal_bookings_handler.MovieResponseDTO:
-    properties:
-      id:
-        type: integer
-      is_premiere:
-        type: boolean
-      is_rescreening:
-        type: boolean
-      poster_url:
-        type: string
-      title:
-        type: string
-      tmdb_id:
-        type: integer
-    type: object
-  internal_bookings_handler.SeatResponseDTO:
-    properties:
-      id:
-        type: integer
-      isOccupied:
-        type: boolean
-      number:
-        type: integer
-      posX:
-        type: integer
-      posY:
-        type: integer
-      roomID:
-        type: integer
-      row:
-        type: string
-      type:
-        type: string
-    type: object
-  internal_catalog_handler.AddMovieToListRequestDTO:
-    properties:
-      movie_id:
-        type: integer
-    required:
-    - movie_id
-    type: object
-  internal_catalog_handler.AddWatchlistRequestDTO:
-    properties:
-      movie_id:
-        type: integer
-    required:
-    - movie_id
-    type: object
-  internal_catalog_handler.CreateMovieListRequestDTO:
-    properties:
-      description:
-        type: string
-      is_public:
-        type: boolean
-      movie_ids:
-        items:
-          type: integer
-        type: array
-      title:
-        type: string
-    required:
-    - title
-    type: object
-  internal_catalog_handler.LogMovieRequestDTO:
-    properties:
-      liked:
-        type: boolean
-      rating:
-        maximum: 10
-        minimum: 0
-        type: number
-      watched:
-        type: boolean
-    type: object
-  internal_catalog_handler.MovieDetailResponseDTO:
-    properties:
-      average_rating:
-        type: number
-      backdrop_url:
-        type: string
-      id:
-        type: integer
-      overview:
-        type: string
-      poster_url:
-        type: string
-      release_date:
-        type: string
-      runtime:
-        type: integer
-      title:
-        type: string
-      tmdb_id:
-        type: integer
-      total_likes:
-        type: integer
-      total_reviews:
-        type: integer
-    type: object
-  internal_catalog_handler.MovieListResponseDTO:
-    properties:
-      created_at:
-        type: string
-      description:
-        type: string
-      id:
-        type: integer
-      is_public:
-        type: boolean
-      item_count:
-        type: integer
-      title:
-        type: string
-    type: object
-  internal_catalog_handler.MovieLogResponseDTO:
-    properties:
-      liked:
-        type: boolean
-      movie:
-        $ref: '#/definitions/internal_catalog_handler.MovieDetailResponseDTO'
-      movie_id:
-        type: integer
-      rating:
-        type: number
-      updated_at:
-        type: string
-      watched:
-        type: boolean
-    type: object
-  internal_catalog_handler.MovieSummaryDTO:
-    properties:
-      id:
-        type: integer
-      poster_url:
-        type: string
-      release_year:
-        type: integer
-      title:
-        type: string
-    type: object
-  internal_catalog_handler.WatchlistItemResponseDTO:
-    properties:
-      added_at:
-        type: string
-      movie:
-        $ref: '#/definitions/internal_catalog_handler.MovieSummaryDTO'
-    type: object
-  internal_cinema_handler.CinemaAdminResponseDTO:
+  handler.CinemaAdminResponseDTO:
     properties:
       address:
         type: string
@@ -666,7 +114,7 @@ definitions:
       name:
         type: string
     type: object
-  internal_cinema_handler.CinemaResponseDTO:
+  handler.CinemaResponseDTO:
     properties:
       address:
         type: string
@@ -684,12 +132,25 @@ definitions:
         type: string
       rooms:
         items:
-          $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_cinema.Room'
+          $ref: '#/definitions/cinema.Room'
         type: array
       updatedAt:
         type: string
     type: object
-  internal_cinema_handler.CreateCinemaRequestDTO:
+  handler.CinemaSessionsResponseDTO:
+    properties:
+      cinema_city:
+        type: string
+      cinema_id:
+        type: integer
+      cinema_name:
+        type: string
+      sessions:
+        items:
+          $ref: '#/definitions/handler.SessionResponseDTO'
+        type: array
+    type: object
+  handler.CreateCinemaRequestDTO:
     properties:
       address:
         type: string
@@ -708,7 +169,42 @@ definitions:
     - name
     - phone
     type: object
-  internal_cinema_handler.CreateRoomRequestDTO:
+  handler.CreateMovieListRequestDTO:
+    properties:
+      description:
+        type: string
+      is_public:
+        type: boolean
+      movie_ids:
+        items:
+          type: integer
+        type: array
+      title:
+        type: string
+    required:
+    - title
+    type: object
+  handler.CreatePostRequest:
+    properties:
+      content:
+        maxLength: 280
+        type: string
+      is_spoiler:
+        type: boolean
+      post_type:
+        enum:
+        - TEXT
+        - REVIEW
+        - SESSION_SHARE
+        - REPOST
+        type: string
+      reference_id:
+        type: integer
+    required:
+    - content
+    - post_type
+    type: object
+  handler.CreateRoomRequestDTO:
     properties:
       capacity:
         minimum: 1
@@ -729,7 +225,7 @@ definitions:
     - name
     - type
     type: object
-  internal_cinema_handler.CreateSessionRequestDTO:
+  handler.CreateSessionRequestDTO:
     properties:
       movie_id:
         type: integer
@@ -756,60 +252,218 @@ definitions:
     - session_type
     - start_time
     type: object
-  internal_cinema_handler.SessionAdminResponseDTO:
+  handler.CreateUserDTO:
     properties:
-      id:
-        type: integer
-      movie_title:
+      email:
         type: string
-      price:
-        type: integer
-      room_name:
+      name:
         type: string
-      session_type:
+      password:
+        minLength: 6
         type: string
-      start_time:
+      password_confirmation:
         type: string
-    type: object
-  internal_social_handler.CreatePostRequest:
-    properties:
-      content:
-        maxLength: 280
+      username:
+        minLength: 4
         type: string
-      is_spoiler:
-        type: boolean
-      post_type:
-        enum:
-        - TEXT
-        - REVIEW
-        - SESSION_SHARE
-        - REPOST
-        type: string
-      reference_id:
-        type: integer
     required:
-    - content
-    - post_type
+    - email
+    - name
+    - password
+    - username
     type: object
-  internal_social_handler.FeedResponse:
+  handler.DailyCinemaStatsResponseDTO:
+    properties:
+      cinema_name:
+        type: string
+      date:
+        type: string
+      occupancy_rate:
+        type: number
+      tickets_sold:
+        type: integer
+      total_revenue:
+        type: number
+    type: object
+  handler.FeedResponse:
     properties:
       next_cursor:
         type: integer
       posts:
         items:
-          $ref: '#/definitions/internal_social_handler.PostResponseDTO'
+          $ref: '#/definitions/handler.PostResponseDTO'
         type: array
     type: object
-  internal_social_handler.PostDetailResponseDTO:
+  handler.ForgotPasswordRequest:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
+  handler.GenreStatsResponseDTO:
+    properties:
+      genre_name:
+        type: string
+      total_revenue:
+        type: number
+    type: object
+  handler.LogMovieRequestDTO:
+    properties:
+      liked:
+        type: boolean
+      rating:
+        maximum: 10
+        minimum: 0
+        type: number
+      watched:
+        type: boolean
+    type: object
+  handler.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  handler.MovieDetailResponseDTO:
+    properties:
+      average_rating:
+        type: number
+      backdrop_url:
+        type: string
+      id:
+        type: integer
+      overview:
+        type: string
+      poster_url:
+        type: string
+      release_date:
+        type: string
+      runtime:
+        type: integer
+      title:
+        type: string
+      tmdb_id:
+        type: integer
+      total_likes:
+        type: integer
+      total_reviews:
+        type: integer
+    type: object
+  handler.MovieListResponseDTO:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      is_public:
+        type: boolean
+      item_count:
+        type: integer
+      title:
+        type: string
+    type: object
+  handler.MovieLogResponseDTO:
+    properties:
+      liked:
+        type: boolean
+      movie:
+        $ref: '#/definitions/handler.MovieDetailResponseDTO'
+      movie_id:
+        type: integer
+      rating:
+        type: number
+      updated_at:
+        type: string
+      watched:
+        type: boolean
+    type: object
+  handler.MovieResponseDTO:
+    properties:
+      id:
+        type: integer
+      is_premiere:
+        type: boolean
+      is_rescreening:
+        type: boolean
+      poster_url:
+        type: string
+      title:
+        type: string
+      tmdb_id:
+        type: integer
+    type: object
+  handler.MovieStatsDTO:
+    properties:
+      movie_id:
+        type: integer
+      movie_title:
+        type: string
+      tickets_sold:
+        type: integer
+      total_revenue:
+        type: number
+    type: object
+  handler.MovieSummaryDTO:
+    properties:
+      id:
+        type: integer
+      poster_url:
+        type: string
+      release_year:
+        type: integer
+      title:
+        type: string
+    type: object
+  handler.NotificationResponseDTO:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      is_read:
+        type: boolean
+      link:
+        type: string
+      message:
+        type: string
+      title:
+        type: string
+      type:
+        type: string
+      user_id:
+        type: string
+    type: object
+  handler.PayRequestDTO:
+    properties:
+      payment_method:
+        type: string
+    required:
+    - payment_method
+    type: object
+  handler.PayResponseDTO:
+    properties:
+      client_secret:
+        type: string
+      message:
+        type: string
+    type: object
+  handler.PostDetailResponseDTO:
     properties:
       post:
-        $ref: '#/definitions/internal_social_handler.PostResponseDTO'
+        $ref: '#/definitions/handler.PostResponseDTO'
       replies:
         items:
-          $ref: '#/definitions/internal_social_handler.PostResponseDTO'
+          $ref: '#/definitions/handler.PostResponseDTO'
         type: array
     type: object
-  internal_social_handler.PostResponseDTO:
+  handler.PostResponseDTO:
     properties:
       author:
         type: string
@@ -828,9 +482,9 @@ definitions:
       replies_count:
         type: integer
       session_data:
-        $ref: '#/definitions/internal_social_handler.PostSessionData'
+        $ref: '#/definitions/handler.PostSessionData'
     type: object
-  internal_social_handler.PostSessionData:
+  handler.PostSessionData:
     properties:
       cinema_name:
         type: string
@@ -845,7 +499,14 @@ definitions:
       start_time:
         type: string
     type: object
-  internal_social_handler.ReplyRequest:
+  handler.RefreshRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  handler.ReplyRequest:
     properties:
       content:
         maxLength: 280
@@ -853,21 +514,136 @@ definitions:
     required:
     - content
     type: object
-  internal_social_handler.ToggleFollowResponse:
+  handler.ReserveRequestDTO:
+    properties:
+      session_id:
+        type: integer
+      tickets_request:
+        items:
+          $ref: '#/definitions/handler.TicketRequest'
+        minItems: 1
+        type: array
+    required:
+    - session_id
+    - tickets_request
+    type: object
+  handler.ReserveResponseDTO:
+    properties:
+      message:
+        type: string
+      transaction_id:
+        type: string
+      valor_total_centavos:
+        type: integer
+    type: object
+  handler.ResetPasswordRequest:
+    properties:
+      new_password:
+        minLength: 6
+        type: string
+      token:
+        type: string
+    required:
+    - new_password
+    - token
+    type: object
+  handler.SeatResponseDTO:
+    properties:
+      id:
+        type: integer
+      isOccupied:
+        type: boolean
+      number:
+        type: integer
+      posX:
+        type: integer
+      posY:
+        type: integer
+      roomID:
+        type: integer
+      row:
+        type: string
+      type:
+        type: string
+    type: object
+  handler.SessionAdminResponseDTO:
+    properties:
+      id:
+        type: integer
+      movie_title:
+        type: string
+      price:
+        type: integer
+      room_name:
+        type: string
+      session_type:
+        type: string
+      start_time:
+        type: string
+    type: object
+  handler.SessionResponseDTO:
+    properties:
+      id:
+        type: integer
+      price:
+        type: integer
+      room_type:
+        type: string
+      session_type:
+        type: string
+      start_time:
+        type: string
+    type: object
+  handler.TicketRequest:
+    properties:
+      seat_id:
+        type: integer
+      type:
+        allOf:
+        - $ref: '#/definitions/bookings.TicketType'
+        enum:
+        - STANDARD
+        - HALF
+        - FREE
+    required:
+    - type
+    type: object
+  handler.TicketResponseDTO:
+    properties:
+      cinema:
+        type: string
+      date:
+        type: string
+      movie_name:
+        type: string
+      qr_code:
+        type: string
+      room:
+        type: string
+      seat:
+        type: string
+      status:
+        type: string
+      ticket_id:
+        type: string
+      user:
+        $ref: '#/definitions/handler.UserBookingDTO'
+    type: object
+  handler.ToggleFollowResponse:
     properties:
       is_following:
         type: boolean
       message:
         type: string
     type: object
-  internal_social_handler.ToggleLikeResponse:
+  handler.ToggleLikeResponse:
     properties:
       liked:
         type: boolean
       message:
         type: string
     type: object
-  internal_social_handler.UpdatePostRequest:
+  handler.UpdatePostRequest:
     properties:
       content:
         maxLength: 280
@@ -877,7 +653,61 @@ definitions:
     required:
     - content
     type: object
-  internal_social_handler.UserFollowResponseDTO:
+  handler.UpdateUserDTO:
+    properties:
+      avatar_url:
+        type: string
+      bio:
+        type: string
+      default_city:
+        type: string
+      name:
+        type: string
+      pronouns:
+        type: string
+    type: object
+  handler.UserBookingDTO:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  handler.UserDTO:
+    properties:
+      avatar_url:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      username:
+        type: string
+    type: object
+  handler.UserDetailsDTO:
+    properties:
+      avatar_url:
+        type: string
+      bio:
+        type: string
+      default_city:
+        type: string
+      favorite_movies:
+        items:
+          type: integer
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+      pronouns:
+        type: string
+      username:
+        type: string
+    type: object
+  handler.UserFollowResponseDTO:
     properties:
       avatar_url:
         type: string
@@ -885,6 +715,170 @@ definitions:
         type: string
       username:
         type: string
+    type: object
+  handler.UserMeDetailsDTO:
+    properties:
+      avatar_url:
+        type: string
+      bio:
+        type: string
+      default_city:
+        type: string
+      email:
+        type: string
+      favorite_movies:
+        items:
+          type: integer
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+      pronouns:
+        type: string
+      username:
+        type: string
+    type: object
+  handler.UserStatsDTO:
+    properties:
+      top_genre_name:
+        type: string
+      total_minutes:
+        type: integer
+      total_movies:
+        type: integer
+    type: object
+  handler.WatchlistItemResponseDTO:
+    properties:
+      added_at:
+        type: string
+      movie:
+        $ref: '#/definitions/handler.MovieSummaryDTO'
+    type: object
+  httputil.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  httputil.MessageResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  internal_auth_handler.UpdateRoleDTO:
+    properties:
+      role:
+        enum:
+        - USER
+        - MANAGER
+        - ADMIN
+        type: string
+    required:
+    - role
+    type: object
+  movies.Genre:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      tmdb_id:
+        type: integer
+    type: object
+  movies.Movie:
+    properties:
+      backdrop_url:
+        type: string
+      credits:
+        items:
+          $ref: '#/definitions/movies.MovieCredit'
+        type: array
+      genres:
+        items:
+          $ref: '#/definitions/movies.Genre'
+        type: array
+      id:
+        type: integer
+      original_language:
+        type: string
+      overview:
+        type: string
+      poster_url:
+        type: string
+      release_date:
+        type: string
+      runtime:
+        type: integer
+      spoken_languages:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+      tmdb_id:
+        type: integer
+    type: object
+  movies.MovieCredit:
+    properties:
+      character:
+        type: string
+      id:
+        type: integer
+      movie_id:
+        type: integer
+      person:
+        $ref: '#/definitions/movies.Person'
+      person_id:
+        type: integer
+      role:
+        type: string
+    type: object
+  movies.Person:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      profile_url:
+        type: string
+      tmdb_id:
+        type: integer
+    type: object
+  tmdb.TMDBMovie:
+    properties:
+      id:
+        type: integer
+      original_language:
+        type: string
+      overview:
+        type: string
+      poster_path:
+        type: string
+      release_date:
+        type: string
+      title:
+        type: string
+      vote_average:
+        type: number
+    type: object
+  tmdb.TMDBPersonMovieCast:
+    properties:
+      character:
+        type: string
+      id:
+        type: integer
+      original_title:
+        type: string
+      overview:
+        type: string
+      poster_path:
+        type: string
+      release_date:
+        type: string
+      title:
+        type: string
+      vote_average:
+        type: number
     type: object
 host: localhost:8003
 info:
@@ -919,7 +913,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_analytics.GenreStatsResponseDTO'
+              $ref: '#/definitions/handler.GenreStatsResponseDTO'
             type: array
       security:
       - BearerAuth: []
@@ -945,7 +939,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_analytics.MovieStatsDTO'
+              $ref: '#/definitions/handler.MovieStatsDTO'
             type: array
       security:
       - BearerAuth: []
@@ -974,7 +968,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_analytics.AnalyticsSummaryResponseDTO'
+            $ref: '#/definitions/handler.AnalyticsSummaryResponseDTO'
       security:
       - BearerAuth: []
       summary: Estatísticas de receita
@@ -990,7 +984,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_cinema_handler.CinemaAdminResponseDTO'
+              $ref: '#/definitions/handler.CinemaAdminResponseDTO'
             type: array
       security:
       - BearerAuth: []
@@ -1007,12 +1001,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/internal_cinema_handler.CreateCinemaRequestDTO'
+          $ref: '#/definitions/handler.CreateCinemaRequestDTO'
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Cadastrar cinema
@@ -1032,7 +1026,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Excluir cinema (Admin)
@@ -1052,7 +1046,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/internal_cinema_handler.CinemaResponseDTO'
+            $ref: '#/definitions/handler.CinemaResponseDTO'
       security:
       - BearerAuth: []
       summary: Detalhes do cinema (Admin)
@@ -1073,12 +1067,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/internal_cinema_handler.CreateCinemaRequestDTO'
+          $ref: '#/definitions/handler.CreateCinemaRequestDTO'
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Atualizar cinema (Admin)
@@ -1100,12 +1094,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/internal_cinema_handler.CreateRoomRequestDTO'
+          $ref: '#/definitions/handler.CreateRoomRequestDTO'
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Criar sala e assentos
@@ -1124,7 +1118,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Excluir sala (Admin)
@@ -1145,12 +1139,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/internal_cinema_handler.CreateRoomRequestDTO'
+          $ref: '#/definitions/handler.CreateRoomRequestDTO'
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Atualizar sala (Admin)
@@ -1176,7 +1170,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_cinema_handler.SessionAdminResponseDTO'
+              $ref: '#/definitions/handler.SessionAdminResponseDTO'
             type: array
       security:
       - BearerAuth: []
@@ -1193,12 +1187,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/internal_cinema_handler.CreateSessionRequestDTO'
+          $ref: '#/definitions/handler.CreateSessionRequestDTO'
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Agendar sessão
@@ -1217,7 +1211,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Excluir sessão
@@ -1238,12 +1232,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/internal_cinema_handler.CreateSessionRequestDTO'
+          $ref: '#/definitions/handler.CreateSessionRequestDTO'
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Atualizar sessão (Admin)
@@ -1265,12 +1259,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_auth.UpdateRoleDTO'
+          $ref: '#/definitions/internal_auth_handler.UpdateRoleDTO'
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       summary: Atualizar papel do usuário
       tags:
       - Auth (Admin)
@@ -1285,12 +1279,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_auth.ChangePasswordRequest'
+          $ref: '#/definitions/handler.ChangePasswordRequest'
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Alterar senha
@@ -1307,12 +1301,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_auth.ForgotPasswordRequest'
+          $ref: '#/definitions/handler.ForgotPasswordRequest'
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       summary: Esqueci minha senha
       tags:
       - Auth
@@ -1327,14 +1321,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_auth.LoginRequest'
+          $ref: '#/definitions/handler.LoginRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_auth.AuthTokenResponse'
+            $ref: '#/definitions/handler.AuthTokenResponse'
       summary: Login de usuário
       tags:
       - Auth
@@ -1345,7 +1339,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Logout
@@ -1362,14 +1356,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_auth.RefreshRequest'
+          $ref: '#/definitions/handler.RefreshRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_auth.AuthTokenResponse'
+            $ref: '#/definitions/handler.AuthTokenResponse'
       summary: Renovar token
       tags:
       - Auth
@@ -1384,12 +1378,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_auth.ResetPasswordRequest'
+          $ref: '#/definitions/handler.ResetPasswordRequest'
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       summary: Resetar senha
       tags:
       - Auth
@@ -1419,7 +1413,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_bookings.CinemaSessionsResponseDTO'
+              $ref: '#/definitions/handler.CinemaSessionsResponseDTO'
             type: array
       summary: Consultar sessões de um filme
       tags:
@@ -1438,7 +1432,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Cancelar sessão por contingência (Admin)
@@ -1460,7 +1454,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_bookings.TicketResponseDTO'
+              $ref: '#/definitions/handler.TicketResponseDTO'
             type: array
       security:
       - BearerAuth: []
@@ -1480,7 +1474,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Cancelar ingresso (Admin)
@@ -1508,7 +1502,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_bookings_handler.MovieResponseDTO'
+              $ref: '#/definitions/handler.MovieResponseDTO'
             type: array
       summary: Listar filmes em cartaz
       tags:
@@ -1531,7 +1525,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_bookings_handler.SeatResponseDTO'
+              $ref: '#/definitions/handler.SeatResponseDTO'
             type: array
       summary: Mapa de assentos
       tags:
@@ -1552,7 +1546,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_bookings.TicketResponseDTO'
+            $ref: '#/definitions/handler.TicketResponseDTO'
       security:
       - BearerAuth: []
       summary: Detalhe do ingresso
@@ -1571,7 +1565,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Cancelar ingresso
@@ -1588,14 +1582,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_bookings.ReserveRequestDTO'
+          $ref: '#/definitions/handler.ReserveRequestDTO'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_bookings.ReserveResponseDTO'
+            $ref: '#/definitions/handler.ReserveResponseDTO'
       security:
       - BearerAuth: []
       summary: Reservar assentos
@@ -1622,14 +1616,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_bookings.PayRequestDTO'
+          $ref: '#/definitions/handler.PayRequestDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_bookings.PayResponseDTO'
+            $ref: '#/definitions/handler.PayResponseDTO'
       security:
       - BearerAuth: []
       summary: Pagar reserva
@@ -1650,7 +1644,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_bookings.TicketResponseDTO'
+              $ref: '#/definitions/handler.TicketResponseDTO'
             type: array
       security:
       - BearerAuth: []
@@ -1673,14 +1667,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/internal_catalog_handler.CreateMovieListRequestDTO'
+          $ref: '#/definitions/handler.CreateMovieListRequestDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Atualizar lista
@@ -1699,7 +1693,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/internal_catalog_handler.MovieDetailResponseDTO'
+            $ref: '#/definitions/handler.MovieDetailResponseDTO'
       security:
       - BearerAuth: []
       summary: Detalhe do Filme (ScreeK)
@@ -1715,7 +1709,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_catalog_handler.MovieLogResponseDTO'
+              $ref: '#/definitions/handler.MovieLogResponseDTO'
             type: array
       security:
       - BearerAuth: []
@@ -1734,14 +1728,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/internal_catalog_handler.CreateMovieListRequestDTO'
+          $ref: '#/definitions/handler.CreateMovieListRequestDTO'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/internal_catalog_handler.MovieListResponseDTO'
+            $ref: '#/definitions/handler.MovieListResponseDTO'
       security:
       - BearerAuth: []
       summary: Criar lista de filmes
@@ -1760,7 +1754,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Excluir lista
@@ -1780,7 +1774,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/internal_catalog_handler.MovieListResponseDTO'
+            $ref: '#/definitions/handler.MovieListResponseDTO'
       security:
       - BearerAuth: []
       summary: Detalhe da lista
@@ -1802,12 +1796,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/internal_catalog_handler.AddMovieToListRequestDTO'
+          $ref: '#/definitions/handler.AddMovieToListRequestDTO'
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Adicionar filme à lista
@@ -1831,7 +1825,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Remover filme da lista
@@ -1847,7 +1841,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_catalog_handler.MovieListResponseDTO'
+              $ref: '#/definitions/handler.MovieListResponseDTO'
             type: array
       security:
       - BearerAuth: []
@@ -1871,11 +1865,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_movies.Movie'
+            $ref: '#/definitions/movies.Movie'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_movies.ErrorResponse'
+            $ref: '#/definitions/httputil.ErrorResponse'
       summary: Detalhes completos de um filme
       tags:
       - Movies
@@ -1895,14 +1889,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/internal_catalog_handler.LogMovieRequestDTO'
+          $ref: '#/definitions/handler.LogMovieRequestDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Registrar atividade de filme
@@ -1926,12 +1920,12 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_movies.TMDBMovie'
+              $ref: '#/definitions/tmdb.TMDBMovie'
             type: array
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_movies.ErrorResponse'
+            $ref: '#/definitions/httputil.ErrorResponse'
       summary: Recomendações de filmes similares
       tags:
       - Movies
@@ -1956,12 +1950,12 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_movies.Movie'
+              $ref: '#/definitions/movies.Movie'
             type: array
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_movies.ErrorResponse'
+            $ref: '#/definitions/httputil.ErrorResponse'
       summary: Descoberta de filmes com filtros
       tags:
       - Movies
@@ -1988,12 +1982,12 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_movies.Movie'
+              $ref: '#/definitions/movies.Movie'
             type: array
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_movies.ErrorResponse'
+            $ref: '#/definitions/httputil.ErrorResponse'
       summary: Busca filmes por título
       tags:
       - Movies
@@ -2007,7 +2001,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_notifications.Notification'
+              $ref: '#/definitions/handler.NotificationResponseDTO'
             type: array
       security:
       - BearerAuth: []
@@ -2026,7 +2020,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Marca uma notificação como lida
@@ -2038,7 +2032,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Marca TODAS como lidas
@@ -2061,11 +2055,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_movies.Person'
+            $ref: '#/definitions/movies.Person'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_movies.ErrorResponse'
+            $ref: '#/definitions/httputil.ErrorResponse'
       summary: Busca detalhes de uma pessoa (ator/diretor)
       tags:
       - Movies
@@ -2087,12 +2081,12 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_movies.TMDBPersonMovieCast'
+              $ref: '#/definitions/tmdb.TMDBPersonMovieCast'
             type: array
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_movies.ErrorResponse'
+            $ref: '#/definitions/httputil.ErrorResponse'
       summary: Lista filmes relacionados a uma pessoa
       tags:
       - Movies
@@ -2114,7 +2108,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/internal_social_handler.FeedResponse'
+            $ref: '#/definitions/handler.FeedResponse'
       security:
       - BearerAuth: []
       summary: Meu feed
@@ -2134,7 +2128,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/internal_social_handler.FeedResponse'
+            $ref: '#/definitions/handler.FeedResponse'
       security:
       - BearerAuth: []
       summary: Feed global (Explorar)
@@ -2151,14 +2145,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/internal_social_handler.CreatePostRequest'
+          $ref: '#/definitions/handler.CreatePostRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/internal_social_handler.PostResponseDTO'
+            $ref: '#/definitions/handler.PostResponseDTO'
       security:
       - BearerAuth: []
       summary: Criar postagem
@@ -2177,7 +2171,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Apagar postagem
@@ -2197,7 +2191,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/internal_social_handler.PostDetailResponseDTO'
+            $ref: '#/definitions/handler.PostDetailResponseDTO'
       security:
       - BearerAuth: []
       summary: Detalhes da postagem
@@ -2218,12 +2212,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/internal_social_handler.UpdatePostRequest'
+          $ref: '#/definitions/handler.UpdatePostRequest'
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Editar postagem
@@ -2242,7 +2236,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/internal_social_handler.ToggleLikeResponse'
+            $ref: '#/definitions/handler.ToggleLikeResponse'
       security:
       - BearerAuth: []
       summary: Curtir/Descurtir post
@@ -2264,12 +2258,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/internal_social_handler.ReplyRequest'
+          $ref: '#/definitions/handler.ReplyRequest'
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Responder postagem
@@ -2291,7 +2285,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_social_handler.UserFollowResponseDTO'
+              $ref: '#/definitions/handler.UserFollowResponseDTO'
             type: array
       security:
       - BearerAuth: []
@@ -2314,7 +2308,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_social_handler.UserFollowResponseDTO'
+              $ref: '#/definitions/handler.UserFollowResponseDTO'
             type: array
       security:
       - BearerAuth: []
@@ -2334,7 +2328,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/internal_social_handler.ToggleFollowResponse'
+            $ref: '#/definitions/handler.ToggleFollowResponse'
       security:
       - BearerAuth: []
       summary: Seguir/Deixar de seguir
@@ -2357,7 +2351,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_users.UserDetailsDTO'
+            $ref: '#/definitions/handler.UserDetailsDTO'
         "404":
           description: Usuário não encontrado
           schema:
@@ -2382,7 +2376,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_users.UserStats'
+            $ref: '#/definitions/handler.UserStatsDTO'
         "404":
           description: Estatísticas não encontradas
           schema:
@@ -2408,7 +2402,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
         "401":
           description: Senha incorreta ou não autorizado
           schema:
@@ -2428,7 +2422,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_users.UserMeDetailsDTO'
+            $ref: '#/definitions/handler.UserMeDetailsDTO'
         "401":
           description: Não autorizado
           schema:
@@ -2449,14 +2443,14 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_users.UpdateUserDTO'
+          $ref: '#/definitions/handler.UpdateUserDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
         "401":
           description: Não autorizado
           schema:
@@ -2518,14 +2512,14 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_users.CreateUserDTO'
+          $ref: '#/definitions/handler.CreateUserDTO'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_users.UserDTO'
+            $ref: '#/definitions/handler.UserDTO'
         "400":
           description: Erro na validação ou usuário já existe
           schema:
@@ -2552,7 +2546,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_users.UserDTO'
+              $ref: '#/definitions/handler.UserDTO'
             type: array
         "400":
           description: Parâmetro 'q' obrigatório
@@ -2571,7 +2565,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_catalog_handler.WatchlistItemResponseDTO'
+              $ref: '#/definitions/handler.WatchlistItemResponseDTO'
             type: array
       security:
       - BearerAuth: []
@@ -2588,12 +2582,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/internal_catalog_handler.AddWatchlistRequestDTO'
+          $ref: '#/definitions/handler.AddWatchlistRequestDTO'
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Adicionar à Watchlist
@@ -2612,7 +2606,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_StartLivin_screek_backend_internal_shared_httputil.MessageResponse'
+            $ref: '#/definitions/httputil.MessageResponse'
       security:
       - BearerAuth: []
       summary: Remover da Watchlist

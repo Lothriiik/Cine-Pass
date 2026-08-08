@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/StartLivin/screek/backend/internal/movies"
+	_ "github.com/StartLivin/screek/backend/internal/movies/tmdb"
 	"github.com/StartLivin/screek/backend/internal/shared/httputil"
 	"github.com/go-chi/chi/v5"
 )
@@ -37,7 +38,7 @@ func (h *Handler) RegisterRoutes(r chi.Router) {
 // @Param q query string true "Termo de busca (ex: Batman)"
 // @Param type query string false "Tipo de busca (MOVIE, PERSON, USER, LIST)" default(MOVIE)
 // @Success 200 {array} movies.Movie
-// @Failure 400 {object} movies.ErrorResponse
+// @Failure 400 {object} httputil.ErrorResponse
 // @Router /movies/search [get]
 func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query().Get("q")
@@ -47,7 +48,7 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if query == "" {
-		httputil.WriteJSON(w, http.StatusBadRequest, movies.ErrorResponse{
+		httputil.WriteJSON(w, http.StatusBadRequest, httputil.ErrorResponse{
 			Error: "Forneça o parâmetro 'q'.",
 		})
 		return
@@ -68,7 +69,7 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err != nil {
-		httputil.WriteJSON(w, http.StatusInternalServerError, movies.ErrorResponse{Error: err.Error()})
+		httputil.WriteJSON(w, http.StatusInternalServerError, httputil.ErrorResponse{Error: err.Error()})
 		return
 	}
 
@@ -83,14 +84,14 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 // @Produce json
 // @Param id path int true "ID do Filme (TMDB ID)"
 // @Success 200 {object} movies.Movie
-// @Failure 500 {object} movies.ErrorResponse
+// @Failure 500 {object} httputil.ErrorResponse
 // @Router /movies/{id} [get]
 func (h *Handler) GetDetails(w http.ResponseWriter, r *http.Request) {
 	tmdbID, _ := strconv.Atoi(chi.URLParam(r, "id"))
 
 	movie, err := h.svc.GetMovieDetails(r.Context(), tmdbID)
 	if err != nil {
-		httputil.WriteJSON(w, http.StatusInternalServerError, movies.ErrorResponse{Error: "Erro ao compilar cache do filme: " + err.Error()})
+		httputil.WriteJSON(w, http.StatusInternalServerError, httputil.ErrorResponse{Error: "Erro ao compilar cache do filme: " + err.Error()})
 		return
 	}
 	httputil.WriteJSON(w, http.StatusOK, movie)
@@ -104,14 +105,14 @@ func (h *Handler) GetDetails(w http.ResponseWriter, r *http.Request) {
 // @Produce json
 // @Param id path int true "ID da Pessoa (TMDB ID)"
 // @Success 200 {object} movies.Person
-// @Failure 500 {object} movies.ErrorResponse
+// @Failure 500 {object} httputil.ErrorResponse
 // @Router /people/{id} [get]
 func (h *Handler) GetPersonDetails(w http.ResponseWriter, r *http.Request) {
 	tmdbID, _ := strconv.Atoi(chi.URLParam(r, "id"))
 
 	person, err := h.svc.GetPersonDetails(r.Context(), tmdbID)
 	if err != nil {
-		httputil.WriteJSON(w, http.StatusInternalServerError, movies.ErrorResponse{Error: "Erro ao compilar cache da pessoa: " + err.Error()})
+		httputil.WriteJSON(w, http.StatusInternalServerError, httputil.ErrorResponse{Error: "Erro ao compilar cache da pessoa: " + err.Error()})
 		return
 	}
 	httputil.WriteJSON(w, http.StatusOK, person)
@@ -124,19 +125,19 @@ func (h *Handler) GetPersonDetails(w http.ResponseWriter, r *http.Request) {
 // @Accept json
 // @Produce json
 // @Param id path int true "ID da Pessoa"
-// @Success 200 {array} movies.TMDBPersonMovieCast
-// @Failure 404 {object} movies.ErrorResponse
+// @Success 200 {array} tmdb.TMDBPersonMovieCast
+// @Failure 404 {object} httputil.ErrorResponse
 // @Router /people/{id}/movies [get]
 func (h *Handler) GetPersonMoviesProxy(w http.ResponseWriter, r *http.Request) {
 	tmdbID, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
-		httputil.WriteJSON(w, http.StatusBadRequest, movies.ErrorResponse{Error: "ID de pessoa inválido"})
+		httputil.WriteJSON(w, http.StatusBadRequest, httputil.ErrorResponse{Error: "ID de pessoa inválido"})
 		return
 	}
 
 	credits, err := h.svc.GetPersonCredits(r.Context(), tmdbID)
 	if err != nil {
-		httputil.WriteJSON(w, http.StatusNotFound, movies.ErrorResponse{Error: "Créditos não encontrados no TMDB"})
+		httputil.WriteJSON(w, http.StatusNotFound, httputil.ErrorResponse{Error: "Créditos não encontrados no TMDB"})
 		return
 	}
 
@@ -150,19 +151,19 @@ func (h *Handler) GetPersonMoviesProxy(w http.ResponseWriter, r *http.Request) {
 // @Accept json
 // @Produce json
 // @Param id path int true "ID do Filme"
-// @Success 200 {array} movies.TMDBMovie
-// @Failure 404 {object} movies.ErrorResponse
+// @Success 200 {array} tmdb.TMDBMovie
+// @Failure 404 {object} httputil.ErrorResponse
 // @Router /movies/{id}/recommendations [get]
 func (h *Handler) GetRecommendationsProxy(w http.ResponseWriter, r *http.Request) {
 	movieID, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
-		httputil.WriteJSON(w, http.StatusBadRequest, movies.ErrorResponse{Error: "ID de filme inválido"})
+		httputil.WriteJSON(w, http.StatusBadRequest, httputil.ErrorResponse{Error: "ID de filme inválido"})
 		return
 	}
 
 	recommendations, err := h.svc.GetMovieRecommendations(r.Context(), movieID)
 	if err != nil {
-		httputil.WriteJSON(w, http.StatusNotFound, movies.ErrorResponse{Error: "Filme não encontrado ou sem recomendações"})
+		httputil.WriteJSON(w, http.StatusNotFound, httputil.ErrorResponse{Error: "Filme não encontrado ou sem recomendações"})
 		return
 	}
 
@@ -178,7 +179,7 @@ func (h *Handler) GetRecommendationsProxy(w http.ResponseWriter, r *http.Request
 // @Param genre_id query int false "ID do Gênero (TMDB ID)"
 // @Param year query int false "Ano de Lançamento"
 // @Success 200 {array} movies.Movie
-// @Failure 500 {object} movies.ErrorResponse
+// @Failure 500 {object} httputil.ErrorResponse
 // @Router /movies/discover [get]
 func (h *Handler) Discover(w http.ResponseWriter, r *http.Request) {
 	genreID, _ := strconv.Atoi(r.URL.Query().Get("genre_id"))
@@ -186,7 +187,7 @@ func (h *Handler) Discover(w http.ResponseWriter, r *http.Request) {
 
 	foundmovies, err := h.svc.DiscoverMovies(r.Context(), genreID, year)
 	if err != nil {
-		httputil.WriteJSON(w, http.StatusInternalServerError, movies.ErrorResponse{Error: err.Error()})
+		httputil.WriteJSON(w, http.StatusInternalServerError, httputil.ErrorResponse{Error: err.Error()})
 		return
 	}
 
