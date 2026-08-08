@@ -4,54 +4,49 @@ import (
 	"time"
 
 	"github.com/StartLivin/screek/backend/internal/movies/tmdb"
-	"gorm.io/gorm"
 )
 
 type TMDBMovie = tmdb.TMDBMovie
 type TMDBPersonMovieCast = tmdb.TMDBPersonMovieCast
 
 type Movie struct {
-	ID               int           `json:"id" gorm:"primaryKey;autoIncrement"`
-	TMDBID           int           `json:"tmdb_id" gorm:"not null;uniqueIndex"`
-	Title            string        `json:"title" gorm:"not null"`
-	Overview         string        `json:"overview" gorm:"not null"`
-	PosterURL        string        `json:"poster_url" gorm:"not null"`
+	ID               int           `json:"id"`
+	TMDBID           int           `json:"tmdb_id"`
+	Title            string        `json:"title"`
+	Overview         string        `json:"overview"`
+	PosterURL        string        `json:"poster_url"`
 	BackdropURL      string        `json:"backdrop_url"`
 	UpdatedAt        time.Time     `json:"-"`
-	ReleaseDate      time.Time     `json:"release_date" gorm:"not null"`
-	Status           string        `json:"status" gorm:"not null;default:'Released'"`
-	Runtime          int           `json:"runtime" gorm:"not null"`
+	ReleaseDate      time.Time     `json:"release_date"`
+	Status           string        `json:"status"`
+	Runtime          int           `json:"runtime"`
 	OriginalLanguage string        `json:"original_language"`
 	SpokenLanguages  string        `json:"spoken_languages"`
-	Genres           []Genre       `json:"genres" gorm:"many2many:movie_genres;"`
-	Credits          []MovieCredit `json:"credits" gorm:"foreignKey:MovieID;references:ID"`
+	Genres           []Genre       `json:"genres"`
+	Credits          []MovieCredit `json:"credits"`
 }
 
 type Genre struct {
-	ID     int     `json:"id" gorm:"primaryKey;autoIncrement"`
-	TMDBID int     `json:"tmdb_id" gorm:"not null;uniqueIndex"`
-	Name   string  `json:"name" gorm:"not null"`
-	Movies []Movie `json:"-" gorm:"many2many:movie_genres;"`
+	ID     int     `json:"id"`
+	TMDBID int     `json:"tmdb_id"`
+	Name   string  `json:"name"`
+	Movies []Movie `json:"-"`
 }
 
 type Person struct {
-	ID           int           `json:"id" gorm:"primaryKey;autoIncrement"`
-	TMDBID       int           `json:"tmdb_id" gorm:"not null;uniqueIndex"`
-	Name         string        `json:"name" gorm:"not null"`
-	ProfileURL   string        `json:"profile_url" gorm:"not null"`
-	MovieCredits []MovieCredit `json:"-" gorm:"foreignKey:PersonID"`
+	ID           int           `json:"id"`
+	TMDBID       int           `json:"tmdb_id"`
+	Name         string        `json:"name"`
+	ProfileURL   string        `json:"profile_url"`
+	MovieCredits []MovieCredit `json:"-"`
 }
 
 type MovieCredit struct {
-	ID        int    `json:"id" gorm:"primaryKey;autoIncrement"`
-	MovieID   int    `json:"movie_id" gorm:"not null"`
-	PersonID  int    `json:"person_id" gorm:"not null"`
-	Role      string `json:"role" gorm:"not null"`
+	ID        int    `json:"id"`
+	MovieID   int    `json:"movie_id"`
+	PersonID  int    `json:"person_id"`
+	Role      string `json:"role"`
 	Character string `json:"character"`
-	Person    Person `json:"person" gorm:"foreignKey:PersonID"`
-	Movie     *Movie `json:"-" gorm:"foreignKey:MovieID"`
-}
-
-func AutoMigrate(db *gorm.DB) error {
-	return db.AutoMigrate(&Movie{}, &Genre{}, &Person{}, &MovieCredit{})
+	Person    Person `json:"person"`
+	Movie     *Movie `json:"-"`
 }

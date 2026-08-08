@@ -42,13 +42,13 @@ func (h *Handler) RegisterRoutes(r chi.Router, authMiddleware func(http.Handler)
 // @Tags Users
 // @Accept json
 // @Produce json
-// @Param user body users.CreateUserDTO true "Dados do Usuário"
-// @Success 201 {object} users.UserDTO
+// @Param user body CreateUserDTO true "Dados do Usuário"
+// @Success 201 {object} UserDTO
 // @Failure 400 {string} string "Erro na validação ou usuário já existe"
 // @Router /users/register [post]
 func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	var dto users.CreateUserDTO
+	var dto CreateUserDTO
 	if err := json.NewDecoder(r.Body).Decode(&dto); err != nil {
 		httputil.WriteJSON(w, http.StatusBadRequest, httputil.ErrorResponse{Error: "JSON inválido"})
 		return
@@ -72,7 +72,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseDTO := users.UserDTO{
+	responseDTO := UserDTO{
 		ID:       userModel.ID,
 		Name:     userModel.Name,
 		Username: userModel.Username,
@@ -88,7 +88,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 // @Accept json
 // @Produce json
 // @Param q query string true "Termo de busca"
-// @Success 200 {array} users.UserDTO
+// @Success 200 {array} UserDTO
 // @Failure 400 {string} string "Parâmetro 'q' obrigatório"
 // @Router /users/search [get]
 func (h *Handler) SearchUsers(w http.ResponseWriter, r *http.Request) {
@@ -104,10 +104,10 @@ func (h *Handler) SearchUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var dtos []users.UserDTO
+	var dtos []UserDTO
 
 	for _, user := range foundUsers {
-		dtos = append(dtos, users.UserDTO{
+		dtos = append(dtos, UserDTO{
 			ID:        user.ID,
 			Username:  user.Username,
 			Name:      user.Name,
@@ -125,7 +125,7 @@ func (h *Handler) SearchUsers(w http.ResponseWriter, r *http.Request) {
 // @Accept json
 // @Produce json
 // @Param id path string true "ID do Usuário (UUID)"
-// @Success 200 {object} users.UserDetailsDTO
+// @Success 200 {object} UserDetailsDTO
 // @Failure 404 {string} string "Usuário não encontrado"
 // @Router /users/{id} [get]
 func (h *Handler) GetByID(w http.ResponseWriter, r *http.Request) {
@@ -140,7 +140,7 @@ func (h *Handler) GetByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userDTO := users.UserDetailsDTO{
+	userDTO := UserDetailsDTO{
 		ID:             user.ID,
 		Username:       user.Username,
 		Name:           user.Name,
@@ -160,7 +160,7 @@ func (h *Handler) GetByID(w http.ResponseWriter, r *http.Request) {
 // @Security BearerAuth
 // @Accept json
 // @Produce json
-// @Success 200 {object} users.UserMeDetailsDTO
+// @Success 200 {object} UserMeDetailsDTO
 // @Failure 401 {string} string "Não autorizado"
 // @Router /users/me [get]
 func (h *Handler) GetMe(w http.ResponseWriter, r *http.Request) {
@@ -176,7 +176,7 @@ func (h *Handler) GetMe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userDTO := users.UserMeDetailsDTO{
+	userDTO := UserMeDetailsDTO{
 		ID:             user.ID,
 		Username:       user.Username,
 		Name:           user.Name,
@@ -197,7 +197,7 @@ func (h *Handler) GetMe(w http.ResponseWriter, r *http.Request) {
 // @Security BearerAuth
 // @Accept json
 // @Produce json
-// @Param user body users.UpdateUserDTO true "Dados para atualização"
+// @Param user body UpdateUserDTO true "Dados para atualização"
 // @Success 200 {object} httputil.MessageResponse
 // @Failure 401 {string} string "Não autorizado"
 // @Router /users/me [put]
@@ -208,7 +208,7 @@ func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var dto users.UpdateUserDTO
+	var dto UpdateUserDTO
 	if err := json.NewDecoder(r.Body).Decode(&dto); err != nil {
 		httputil.WriteJSON(w, http.StatusBadRequest, httputil.ErrorResponse{Error: "JSON inválido"})
 		return

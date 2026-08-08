@@ -1,0 +1,161 @@
+import React from 'react';
+
+// ============================================================================
+// 1. SessionChip (Quadrado de Sessão 19:00, Sala 4, 82% livres)
+// ============================================================================
+export interface SessionChipProps {
+  time: string; // e.g. "19:00"
+  roomName: string; // e.g. "Sala 4"
+  freeSeatsPercentage?: number; // e.g. 82
+  state?: 'available' | 'selected' | 'disabled';
+  onClick?: () => void;
+}
+
+export const SessionChip: React.FC<SessionChipProps> = ({
+  time,
+  roomName,
+  freeSeatsPercentage = 82,
+  state = 'available',
+  onClick,
+}) => {
+  const isSelected = state === 'selected';
+  const isDisabled = state === 'disabled';
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={isDisabled}
+      className={`w-28 h-28 flex flex-col items-center justify-center p-3 font-display rounded-none border-4 transition-all cursor-pointer ${
+        isDisabled
+          ? 'opacity-40 border-foreground/30 bg-background/50 cursor-not-allowed text-foreground/50'
+          : isSelected
+          ? 'border-[#6A1B4D] bg-[#6A1B4D] text-white shadow-[4px_4px_0px_0px_var(--border)]'
+          : 'border-[#6A1B4D] bg-background text-foreground hover:bg-[#6A1B4D]/5 shadow-[4px_4px_0px_0px_var(--border)]'
+      }`}
+    >
+      {/* Time Text */}
+      <span
+        className={`text-xl font-black tracking-tight ${
+          isSelected ? 'text-white' : isDisabled ? 'text-foreground/50' : 'text-[#6A1B4D]'
+        }`}
+      >
+        {time}
+      </span>
+
+      {/* Room Name */}
+      <span
+        className={`text-xs font-bold my-0.5 ${
+          isSelected ? 'text-white/80' : 'text-foreground/60'
+        }`}
+      >
+        {roomName}
+      </span>
+
+      {/* Occupancy Progress Bar */}
+      <div
+        className={`w-full h-1.5 rounded-none overflow-hidden my-1 ${
+          isSelected ? 'bg-white/30' : 'bg-foreground/20'
+        }`}
+      >
+        <div
+          className={`h-full ${isSelected ? 'bg-white' : 'bg-[#6A1B4D]'}`}
+          style={{ width: `${freeSeatsPercentage}%` }}
+        />
+      </div>
+
+      {/* Percentage Text */}
+      <span
+        className={`text-[10px] font-extrabold uppercase ${
+          isSelected ? 'text-white' : 'text-[#6A1B4D]'
+        }`}
+      >
+        {freeSeatsPercentage}% livres
+      </span>
+    </button>
+  );
+};
+
+// ============================================================================
+// 2. SessionCard (Card Horizontal Retangular de Sessão com Badges)
+// ============================================================================
+export interface SessionCardProps {
+  time: string; // e.g. "19:00"
+  cinemaName: string; // e.g. "Cinesystem Arapiraca"
+  roomName: string; // e.g. "Sala 4 - IMAX"
+  freeSeatsPercentage?: number; // e.g. 82
+  audioFormat?: string; // e.g. "DUB"
+  screenFormat?: string; // e.g. "IMAX"
+  dateLabel?: string; // e.g. "SEX 27/03"
+  highlightBorder?: boolean;
+  onClick?: () => void;
+}
+
+export const SessionCard: React.FC<SessionCardProps> = ({
+  time,
+  cinemaName,
+  roomName,
+  freeSeatsPercentage = 82,
+  audioFormat = 'DUB',
+  screenFormat = 'IMAX',
+  dateLabel = 'SEX 27/03',
+  highlightBorder = false,
+  onClick,
+}) => {
+  return (
+    <div
+      onClick={onClick}
+      className={`w-full rounded-none border-4 bg-background font-display p-4 sm:p-5 flex items-center justify-between shadow-[4px_4px_0px_0px_var(--border)] transition-all cursor-pointer ${
+        highlightBorder
+          ? 'border-[#6A1B4D]'
+          : 'border-foreground/30 hover:border-[#6A1B4D]'
+      }`}
+    >
+      {/* Left Column: Big Time + Info */}
+      <div className="flex items-center gap-4 sm:gap-6">
+        <span className="text-2xl sm:text-3xl font-black text-[#6A1B4D] tracking-tight shrink-0">
+          {time}
+        </span>
+
+        <div className="space-y-1">
+          <h4 className="text-sm sm:text-base font-black uppercase text-foreground leading-none">
+            {cinemaName}
+          </h4>
+          <p className="text-xs font-bold text-foreground/60">{roomName}</p>
+
+          {/* Badges Row */}
+          <div className="flex flex-wrap items-center gap-1.5 pt-1">
+            {audioFormat && (
+              <span className="border border-foreground/40 text-foreground px-2 py-0.5 text-[10px] font-extrabold uppercase">
+                {audioFormat}
+              </span>
+            )}
+            {screenFormat && (
+              <span className="border border-foreground/40 text-foreground px-2 py-0.5 text-[10px] font-extrabold uppercase">
+                {screenFormat}
+              </span>
+            )}
+            {dateLabel && (
+              <span className="border border-foreground/40 text-foreground px-2 py-0.5 text-[10px] font-extrabold uppercase">
+                {dateLabel}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Right Column: Occupancy Progress Bar & Text */}
+      <div className="flex flex-col items-end shrink-0 pl-2">
+        <div className="w-24 sm:w-32 h-2 bg-foreground/20 rounded-none overflow-hidden">
+          <div
+            className="h-full bg-[#6A1B4D]"
+            style={{ width: `${freeSeatsPercentage}%` }}
+          />
+        </div>
+        <span className="text-xs font-extrabold text-[#6A1B4D] mt-1">
+          {freeSeatsPercentage}% livres
+        </span>
+      </div>
+    </div>
+  );
+};

@@ -7,6 +7,9 @@ import { toast } from 'sonner';
 import { X as XIcon } from '@phosphor-icons/react';
 import { api } from '../services/api';
 
+import { Input } from '../components/ui/input';
+import { Button } from '../components/ui/button';
+
 const forgotPasswordSchema = z.object({
   email: z.string().email('Digite um e-mail válido'),
 });
@@ -44,7 +47,8 @@ export const ForgotPassword = () => {
   };
 
   return (
-    <div className="w-full bg-background text-foreground rounded-none border-4 border-tertiary shadow-[6px_6px_0px_0px_var(--border)] sm:shadow-[8px_8px_0px_0px_var(--border)]">
+    <div className="w-full bg-background text-foreground rounded-none border-4 border-tertiary shadow-[10px_10px_0px_0px_var(--border)]">
+
       <div className="flex items-center justify-between border-b-4 bg-tertiary/10 border-tertiary p-4 px-5 sm:p-5 sm:px-8">
         <h1 className="text-lg sm:text-xl text-tertiary font-display font-extrabold uppercase tracking-wide">
           ESQUECI A SENHA
@@ -67,11 +71,10 @@ export const ForgotPassword = () => {
           <label className="block text-xs sm:text-base text-foreground/60 font-bold font-display mb-1.5">
             Endereço de e-mail
           </label>
-          <input
+          <Input
             type="email"
             {...register('email')}
-            placeholder=""
-            className="w-full h-11 sm:h-12 bg-background border-2 sm:border-4 font-display border-foreground/40 px-3 py-2 text-sm sm:text-base text-foreground focus:outline-none focus:border-tertiary"
+            placeholder="Seu E-mail"
           />
           {errors.email && (
             <span className="text-xs text-destructive mt-1 block font-bold">{errors.email.message}</span>
@@ -79,17 +82,18 @@ export const ForgotPassword = () => {
         </div>
 
         <div className="pt-2">
-          <button
+          <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-tertiary hover:bg-tertiary-hover text-tertiary-foreground font-display font-extrabold py-2.5 sm:py-3 text-xs sm:text-sm uppercase tracking-wider transition-all disabled:opacity-50 cursor-pointer border-2 border-tertiary"
+            variant="tertiary"
+            className="w-full"
           >
             {loading ? 'ENVIANDO...' : 'ENVIAR'}
-          </button>
+          </Button>
         </div>
       </form>
     </div>
   );
-
 };
+
 

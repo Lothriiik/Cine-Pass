@@ -38,11 +38,11 @@ func (h *Handler) RegisterRoutes(r chi.Router, authMiddleware func(http.Handler)
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Param request body auth.LoginRequest true "Credenciais"
-// @Success 200 {object} auth.AuthTokenResponse
+// @Param request body LoginRequest true "Credenciais"
+// @Success 200 {object} AuthTokenResponse
 // @Router /auth/login [post]
 func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
-	var req auth.LoginRequest
+	var req LoginRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		httputil.WriteJSON(w, http.StatusBadRequest, httputil.ErrorResponse{Error: "JSON inválido"})
 		return
@@ -66,11 +66,11 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Param request body auth.RefreshRequest true "Refresh Token"
-// @Success 200 {object} auth.AuthTokenResponse
+// @Param request body RefreshRequest true "Refresh Token"
+// @Success 200 {object} AuthTokenResponse
 // @Router /auth/refresh [post]
 func (h *Handler) Refresh(w http.ResponseWriter, r *http.Request) {
-	var req auth.RefreshRequest
+	var req RefreshRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		httputil.WriteJSON(w, http.StatusBadRequest, httputil.ErrorResponse{Error: "JSON inválido"})
@@ -112,11 +112,11 @@ func (h *Handler) Logout(w http.ResponseWriter, r *http.Request) {
 // @Description Envia e-mail com instruções para recuperação de senha
 // @Tags Auth
 // @Accept json
-// @Param request body auth.ForgotPasswordRequest true "E-mail cadastrado"
+// @Param request body ForgotPasswordRequest true "E-mail cadastrado"
 // @Success 200 {object} httputil.MessageResponse
 // @Router /auth/forgot-password [post]
 func (h *Handler) ForgotPassword(w http.ResponseWriter, r *http.Request) {
-	var req auth.ForgotPasswordRequest
+	var req ForgotPasswordRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		httputil.WriteJSON(w, http.StatusBadRequest, httputil.ErrorResponse{Error: "JSON inválido"})
 		return
@@ -131,11 +131,11 @@ func (h *Handler) ForgotPassword(w http.ResponseWriter, r *http.Request) {
 // @Description Define uma nova senha usando o token recebido por e-mail
 // @Tags Auth
 // @Accept json
-// @Param request body auth.ResetPasswordRequest true "Token e nova senha"
+// @Param request body ResetPasswordRequest true "Token e nova senha"
 // @Success 200 {object} httputil.MessageResponse
 // @Router /auth/reset-password [post]
 func (h *Handler) ResetPassword(w http.ResponseWriter, r *http.Request) {
-	var req auth.ResetPasswordRequest
+	var req ResetPasswordRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		httputil.WriteJSON(w, http.StatusBadRequest, httputil.ErrorResponse{Error: "JSON inválido"})
 		return
@@ -153,12 +153,12 @@ func (h *Handler) ResetPassword(w http.ResponseWriter, r *http.Request) {
 // @Description Atualiza a senha do usuário logado validando a senha antiga
 // @Tags Auth
 // @Accept json
-// @Param request body auth.ChangePasswordRequest true "Senhas antiga e nova"
+// @Param request body ChangePasswordRequest true "Senhas antiga e nova"
 // @Success 200 {object} httputil.MessageResponse
 // @Security BearerAuth
 // @Router /auth/change-password [post]
 func (h *Handler) ChangePassword(w http.ResponseWriter, r *http.Request) {
-	var req auth.ChangePasswordRequest
+	var req ChangePasswordRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		httputil.WriteJSON(w, http.StatusBadRequest, httputil.ErrorResponse{Error: "JSON inválido"})
 		return

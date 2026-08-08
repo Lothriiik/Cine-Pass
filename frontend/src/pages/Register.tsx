@@ -4,26 +4,32 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
-import { XIcon, Lock, MagnifyingGlassIcon } from '@phosphor-icons/react';
+import { X as XIcon, Lock, MagnifyingGlass as MagnifyingGlassIcon } from '@phosphor-icons/react';
 import { api } from '../services/api';
-import { useAuthStore, type User } from '../stores/authStore';
 
-const loginSchema = z.object({
-  email: z.string().email('Digite um e-mail válido'),
-  password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
-});
+import { Input } from '../components/ui/input';
+import { Button } from '../components/ui/button';
 
-type LoginFormData = z.infer<typeof loginSchema>;
+const registerSchema = z
+  .object({
+    username: z.string().min(3, 'O nome de usuário deve ter no mínimo 3 caracteres'),
+    email: z.string().email('Digite um e-mail válido'),
+    password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
+    confirmPassword: z.string().min(6, 'Confirme sua senha'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'As senhas não coincidem',
+    path: ['confirmPassword'],
+  });
 
-interface LoginResponse {
-  access_token: string;
-  refresh_token: string;
-  user: User;
+type RegisterFormData = z.infer<typeof registerSchema>;
+
+interface RegisterProps {
+  onClose?: () => void;
 }
 
-export const Register = () => {
-  const navigate = useNavigate(); 
-  const setAuth = useAuthStore((state) => state.setAuth); 
+export const Register = ({ onClose }: RegisterProps = {}) => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -34,125 +40,125 @@ export const Register = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
   });
 
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      navigate('/');
+    }
+  };
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: RegisterFormData) => {
     try {
       setLoading(true);
-
-      const response = await api.post<LoginResponse>('/auth/login', data);
-
-      setAuth(
-        response.data.user,
-        response.data.access_token,
-        response.data.refresh_token
-      );
-
-      toast.success('Login realizado com sucesso! Bem-vindo(a).');
-      navigate('/'); 
+      await api.post('/auth/register', {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      });
+      toast.success('Conta criada com sucesso! Faça login para entrar.');
+      handleClose();
     } catch (err: any) {
-      const message = err.response?.data?.error || 'Erro ao realizar login. Tente novamente.';
+      const message = err.response?.data?.error || 'Erro ao criar conta. Tente novamente.';
       toast.error(message);
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-3 sm:p-4">
-      <div className="w-full max-w-md bg-background text-foreground rounded-none border-4 border-secondary">
-        
-        <div className="flex items-center border-b-4 bg-secondary/10 border-secondary p-4 sm:p-5 px-5 sm:px-8">
-          <div>
-            <h1 className="text-lg sm:text-xl text-secondary font-display font-extrabold uppercase tracking-wide">CADASTRAR</h1>
-          </div>
-          <button onClick={() => navigate('/')} className="border-4 hover:bg-foreground/30 border-secondary h-9 w-9 sm:h-10 sm:w-10 flex items-center justify-center ml-auto cursor-pointer">
-            <XIcon size={20} className="text-secondary" />
-          </button>
+  const cardContent = (
+    <div className="w-full max-w-[450px] bg-background text-foreground rounded-none border-4 border-secondary shadow-[10px_10px_0px_0px_var(--border)]">
+      <div className="flex items-center border-b-4 bg-secondary/10 border-secondary p-3.5 sm:p-4 px-5 sm:px-6">
+        <div>
+          <h1 className="text-lg sm:text-xl text-secondary font-display font-extrabold uppercase tracking-wide">CADASTRAR</h1>
+        </div>
+        <button onClick={handleClose} className="border-4 hover:bg-foreground/30 border-secondary h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center ml-auto cursor-pointer" title="Fechar">
+          <XIcon size={18} className="text-secondary" />
+        </button>
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 p-5 sm:p-6">
+        <div>
+          <label className="block text-xs sm:text-sm text-foreground/40 font-bold font-display mb-1">Nome de Usuario</label>
+          <Input
+            type="text"
+            icon={<MagnifyingGlassIcon size={20} className="text-foreground/40" />}
+            {...register('username')}
+            placeholder="Seu Usuario"
+          />
+          {errors.username && (
+            <span className="text-xs text-destructive mt-1 block font-bold">{errors.username.message}</span>
+          )}
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-5 sm:p-8 sm:px-8">
-          <div>
-            <label className="block text-sm sm:text-base text-foreground/40 font-bold font-display mb-1">Nome de Usuario</label>
-            <div className="relative">
-              <MagnifyingGlassIcon size={22} className="absolute left-4 sm:left-5 top-3.5 sm:top-4 text-foreground/40" />
-              <input
-                type="text"
-                {...register('email')}
-                placeholder="Seu Usuario"
-                className="w-full h-12 sm:h-14 bg-background border-4 font-display border-foreground/40 pl-11 sm:pl-12 pr-3 py-2 text-sm sm:text-base placeholder:text-foreground/40 focus:outline-none focus:border-[#FF5C80]"
-              />
-            </div>
-            {errors.email && (
-              <span className="text-xs text-destructive mt-1 block">{errors.email.message}</span>
-            )}
-          </div>
+        <div>
+          <label className="block text-xs sm:text-sm text-foreground/40 font-bold font-display mb-1">Endereço de e-mail</label>
+          <Input
+            type="text"
+            icon={<MagnifyingGlassIcon size={20} className="text-foreground/40" />}
+            {...register('email')}
+            placeholder="Seu E-mail"
+          />
+          {errors.email && (
+            <span className="text-xs text-destructive mt-1 block font-bold">{errors.email.message}</span>
+          )}
+        </div>
 
-          <div>
-            <label className="block text-sm sm:text-base text-foreground/40 font-bold font-display mb-1">Endereço de e-mail</label>
-            <div className="relative">
-              <MagnifyingGlassIcon size={22} className="absolute left-4 sm:left-5 top-3.5 sm:top-4 text-foreground/40" />
-              <input
-                type="text"
-                {...register('email')}
-                placeholder="Seu E-mail"
-                className="w-full h-12 sm:h-14 bg-background border-4 font-display border-foreground/40 pl-11 sm:pl-12 pr-3 py-2 text-sm sm:text-base placeholder:text-foreground/40 focus:outline-none focus:border-[#FF5C80]"
-              />
-            </div>
-            {errors.email && (
-              <span className="text-xs text-destructive mt-1 block">{errors.email.message}</span>
-            )}
-          </div>
+        <div>
+          <label className="block text-xs sm:text-sm text-foreground/40 font-bold font-display mb-1">Senha</label>
+          <Input
+            type="password"
+            icon={<Lock size={20} className="text-foreground/40" />}
+            {...register('password')}
+            placeholder="••••••••"
+          />
+          {errors.password && (
+            <span className="text-xs text-destructive mt-1 block font-bold">{errors.password.message}</span>
+          )}
+        </div>
 
-          <div>
-            <label className="block text-sm sm:text-base text-foreground/40 font-bold font-display mb-1">Senha</label>
-            <div className="relative">
-              <Lock size={22} className="absolute left-4 sm:left-5 top-3.5 sm:top-4 text-foreground/40" />
-              <input
-                type="password"
-                {...register('password')}
-                placeholder="••••••••"
-                className="w-full h-12 sm:h-14 bg-background border-4 font-display border-foreground/40 pl-11 sm:pl-12 pr-3 py-2 text-sm sm:text-base placeholder:text-foreground/40 focus:outline-none focus:border-[#FF5C80]"
-              />
-            </div>
-            {errors.password && (
-              <span className="text-xs text-destructive mt-1 block">{errors.password.message}</span>
-            )}
-          </div>
+        <div>
+          <label className="block text-xs sm:text-sm text-foreground/40 font-bold font-display mb-1">Confirmação de Senha</label>
+          <Input
+            type="password"
+            icon={<Lock size={20} className="text-foreground/40" />}
+            {...register('confirmPassword')}
+            placeholder="••••••••"
+          />
+          {errors.confirmPassword && (
+            <span className="text-xs text-destructive mt-1 block font-bold">{errors.confirmPassword.message}</span>
+          )}
+        </div>
 
-          <div>
-            <label className="block text-sm sm:text-base text-foreground/40 font-bold font-display mb-1">Confirmação de Senha</label>
-            <div className="relative">
-              <Lock size={22} className="absolute left-4 sm:left-5 top-3.5 sm:top-4 text-foreground/40" />
-              <input
-                type="password"
-                {...register('password')}
-                placeholder="••••••••"
-                className="w-full h-12 sm:h-14 bg-background border-4 font-display border-foreground/40 pl-11 sm:pl-12 pr-3 py-2 text-sm sm:text-base placeholder:text-foreground/40 focus:outline-none focus:border-[#FF5C80]"
-              />
-            </div>
-            {errors.password && (
-              <span className="text-xs text-destructive mt-1 block">{errors.password.message}</span>
-            )}
-          </div>
-          <div className="justify-between mt-4">
-            <p className="font-black text-xs sm:text-sm text-foreground/40 mb-4">
-              Ao continuar, você concorda com os <Link to="/register" className="hover:text-secondary-hover text-secondary font-black text-xs sm:text-sm text-decoration-line: underline">Termos de Uso</Link> e a <Link to="/register" className="hover:text-secondary-hover text-secondary font-black text-xs sm:text-sm text-decoration-line: underline">Política de Privacidade</Link>.
-            </p>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-secondary hover:bg-secondary-hover text-background font-bold py-2.5 sm:py-3 text-sm sm:text-base uppercase tracking-wider transition-all disabled:opacity-50 cursor-pointer"
-            >
-              {loading ? 'Entrando...' : 'CADASTRE-SE'}
-            </button>
-          </div>
-        </form>
-      </div>
+        <div className="justify-between mt-3">
+          <p className="font-black text-xs text-foreground/40 mb-3 leading-tight">
+            Ao continuar, você concorda com os <Link to="#" onClick={onClose} className="hover:text-secondary-hover text-secondary font-black text-xs text-decoration-line: underline">Termos de Uso</Link> e a <Link to="#" onClick={onClose} className="hover:text-secondary-hover text-secondary font-black text-xs text-decoration-line: underline">Política de Privacidade</Link>.
+          </p>
+          <Button
+            type="submit"
+            disabled={loading}
+            variant="secondary"
+            className="w-full"
+          >
+            {loading ? 'Cadastrando...' : 'CADASTRE-SE'}
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+
+
+  if (onClose) {
+    return cardContent;
+  }
+
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center p-3 sm:p-4">
+      {cardContent}
     </div>
   );
 };
-

@@ -154,7 +154,7 @@ func (h *Handler) ReserveTickets(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var dto bookings.ReserveRequestDTO
+	var dto ReserveRequestDTO
 	if err := json.NewDecoder(r.Body).Decode(&dto); err != nil {
 		httputil.WriteJSON(w, http.StatusBadRequest, httputil.ErrorResponse{Error: "JSON inválido"})
 		return
@@ -165,7 +165,15 @@ func (h *Handler) ReserveTickets(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	transaction, err := h.service.ReserveSeats(r.Context(), userID, dto.SessionID, dto.TicketsRequested)
+	var reqs []bookings.TicketRequest
+	for _, t := range dto.TicketsRequested {
+		reqs = append(reqs, bookings.TicketRequest{
+			SeatID: t.SeatID,
+			Type:   t.Type,
+		})
+	}
+
+	transaction, err := h.service.ReserveSeats(r.Context(), userID, dto.SessionID, reqs)
 	if err != nil {
 		if errors.Is(err, bookings.ErrSeatLockFailed) {
 			httputil.WriteJSON(w, http.StatusConflict, httputil.ErrorResponse{Error: err.Error()})
@@ -175,7 +183,7 @@ func (h *Handler) ReserveTickets(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httputil.WriteJSON(w, http.StatusCreated, bookings.ReserveResponseDTO{
+	httputil.WriteJSON(w, http.StatusCreated, ReserveResponseDTO{
 		Message:            "Reserva garantida por 10 minutos!",
 		TransactionID:      transaction.ID,
 		ValorTotalCentavos: transaction.TotalAmount,
@@ -189,8 +197,8 @@ func (h *Handler) ReserveTickets(w http.ResponseWriter, r *http.Request) {
 // @Produce json
 // @Param id path string true "ID da Transação (UUID)"
 // @Param idempotency-key header string true "Chave de Idempotência"
-// @Param request body bookings.PayRequestDTO true "Método de pagamento"
-// @Success 200 {object} bookings.PayResponseDTO
+// @Param request body PayRequestDTO true "Método de pagamento"
+// @Success 200 {object} PayResponseDTO
 // @Security BearerAuth
 // @Router /bookings/transactions/{id}/pay [post]
 func (h *Handler) PayReservation(w http.ResponseWriter, r *http.Request) {
@@ -212,7 +220,7 @@ func (h *Handler) PayReservation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var dto bookings.PayRequestDTO
+	var dto PayRequestDTO
 	if err := json.NewDecoder(r.Body).Decode(&dto); err != nil {
 		httputil.WriteJSON(w, http.StatusBadRequest, httputil.ErrorResponse{Error: "JSON inválido"})
 		return
@@ -229,7 +237,7 @@ func (h *Handler) PayReservation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httputil.WriteJSON(w, http.StatusOK, bookings.PayResponseDTO{
+	httputil.WriteJSON(w, http.StatusOK, PayResponseDTO{
 		Message:      "Intenção de pagamento gerada com sucesso",
 		ClientSecret: clientSecret,
 	})

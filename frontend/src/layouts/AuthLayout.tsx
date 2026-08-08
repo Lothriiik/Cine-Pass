@@ -14,9 +14,10 @@ export const AuthLayout = () => {
         </Link>
       </header>
 
-      <main className="w-full max-w-md my-auto py-6">
+      <main className="w-full max-w-[450px] my-auto py-6">
         <Outlet />
       </main>
+
 
       <footer className="pb-6 sm:pb-12 md:pb-32 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs sm:text-sm font-bold font-display text-foreground/60">
         <Link to="#" className="underline hover:text-tertiary transition-colors">Termos de Uso</Link>

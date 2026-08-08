@@ -5,22 +5,23 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-black uppercase tracking-tight transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-95 hover:scale-105 border-4 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-display font-bold uppercase tracking-wider transition-all focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 cursor-pointer rounded-none",
   {
     variants: {
       variant: {
-        default: "bg-primary-400 text-white border-primary-400 hover:brightness-90",
-        destructive: "bg-danger-400 text-white border-danger-400 hover:brightness-90",
-        outline: "border-white/20 bg-transparent hover:border-primary-400 hover:bg-primary-400/10",
-        secondary: "bg-secondary-400 text-white border-secondary-400 hover:brightness-90",
-        ghost: "border-2 border-transparent hover:bg-white/5 hover:text-white hover:border-white/20",
-        link: "text-primary-400 underline-offset-4 hover:underline border-transparent",
+        default: "bg-primary hover:bg-primary-hover text-background shadow-[3px_3px_0px_0px_var(--border)]",
+        secondary: "bg-secondary hover:bg-secondary-hover text-background shadow-[3px_3px_0px_0px_var(--border)]",
+        tertiary: "bg-tertiary hover:bg-tertiary-hover text-background shadow-[3px_3px_0px_0px_var(--border)]",
+        destructive: "bg-destructive hover:opacity-90 text-background shadow-[3px_3px_0px_0px_var(--border)]",
+        outline: "border-foreground/40 border-4 bg-background hover:border-primary text-foreground/70",
+        ghost: "bg-transparent hover:bg-foreground/10 text-foreground/70",
+        link: "text-primary underline-offset-4 hover:underline p-0 h-auto",
       },
       size: {
-        default: "h-11 px-6 min-w-[120px] text-sm", // Standard (44px)
-        sm: "h-9 px-4 text-xs min-w-[80px]", // Small (36px)
-        lg: "h-14 px-8 min-w-[140px] text-base", // Large (56px) needs to be taller but not too wide
-        icon: "h-11 w-11", // Icon Button match default
+        default: "h-11 sm:h-12 px-6 text-sm sm:text-base",
+        sm: "h-9 px-3 text-xs",
+        lg: "h-14 px-8 text-base sm:text-lg",
+        icon: "h-10 w-10 p-0 flex items-center justify-center",
       },
     },
     defaultVariants: {
@@ -29,6 +30,7 @@ const buttonVariants = cva(
     },
   }
 )
+
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,

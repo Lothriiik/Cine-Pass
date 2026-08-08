@@ -2,34 +2,20 @@ package users
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"log/slog"
 	"time"
-	"fmt"
 
-	"github.com/StartLivin/screek/backend/internal/movies"
 	"github.com/StartLivin/screek/backend/internal/shared/crypto"
 	"github.com/google/uuid"
 )
 
-var (
-	ErrUserNotFound       = errors.New("user not found")
-	ErrUserAlreadyExists  = errors.New("usuário com este e-mail ou username já existe")
-	ErrInvalidPassword    = errors.New("senha incorreta")
-	ErrOldPasswordInvalid = errors.New("senha antiga incorreta")
-	ErrMovieNotFound      = errors.New("filme não encontrado na base local")
-)
-
-type MovieRepository interface {
-	GetMovieByTMDBID(ctx context.Context, tmdbID int) (*movies.Movie, error)
-}
-
 type UserService struct {
 	repo      UserRepository
-	movieRepo MovieRepository
+	movieRepo MovieProvider
 }
 
-func NewService(repo UserRepository, movieRepo MovieRepository) *UserService {
+func NewService(repo UserRepository, movieRepo MovieProvider) *UserService {
 	return &UserService{repo: repo, movieRepo: movieRepo}
 }
 

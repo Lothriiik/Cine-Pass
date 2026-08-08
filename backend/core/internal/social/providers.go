@@ -6,6 +6,12 @@ import (
 	"github.com/google/uuid"
 )
 
+type UserSummary struct {
+	ID        uuid.UUID
+	Username  string
+	AvatarURL string
+}
+
 type UserProvider interface {
 	GetUserByID(ctx context.Context, id uuid.UUID) (*UserSummary, error)
 	GetUserByUsername(ctx context.Context, username string) (*UserSummary, error)

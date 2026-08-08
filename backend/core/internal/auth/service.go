@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"errors"
 	"log/slog"
 	"time"
 
@@ -10,23 +9,8 @@ import (
 	"github.com/StartLivin/screek/backend/internal/shared/crypto"
 	"github.com/StartLivin/screek/backend/internal/shared/email"
 	"github.com/StartLivin/screek/backend/internal/shared/httputil"
-	"github.com/StartLivin/screek/backend/internal/users"
 	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"
-)
-
-var (
-	ErrInvalidCredentials = errors.New("usuário ou senha inválidos")
-	ErrTokenGeneration    = errors.New("erro ao gerar token")
-	ErrInvalidToken       = errors.New("token inválido")
-	ErrLogoutProcess      = errors.New("erro ao processar logout no servidor")
-	ErrUserNotFound       = errors.New("usuário não encontrado")
-	ErrSamePassword       = errors.New("a nova senha não pode ser igual à senha antiga")
-	ErrPasswordProcess    = errors.New("erro ao processar nova senha")
-	ErrPasswordUpdate     = errors.New("erro ao atualizar senha")
-	ErrOldPasswordInvalid = errors.New("senha antiga incorreta")
-	ErrRefreshRevoked     = errors.New("token de atualização revogado ou expirado")
-	ErrTooManyAttempts    = errors.New("muitas tentativas de login. tente novamente mais tarde")
 )
 
 type RedisClient interface {
@@ -40,18 +24,17 @@ type RedisClient interface {
 }
 
 type AuthService struct {
-	userRepo users.UserRepository
+	userRepo UserProvider
 	jwt      *jwt.JWTService
 	redis    RedisClient
 	mailer   email.Mailer
 }
 
-func NewAuthService(userRepo users.UserRepository, jwt *jwt.JWTService, redisClient RedisClient, mailer email.Mailer) *AuthService {
+func NewAuthService(userRepo UserProvider, jwt *jwt.JWTService, redisClient RedisClient, mailer email.Mailer) *AuthService {
 	return &AuthService{userRepo: userRepo, jwt: jwt, redis: redisClient, mailer: mailer}
 }
 
 func (s *AuthService) Login(ctx context.Context, username, password string) (*AuthTokenResponse, error) {
-
 	lockKey := "brute_force:" + username
 	attempts, _ := s.redis.Get(ctx, lockKey).Int()
 	if attempts >= 10 {
@@ -201,7 +184,7 @@ func (s *AuthService) ResetPassword(ctx context.Context, token, newPassword stri
 	}
 
 	user.Password = hashedPassword
-	if err := s.userRepo.UpdateUser(ctx, user); err != nil {
+	if err := s.userRepo.UpdateUserPassword(ctx, user); err != nil {
 		return ErrPasswordUpdate
 	}
 
@@ -231,7 +214,7 @@ func (s *AuthService) ChangePassword(ctx context.Context, userID uuid.UUID, oldP
 	}
 
 	user.Password = hashedPassword
-	if err := s.userRepo.UpdateUser(ctx, user); err != nil {
+	if err := s.userRepo.UpdateUserPassword(ctx, user); err != nil {
 		return ErrPasswordUpdate
 	}
 
@@ -244,7 +227,7 @@ func (s *AuthService) UpdateUserRole(ctx context.Context, userID uuid.UUID, role
 		return ErrUserNotFound
 	}
 	user.Role = role
-	return s.userRepo.UpdateUser(ctx, user)
+	return s.userRepo.UpdateUserRole(ctx, user, role)
 }
 
 func (s *AuthService) handleFailedLogin(ctx context.Context, username string) {

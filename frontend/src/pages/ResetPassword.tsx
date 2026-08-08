@@ -7,6 +7,9 @@ import { toast } from 'sonner';
 import { X as XIcon, Eye, EyeSlash } from '@phosphor-icons/react';
 import { api } from '../services/api';
 
+import { Input } from '../components/ui/input';
+import { Button } from '../components/ui/button';
+
 const resetPasswordSchema = z
   .object({
     password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
@@ -53,7 +56,8 @@ export const ResetPassword = () => {
   };
 
   return (
-    <div className="w-full bg-background text-foreground rounded-none border-4 border-tertiary shadow-[6px_6px_0px_0px_var(--border)] sm:shadow-[8px_8px_0px_0px_var(--border)]">
+    <div className="w-full bg-background text-foreground rounded-none border-4 border-tertiary shadow-[10px_10px_0px_0px_var(--border)]">
+
       <div className="flex items-center justify-between border-b-4 bg-tertiary/10 border-tertiary p-4 px-5 sm:p-5 sm:px-8">
         <h1 className="text-lg sm:text-xl text-tertiary font-display font-extrabold uppercase tracking-wide">
           REDEFINIR A SENHA
@@ -73,16 +77,15 @@ export const ResetPassword = () => {
             Nova Senha
           </label>
           <div className="relative">
-            <input
+            <Input
               type={showPassword ? 'text' : 'password'}
               {...register('password')}
               placeholder="••••••••••••"
-              className="w-full h-11 sm:h-12 bg-background border-2 sm:border-4 font-display border-foreground/40 px-3 pr-10 py-2 text-sm sm:text-base text-foreground focus:outline-none focus:border-tertiary"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-3 sm:top-3.5 text-foreground/50 hover:text-tertiary cursor-pointer"
+              className="absolute right-3 top-3 sm:top-3.5 text-foreground/50 hover:text-tertiary cursor-pointer z-10"
             >
               {showPassword ? <EyeSlash size={18} /> : <Eye size={18} />}
             </button>
@@ -97,16 +100,15 @@ export const ResetPassword = () => {
             Confirmar Senha
           </label>
           <div className="relative">
-            <input
+            <Input
               type={showConfirmPassword ? 'text' : 'password'}
               {...register('confirmPassword')}
               placeholder="••••••••••••"
-              className="w-full h-11 sm:h-12 bg-background border-2 sm:border-4 font-display border-foreground/40 px-3 pr-10 py-2 text-sm sm:text-base text-foreground focus:outline-none focus:border-tertiary"
             />
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-3 sm:top-3.5 text-foreground/50 hover:text-tertiary cursor-pointer"
+              className="absolute right-3 top-3 sm:top-3.5 text-foreground/50 hover:text-tertiary cursor-pointer z-10"
             >
               {showConfirmPassword ? <EyeSlash size={18} /> : <Eye size={18} />}
             </button>
@@ -117,16 +119,16 @@ export const ResetPassword = () => {
         </div>
 
         <div className="pt-2">
-          <button
+          <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-tertiary hover:bg-tertiary-hover text-tertiary-foreground font-display font-extrabold py-2.5 sm:py-3 text-xs sm:text-sm uppercase tracking-wider transition-all disabled:opacity-50 cursor-pointer border-2 border-tertiary"
+            variant="tertiary"
+            className="w-full"
           >
             {loading ? 'REDEFININDO...' : 'REDEFINIR'}
-          </button>
+          </Button>
         </div>
       </form>
     </div>
   );
-
 };

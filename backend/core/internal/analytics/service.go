@@ -5,30 +5,7 @@ import (
 	"log/slog"
 	"sort"
 	"time"
-
-	"github.com/StartLivin/screek/backend/internal/cinema"
-	"github.com/StartLivin/screek/backend/internal/movies"
 )
-
-type MovieProvider interface {
-	GetMovieDetails(ctx context.Context, tmdbID int) (*movies.Movie, error)
-}
-
-type CinemaProvider interface {
-	GetCinemaByID(ctx context.Context, id int) (*cinema.Cinema, error)
-}
-
-type AnalyticsRepository interface {
-	GetStatsByDateRange(ctx context.Context, start, end time.Time) ([]DailyCinemaStats, error)
-	GetTopMoviesByDateRange(ctx context.Context, start, end time.Time, limit int) ([]DailyMovieStats, error)
-	GetGenreStats(ctx context.Context, start, end time.Time) (map[string]float64, error)
-	GetRevenueTrends(ctx context.Context, start, end time.Time, period string) ([]DailyCinemaStats, error)
-
-	CalculateDailyStats(ctx context.Context, date time.Time) ([]DailyCinemaStats, error)
-	UpsertDailyStats(ctx context.Context, stats []DailyCinemaStats) error
-	CalculateDailyMovieStats(ctx context.Context, date time.Time) ([]DailyMovieStats, error)
-	UpsertDailyMovieStats(ctx context.Context, stats []DailyMovieStats) error
-}
 
 type AnalyticsService struct {
 	repo           AnalyticsRepository
@@ -60,8 +37,10 @@ func (s *AnalyticsService) GetAnalytics(ctx context.Context, start, end time.Tim
 		totalTickets += st.TicketsSold
 
 		cinemaName := "Cinema Desconhecido"
-		if c, err := s.cinemaProvider.GetCinemaByID(ctx, st.CinemaID); err == nil && c != nil {
-			cinemaName = c.Name
+		if s.cinemaProvider != nil {
+			if c, err := s.cinemaProvider.GetCinemaByID(ctx, st.CinemaID); err == nil && c != nil {
+				cinemaName = c.Name
+			}
 		}
 
 		cinemaStats = append(cinemaStats, DailyCinemaStatsResponseDTO{
@@ -90,10 +69,11 @@ func (s *AnalyticsService) GetMovieAnalytics(ctx context.Context, start, end tim
 
 	var response []MovieStatsDTO
 	for _, ms := range movieStats {
-		movie, err := s.movieProvider.GetMovieDetails(ctx, ms.MovieID)
 		title := "Filme Desconhecido"
-		if err == nil {
-			title = movie.Title
+		if s.movieProvider != nil {
+			if movie, err := s.movieProvider.GetMovieDetails(ctx, ms.MovieID); err == nil && movie != nil {
+				title = movie.Title
+			}
 		}
 
 		response = append(response, MovieStatsDTO{

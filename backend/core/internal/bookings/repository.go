@@ -4,14 +4,13 @@ import (
 	"context"
 
 	"github.com/StartLivin/screek/backend/internal/cinema"
-	"github.com/StartLivin/screek/backend/internal/movies"
 	"github.com/google/uuid"
 )
 
 type BookingsRepository interface {
 	GetCinemaByID(ctx context.Context, id int) (*cinema.Cinema, error)
 	GetSessionsByMovie(ctx context.Context, movieID int, city string, date string) ([]cinema.Session, error)
-	GetMoviesPlaying(ctx context.Context, city string, date string) ([]movies.Movie, error)
+	GetMoviesPlaying(ctx context.Context, city string, date string) ([]MovieSummary, error)
 	GetSeatsBySession(ctx context.Context, sessionID int) ([]cinema.Seat, error)
 	CreateReservation(ctx context.Context, userID uuid.UUID, sessionID int, tickets []Ticket, totalAmount int) (*Transaction, error)
 	GetTransactionByID(ctx context.Context, transactionID uuid.UUID, userID uuid.UUID) (*Transaction, error)

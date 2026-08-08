@@ -6,19 +6,8 @@ import (
 	"io"
 	"strconv"
 
-	"github.com/StartLivin/screek/backend/internal/catalog"
-	"github.com/StartLivin/screek/backend/internal/movies"
 	"github.com/google/uuid"
 )
-
-type MovieMatcher interface {
-	MatchMovieByTitleAndYear(ctx context.Context, title string, year int) (*movies.Movie, error)
-}
-
-type CatalogProvider interface {
-	LogMovie(ctx context.Context, userID uuid.UUID, movieID uint, req catalog.LogMovieRequest) error
-	AddToWatchlist(ctx context.Context, userID uuid.UUID, movieID uint) error
-}
 
 type Service struct {
 	matcher MovieMatcher
@@ -60,11 +49,7 @@ func (s *Service) ImportWatchedCSV(ctx context.Context, userID uuid.UUID, reader
 			continue
 		}
 
-		err = s.catalog.LogMovie(ctx, userID, uint(movie.ID), catalog.LogMovieRequest{
-			Watched: true,
-			Rating:  0,
-			Liked:   false,
-		})
+		err = s.catalog.LogMovie(ctx, userID, uint(movie.ID), 0, true, false)
 		if err != nil {
 			summary.Failed++
 			continue
@@ -98,11 +83,7 @@ func (s *Service) ImportRatingsCSV(ctx context.Context, userID uuid.UUID, reader
 			continue
 		}
 
-		err = s.catalog.LogMovie(ctx, userID, uint(movie.ID), catalog.LogMovieRequest{
-			Watched: true,
-			Rating:  rating,
-			Liked:   false,
-		})
+		err = s.catalog.LogMovie(ctx, userID, uint(movie.ID), rating, true, false)
 		if err != nil {
 			summary.Failed++
 			continue

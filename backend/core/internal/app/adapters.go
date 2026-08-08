@@ -4,14 +4,187 @@ import (
 	"context"
 	"errors"
 
+	"github.com/StartLivin/screek/backend/internal/analytics"
+	"github.com/StartLivin/screek/backend/internal/auth"
 	"github.com/StartLivin/screek/backend/internal/bookings"
 	"github.com/StartLivin/screek/backend/internal/catalog"
 	"github.com/StartLivin/screek/backend/internal/cinema"
+	"github.com/StartLivin/screek/backend/internal/imports/letterboxd"
 	"github.com/StartLivin/screek/backend/internal/movies"
+	"github.com/StartLivin/screek/backend/internal/shared/httputil"
 	"github.com/StartLivin/screek/backend/internal/social"
 	"github.com/StartLivin/screek/backend/internal/users"
 	"github.com/google/uuid"
 )
+
+type authUserAdapter struct {
+	svc *users.UserService
+}
+
+func (a *authUserAdapter) GetUserByUsername(ctx context.Context, username string) (*auth.UserSummary, error) {
+	u, err := a.svc.GetUserByUsername(ctx, username)
+	if err != nil {
+		return nil, err
+	}
+	return &auth.UserSummary{
+		ID:       u.ID,
+		Username: u.Username,
+		Email:    u.Email,
+		Password: u.Password,
+		Role:     u.Role,
+	}, nil
+}
+
+func (a *authUserAdapter) GetUserByID(ctx context.Context, id uuid.UUID) (*auth.UserSummary, error) {
+	u, err := a.svc.GetUserByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return &auth.UserSummary{
+		ID:       u.ID,
+		Username: u.Username,
+		Email:    u.Email,
+		Password: u.Password,
+		Role:     u.Role,
+	}, nil
+}
+
+func (a *authUserAdapter) GetUserByEmail(ctx context.Context, email string) (*auth.UserSummary, error) {
+	u, err := a.svc.GetUserByEmail(ctx, email)
+	if err != nil {
+		return nil, err
+	}
+	return &auth.UserSummary{
+		ID:       u.ID,
+		Username: u.Username,
+		Email:    u.Email,
+		Password: u.Password,
+		Role:     u.Role,
+	}, nil
+}
+
+func (a *authUserAdapter) UpdateUserPassword(ctx context.Context, user *auth.UserSummary) error {
+	u, err := a.svc.GetUserByID(ctx, user.ID)
+	if err != nil {
+		return err
+	}
+	u.Password = user.Password
+	return a.svc.UpdateUser(ctx, u)
+}
+
+func (a *authUserAdapter) UpdateUserRole(ctx context.Context, user *auth.UserSummary, role httputil.Role) error {
+	u, err := a.svc.GetUserByID(ctx, user.ID)
+	if err != nil {
+		return err
+	}
+	u.Role = role
+	return a.svc.UpdateUser(ctx, u)
+}
+
+type userMovieAdapter struct {
+	svc *movies.MovieService
+}
+
+func (a *userMovieAdapter) GetMovieByTMDBID(ctx context.Context, tmdbID int) (*users.MovieSummary, error) {
+	m, err := a.svc.GetMovieDetails(ctx, tmdbID)
+	if err != nil {
+		return nil, err
+	}
+	return &users.MovieSummary{
+		ID:     m.ID,
+		TMDBID: m.TMDBID,
+	}, nil
+}
+
+type analyticsMovieAdapter struct {
+	svc *movies.MovieService
+}
+
+func (a *analyticsMovieAdapter) GetMovieDetails(ctx context.Context, tmdbID int) (*analytics.MovieSummary, error) {
+	m, err := a.svc.GetMovieDetails(ctx, tmdbID)
+	if err != nil {
+		return nil, err
+	}
+	return &analytics.MovieSummary{
+		ID:    m.ID,
+		Title: m.Title,
+	}, nil
+}
+
+type analyticsCinemaAdapter struct {
+	svc *cinema.CinemaService
+}
+
+func (a *analyticsCinemaAdapter) GetCinemaByID(ctx context.Context, id int) (*analytics.CinemaSummary, error) {
+	c, err := a.svc.GetCinemaByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return &analytics.CinemaSummary{
+		ID:   c.ID,
+		Name: c.Name,
+	}, nil
+}
+
+type bookingMovieAdapter struct {
+	svc *movies.MovieService
+}
+
+func (a *bookingMovieAdapter) GetMovieDetails(ctx context.Context, tmdbID int) (*bookings.MovieSummary, error) {
+	m, err := a.svc.GetMovieDetails(ctx, tmdbID)
+	if err != nil {
+		return nil, err
+	}
+	return &bookings.MovieSummary{
+		ID:     m.ID,
+		TMDBID: m.TMDBID,
+		Title:  m.Title,
+	}, nil
+}
+
+type bookingUserAdapter struct {
+	svc *users.UserService
+}
+
+func (a *bookingUserAdapter) GetUserByID(ctx context.Context, id uuid.UUID) (*bookings.UserSummary, error) {
+	u, err := a.svc.GetUserByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return &bookings.UserSummary{
+		ID:    u.ID,
+		Name:  u.Name,
+		Email: u.Email,
+	}, nil
+}
+
+type letterboxdMovieAdapter struct {
+	svc *movies.MovieService
+}
+
+func (a *letterboxdMovieAdapter) MatchMovieByTitleAndYear(ctx context.Context, title string, year int) (*letterboxd.MatchedMovieSummary, error) {
+	m, err := a.svc.MatchMovieByTitleAndYear(ctx, title, year)
+	if err != nil {
+		return nil, err
+	}
+	return &letterboxd.MatchedMovieSummary{ID: m.ID}, nil
+}
+
+type letterboxdCatalogAdapter struct {
+	svc *catalog.CatalogService
+}
+
+func (a *letterboxdCatalogAdapter) LogMovie(ctx context.Context, userID uuid.UUID, movieID uint, rating float64, watched bool, liked bool) error {
+	return a.svc.LogMovie(ctx, userID, movieID, catalog.LogMovieRequest{
+		Watched: watched,
+		Rating:  rating,
+		Liked:   liked,
+	})
+}
+
+func (a *letterboxdCatalogAdapter) AddToWatchlist(ctx context.Context, userID uuid.UUID, movieID uint) error {
+	return a.svc.AddToWatchlist(ctx, userID, movieID)
+}
 
 type catalogMovieAdapter struct {
 	svc *movies.MovieService

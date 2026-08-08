@@ -9,7 +9,7 @@ import (
 	"github.com/StartLivin/screek/backend/internal/bookings"
 	"github.com/StartLivin/screek/backend/internal/cinema"
 	cinemastore "github.com/StartLivin/screek/backend/internal/cinema/store"
-	"github.com/StartLivin/screek/backend/internal/movies"
+	moviestore "github.com/StartLivin/screek/backend/internal/movies/store"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -41,8 +41,8 @@ func (s *Store) GetCinemaByID(ctx context.Context, id int) (*cinema.Cinema, erro
 	return cinemastore.ToCinemaDomain(&record), nil
 }
 
-func (s *Store) GetMoviesPlaying(ctx context.Context, city string, date string) ([]movies.Movie, error) {
-	var moviesList []movies.Movie
+func (s *Store) GetMoviesPlaying(ctx context.Context, city string, date string) ([]bookings.MovieSummary, error) {
+	var records []moviestore.MovieRecord
 
 	parsedDate, err := time.Parse("2006-01-02", date)
 	if err != nil {
@@ -60,11 +60,21 @@ func (s *Store) GetMoviesPlaying(ctx context.Context, city string, date string) 
 		  AND s.start_time >= ? 
 		  AND s.start_time < ?
 	`
-	err = s.db.WithContext(ctx).Preload("Genres").Raw(query, city, parsedDate, endOfDay).Find(&moviesList).Error
+	err = s.db.WithContext(ctx).Raw(query, city, parsedDate, endOfDay).Find(&records).Error
 	if err != nil {
 		return nil, err
 	}
-	return moviesList, nil
+
+	var list []bookings.MovieSummary
+	for _, r := range records {
+		list = append(list, bookings.MovieSummary{
+			ID:        int(r.ID),
+			TMDBID:    r.TMDBID,
+			Title:     r.Title,
+			PosterURL: r.PosterURL,
+		})
+	}
+	return list, nil
 }
 
 func (s *Store) GetSessionsByMovie(ctx context.Context, movieID int, city string, date string) ([]cinema.Session, error) {

@@ -146,8 +146,9 @@ func (app *Application) mount() {
 	// listAdapter é inicializado em duas fases por causa de uma
 	// dependência circular: movieService → listAdapter → catalogSvc → movieService
 	listAdapter := &listSearchAdapter{}
+	userMovieAdapt := &userMovieAdapter{}
 
-	userService := users.NewService(userStore, movieStore)
+	userService := users.NewService(userStore, userMovieAdapt)
 	notifService := notifications.NewService(notifStore, app.hub)
 
 	movieService := movies.NewService(
@@ -156,12 +157,13 @@ func (app *Application) mount() {
 		&userSearchAdapter{svc: userService},
 		listAdapter,
 	)
+	userMovieAdapt.svc = movieService
 
-	authSvc := auth.NewAuthService(userStore, jwtService, app.redis, resendClient)
+	authSvc := auth.NewAuthService(&authUserAdapter{svc: userService}, jwtService, app.redis, resendClient)
 	mgmtSvc := cinema.NewService(mgmtStore, &cinemaMovieAdapter{svc: movieService}, app.events)
-	analyticsSvc := analytics.NewService(analyticsStore, movieService, mgmtSvc)
+	analyticsSvc := analytics.NewService(analyticsStore, &analyticsMovieAdapter{svc: movieService}, &analyticsCinemaAdapter{svc: mgmtSvc})
 	catalogSvc := catalog.NewService(catalogStore, &catalogUserAdapter{svc: userService}, &catalogMovieAdapter{svc: movieService})
-	bookingSvc := bookings.NewService(bookingStore, app.redis, paymentSvc, resendClient, movieService, userService, app.events)
+	bookingSvc := bookings.NewService(bookingStore, app.redis, paymentSvc, resendClient, &bookingMovieAdapter{svc: movieService}, &bookingUserAdapter{svc: userService}, app.events)
 	socialSvc := social.NewService(socialStore, app.events, &userSearchAdapter{svc: userService}, &sessionSearchAdapter{svc: bookingSvc, movieSvc: movieService, mgmtSvc: mgmtSvc})
 
 	app.userSvc = userService
@@ -181,7 +183,7 @@ func (app *Application) mount() {
 	bookingHandler := bookinghandler.NewHandler(bookingSvc)
 	notifHandler := notifhandler.NewHandler(notifService)
 	webhookHandler := bookinghandler.NewWebhookHandler(bookingSvc, paymentSvc)
-	letterboxdSvc := letterboxd.NewService(movieService, catalogSvc)
+	letterboxdSvc := letterboxd.NewService(&letterboxdMovieAdapter{svc: movieService}, &letterboxdCatalogAdapter{svc: catalogSvc})
 	letterboxdHandler := lbxdhandler.NewHandler(letterboxdSvc)
 
 	app.registerEventHandlers(notifService, mgmtSvc, socialSvc)
@@ -229,7 +231,7 @@ func (app *Application) Run() error {
 		if err := userstore.AutoMigrate(app.db); err != nil {
 			return err
 		}
-		if err := movies.AutoMigrate(app.db); err != nil {
+		if err := moviestore.AutoMigrate(app.db); err != nil {
 			return err
 		}
 		if err := cinemastore.AutoMigrate(app.db); err != nil {

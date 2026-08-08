@@ -19,6 +19,7 @@ const (
 	EventSessionScheduled EventType = "session.scheduled"
 )
 
+type Data = map[string]any
 type Handler func(payload any)
 
 type EventBus struct {

@@ -2,16 +2,12 @@ package movies
 
 import (
 	"context"
-	"errors"
-	"time"
 	"fmt"
+	"time"
 
 	movietmdb "github.com/StartLivin/screek/backend/internal/movies/tmdb"
 )
 
-var (
-    ErrMovieMatchNotFound = errors.New("filme não encontrado por título/ano")
-)
 
 type UserSearchProvider interface {
 	SearchUsers(ctx context.Context, query string) ([]UserSearchResult, error)
@@ -80,7 +76,7 @@ func (s *MovieService) SearchMovies(ctx context.Context, query string) ([]Movie,
 func (s *MovieService) GetMovieDetails(ctx context.Context, tmdbID int) (*Movie, error) {
 	localMovie, err := s.store.GetMovieByTMDBID(ctx, tmdbID)
 	if err == nil && localMovie != nil {
-		return localMovie, fmt.Errorf("falha nos detalhes do filme no TMDB/store: %w", err)
+		return localMovie, nil
 	}
 
 	tmdbDetails, err := s.tmdb.GetMovieDetails(ctx, tmdbID)

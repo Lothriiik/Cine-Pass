@@ -1,6 +1,7 @@
 package catalog
 
 import (
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -20,10 +21,10 @@ type MovieList struct {
 	ID          uint
 	UserID      uuid.UUID
 	Title       string
-	IsPublic    bool
 	Description string
-	Items       []MovieListItem
+	IsPublic    bool
 	CreatedAt   time.Time
+	Items       []MovieListItem
 }
 
 type MovieListItem struct {
@@ -44,4 +45,50 @@ type MovieStats struct {
 	AverageRating float64
 	TotalReviews  int
 	TotalLikes    int
+}
+
+type CreateMovieListRequest struct {
+	Title       string
+	Description string
+	IsPublic    bool
+	MovieIDs    []uint
+}
+
+type LogMovieRequest struct {
+	Watched bool
+	Rating  float64
+	Liked   bool
+}
+
+func (r *LogMovieRequest) Validate() error {
+	if r.Rating < 0 || r.Rating > 10 {
+		return errors.New("avaliação deve ser entre 0 e 10")
+	}
+	return nil
+}
+
+type WatchlistRichItem struct {
+	MovieID     uint
+	AddedAt     time.Time
+	Title       string
+	ReleaseYear int
+	PosterURL   string
+}
+
+type MovieListSummary struct {
+	ID          uint
+	Title       string
+	Description string
+	IsPublic    bool
+	ItemCount   int
+	CreatedAt   time.Time
+}
+
+type MovieLogSummary struct {
+	MovieID   uint
+	Watched   bool
+	Rating    float64
+	Liked     bool
+	UpdatedAt time.Time
+	Movie     MovieDetailSummary
 }

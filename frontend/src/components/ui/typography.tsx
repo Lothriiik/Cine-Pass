@@ -34,7 +34,6 @@ export interface TypographyProps
 
 const Typography = React.forwardRef<HTMLElement, TypographyProps>(
     ({ className, variant, as, children, ...props }, ref) => {
-        // Determina o componente base
         const defaultElement = variant?.startsWith("h") ? variant : "p"
         const Comp = (as || defaultElement) as React.ElementType
 

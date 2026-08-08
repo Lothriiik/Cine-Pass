@@ -10,32 +10,14 @@ import (
 
 	"github.com/StartLivin/screek/backend/internal/bookings/infra/payment"
 	"github.com/StartLivin/screek/backend/internal/cinema"
-	"github.com/StartLivin/screek/backend/internal/movies"
 	"github.com/StartLivin/screek/backend/internal/shared/events"
-	"github.com/StartLivin/screek/backend/internal/users"
 	"github.com/google/uuid"
 	redisclient "github.com/redis/go-redis/v9"
 )
 
-var (
-    ErrSeatLockFailed        = errors.New("uma ou mais cadeiras foram compradas por outro usuário")
-    ErrInvalidTicketStatus   = errors.New("query param 'status' inválido")
-    ErrInvalidSeatID         = errors.New("SeatID deve ser um número positivo")
-    ErrSessionNotFound       = errors.New("sessão não encontrada")
-    ErrTransactionNotFound   = errors.New("transação não encontrada, não pertence a você ou já paga")
-    ErrTransactionNotPending = errors.New("esta transação não está mais pendente")
-)
 
 type Mailer interface {
 	SendTicketEmail(ctx context.Context, to, userName, qrCode string) error
-}
-
-type MovieProvider interface {
-	GetMovieDetails(ctx context.Context, tmdbID int) (*movies.Movie, error)
-}
-
-type UserProvider interface {
-	GetUserByID(ctx context.Context, id uuid.UUID) (*users.User, error)
 }
 
 type SimpleRedisClient interface {
@@ -637,6 +619,9 @@ func (s *bookingsService) GetTicketsBySession(ctx context.Context, sessionID int
 }
 
 func (s *bookingsService) fetchUserInfo(ctx context.Context, userID uuid.UUID) (string, string) {
+	if s.userProvider == nil {
+		return "Desconhecido", ""
+	}
 	user, err := s.userProvider.GetUserByID(ctx, userID)
 	if err != nil || user == nil {
 		return "Desconhecido", ""
@@ -645,6 +630,9 @@ func (s *bookingsService) fetchUserInfo(ctx context.Context, userID uuid.UUID) (
 }
 
 func (s *bookingsService) fetchUserBookingDTO(ctx context.Context, userID uuid.UUID) *UserBookingDTO {
+	if s.userProvider == nil {
+		return nil
+	}
 	user, err := s.userProvider.GetUserByID(ctx, userID)
 	if err != nil || user == nil {
 		return nil
