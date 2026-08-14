@@ -1,4 +1,4 @@
-name: Backend CI
+name: Backend Core CI
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -7,17 +7,17 @@ on:
   push:
     branches: [ main, develop ]
     paths:
-      - 'backend/**'
+      - 'backend/core/**'
       - 'docker-compose.yml'
-      - '.github/workflows/backend-ci.yml'
+      - '.github/workflows/backend-core-ci.yml'
   pull_request:
     branches: [ main ]
     paths:
-      - 'backend/**'
+      - 'backend/core/**'
 
 jobs:
   test:
-    name: Build & Test
+    name: Build & Test Core Service
     runs-on: ubuntu-latest
 
     services:
@@ -69,7 +69,6 @@ jobs:
     - name: Run Unit Tests
       run: |
         cd backend/core
-        # -short pula os testes que precisam de banco real
         go test ./internal/... -v -short -p 1
 
     - name: Run Integration Tests
@@ -79,10 +78,9 @@ jobs:
         JWT_SECRET: "ci-test-secret"
       run: |
         cd backend/core
-        # Roda apenas os testes que contém "Test_integ" ou que dependem de infra
         go test ./internal/... -v -run "Test_integ" -p 1
 
-    - name: Build Backend Image
+    - name: Build Backend Core Image
       run: |
         cd backend/core
-        docker build -t screek-backend:latest .
+        docker build -t screek-backend-core:latest .

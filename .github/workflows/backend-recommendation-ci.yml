@@ -1,0 +1,42 @@
+name: Backend Recommendation CI
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'backend/recommendation/**'
+      - '.github/workflows/backend-recommendation-ci.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'backend/recommendation/**'
+
+jobs:
+  test-and-build:
+    name: Test & Build Recommendation Service
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: backend/recommendation/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          cd backend/recommendation
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build Docker Image
+        run: |
+          cd backend/recommendation
+          docker build -t screek-recommendation:latest .
