@@ -10,6 +10,7 @@ import { useAuthStore, type User } from '../stores/authStore';
 
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
+import { TooltipError } from '../components/ui/tooltip-error';
 
 const loginSchema = z.object({
   email: z.string().email('Digite um e-mail válido'),
@@ -83,8 +84,8 @@ export const Login = ({ onClose }: LoginProps = {}) => {
         </button>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-3.5 p-5 sm:p-6">
-        <div>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-5 sm:p-6">
+        <div className="relative">
           <label className="block text-xs sm:text-sm text-foreground/40 font-bold font-display mb-1">Nome de Usuario</label>
           <Input
             type="text"
@@ -92,12 +93,10 @@ export const Login = ({ onClose }: LoginProps = {}) => {
             {...register('email')}
             placeholder="Seu Usuario"
           />
-          {errors.email && (
-            <span className="text-xs text-destructive mt-1 block font-bold">{errors.email.message}</span>
-          )}
+          <TooltipError message={errors.email?.message} />
         </div>
 
-        <div>
+        <div className="relative">
           <label className="block text-xs sm:text-sm text-foreground/40 font-bold font-display mb-1">Senha</label>
           <Input
             type="password"
@@ -105,9 +104,7 @@ export const Login = ({ onClose }: LoginProps = {}) => {
             {...register('password')}
             placeholder="••••••••"
           />
-          {errors.password && (
-            <span className="text-xs text-destructive mt-1 block font-bold">{errors.password.message}</span>
-          )}
+          <TooltipError message={errors.password?.message} />
         </div>
 
         <div className="justify-between mt-3">

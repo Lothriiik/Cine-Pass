@@ -5,20 +5,32 @@
 @layer base {
   /* ===== LIGHT MODE ===== */
   :root {
-    /* RGB da paleta exata */
+    /* Constantes de Cor Fixo */
+    --light-cream-rgb: 233 216 200;     /* #E9D8C8 */
+    --dark-void-rgb: 25 2 7;          /* #190207 */
+
+    /* RGB da paleta principal */
     --background-rgb: 233 216 200;      /* #E9D8C8 */
     --foreground-rgb: 25 2 7;           /* #190207 */
+
     --primary-rgb: 126 37 83;           /* #7E2553 */
     --primary-hover-rgb: 99 27 64;
+    --primary-foreground-rgb: 233 216 200; /* Texto Creme Claro SEMPRE */
+
     --secondary-rgb: 255 92 128;        /* #FF5C80 */
     --secondary-hover-rgb: 229 69 106;
+    --secondary-foreground-rgb: 233 216 200; /* Texto Creme Claro SEMPRE */
+
     --tertiary-rgb: 26 39 68;           /* #1A2744 */
     --tertiary-hover-rgb: 17 26 46;
+    --tertiary-foreground-rgb: 233 216 200; /* Texto Creme Claro SEMPRE */
+    
     /* Semânticas */
-    --success-rgb: 22 163 74;           /* #16A34A */
-    --info-rgb: 59 130 246;             /* #3B82F6 */
-    --warning-rgb: 219 162 18;          /* #DBA212 */
-    --destructive-rgb: 220 38 38;       /* #DC2626 */
+    --success-rgb: 22 101 52;           /* #166534 */
+    --info-rgb: 32 91 194;              /* #205BC2 */
+    --warning-rgb: 113 84 14;           /* #71540E */
+    --destructive-rgb: 153 27 27;       /* #991B1B */
+    
     /* Surfaces */
     --card-rgb: 242 229 215;
     --popover-rgb: 247 236 225;
@@ -27,21 +39,31 @@
     --border-rgb: 25 2 7;
     --radius: 0px;
   }
+  
   /* ===== DARK MODE ===== */
   .dark {
     --background-rgb: 25 2 7;           /* #190207 */
     --foreground-rgb: 233 216 200;      /* #E9D8C8 */
-    --primary-rgb: 126 37 83;           /* #7E2553 */
-    --primary-hover-rgb: 152 48 103;
-    --secondary-rgb: 255 92 128;        /* #FF5C80 */
-    --secondary-hover-rgb: 255 123 153;
+    
+    /* Primary e Secondary invertidos */
+    --primary-rgb: 255 92 128;          /* #FF5C80 */
+    --primary-hover-rgb: 255 123 153;
+    --primary-foreground-rgb: 233 216 200; /* Texto Creme Claro SEMPRE */
+
+    --secondary-rgb: 126 37 83;         /* #7E2553 */
+    --secondary-hover-rgb: 152 48 103;
+    --secondary-foreground-rgb: 233 216 200; /* Texto Creme Claro SEMPRE */
+    
     --tertiary-rgb: 26 39 68;           /* #1A2744 */
     --tertiary-hover-rgb: 41 59 97;
+    --tertiary-foreground-rgb: 233 216 200; /* Texto Creme Claro SEMPRE */
+    
     /* Semânticas */
-    --success-rgb: 22% 163% 74;
-    --info-rgb: 59 130 246;
-    --warning-rgb: 219 162 18;
-    --destructive-rgb: 220 38 38;
+    --success-rgb: 22 163 74;           /* #16A34A */
+    --info-rgb: 59 130 246;             /* #3B82F6 */
+    --warning-rgb: 219 162 18;          /* #DBA212 */
+    --destructive-rgb: 234 52 52;       /* #EA3434 */
+    
     /* Surfaces */
     --card-rgb: 37 4 12;
     --popover-rgb: 44 5 14;

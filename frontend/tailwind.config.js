@@ -8,69 +8,73 @@ export default {
     theme: {
         extend: {
             colors: {
-                // Background & Texto
-                background: '#E9D8C8',
-                foreground: '#190207',
+                // Background & Texto da página
+                background: 'rgb(var(--background-rgb) / <alpha-value>)',
+                foreground: 'rgb(var(--foreground-rgb) / <alpha-value>)',
+
+                // Cores constantes da paleta
+                'light-cream': 'rgb(var(--light-cream-rgb) / <alpha-value>)',
+                'dark-void': 'rgb(var(--dark-void-rgb) / <alpha-value>)',
 
                 // Cores da Marca
                 primary: {
-                    DEFAULT: '#7E2553',
-                    hover: '#631B40',
-                    foreground: '#E9D8C8',
+                    DEFAULT: 'rgb(var(--primary-rgb) / <alpha-value>)',
+                    hover: 'rgb(var(--primary-hover-rgb) / <alpha-value>)',
+                    foreground: 'rgb(var(--primary-foreground-rgb) / <alpha-value>)',
                 },
                 secondary: {
-                    DEFAULT: '#FF5C80',
-                    hover: '#E5456A',
-                    foreground: '#190207',
+                    DEFAULT: 'rgb(var(--secondary-rgb) / <alpha-value>)',
+                    hover: 'rgb(var(--secondary-hover-rgb) / <alpha-value>)',
+                    foreground: 'rgb(var(--secondary-foreground-rgb) / <alpha-value>)',
                 },
                 tertiary: {
-                    DEFAULT: '#1A2744',
-                    hover: '#111A2E',
-                    foreground: '#E9D8C8',
+                    DEFAULT: 'rgb(var(--tertiary-rgb) / <alpha-value>)',
+                    hover: 'rgb(var(--tertiary-hover-rgb) / <alpha-value>)',
+                    foreground: 'rgb(var(--tertiary-foreground-rgb) / <alpha-value>)',
                 },
 
                 // Semânticas
                 success: {
-                    DEFAULT: '#16A34A',
-                    hover: '#15803D',
+                    DEFAULT: 'rgb(var(--success-rgb) / <alpha-value>)',
+                    hover: 'rgb(var(--success-rgb) / 0.85)',
                 },
                 info: {
-                    DEFAULT: '#3B82F6',
-                    hover: '#2563EB',
+                    DEFAULT: 'rgb(var(--info-rgb) / <alpha-value>)',
+                    hover: 'rgb(var(--info-rgb) / 0.85)',
                 },
                 warning: {
-                    DEFAULT: '#DBA212',
-                    hover: '#B5840D',
+                    DEFAULT: 'rgb(var(--warning-rgb) / <alpha-value>)',
+                    hover: 'rgb(var(--warning-rgb) / 0.85)',
                 },
                 destructive: {
-                    DEFAULT: '#DC2626',
-                    hover: '#B91C1C',
+                    DEFAULT: 'rgb(var(--destructive-rgb) / <alpha-value>)',
+                    hover: 'rgb(var(--destructive-rgb) / 0.85)',
                     foreground: '#FFFFFF',
                 },
 
                 // Superfícies (Surfaces)
                 card: {
-                    DEFAULT: '#F2E5D7',
-                    hover: '#F8EDE1',
-                    foreground: '#190207',
+                    DEFAULT: 'rgb(var(--card-rgb) / <alpha-value>)',
+                    hover: 'rgb(var(--accent-rgb) / <alpha-value>)',
+                    foreground: 'rgb(var(--foreground-rgb) / <alpha-value>)',
                 },
                 popover: {
-                    DEFAULT: '#F7ECE1',
-                    foreground: '#190207',
+                    DEFAULT: 'rgb(var(--popover-rgb) / <alpha-value>)',
+                    foreground: 'rgb(var(--foreground-rgb) / <alpha-value>)',
                 },
                 muted: {
-                    DEFAULT: '#DECBB9',
-                    foreground: '#4A353A',
+                    DEFAULT: 'rgb(var(--muted-rgb) / <alpha-value>)',
+                    foreground: 'rgb(var(--foreground-rgb) / 0.7)',
                 },
                 accent: {
-                    DEFAULT: '#D5C2B0',
-                    foreground: '#190207',
+                    DEFAULT: 'rgb(var(--accent-rgb) / <alpha-value>)',
+                    foreground: 'rgb(var(--foreground-rgb) / <alpha-value>)',
                 },
 
                 // Bordas e Inputs
-                border: '#190207',
-                input: '#F2E5D7',
-                ring: '#7E2553',
+                border: 'rgb(var(--border-rgb) / <alpha-value>)',
+                input: 'rgb(var(--card-rgb) / <alpha-value>)',
+                ring: 'rgb(var(--primary-rgb) / <alpha-value>)',
             },
             fontFamily: {
                 sans: ['Inter', 'system-ui', 'sans-serif'],

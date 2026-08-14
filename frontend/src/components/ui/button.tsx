@@ -9,11 +9,11 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary hover:bg-primary-hover text-background shadow-[3px_3px_0px_0px_var(--border)]",
-        secondary: "bg-secondary hover:bg-secondary-hover text-background shadow-[3px_3px_0px_0px_var(--border)]",
-        tertiary: "bg-tertiary hover:bg-tertiary-hover text-background shadow-[3px_3px_0px_0px_var(--border)]",
-        destructive: "bg-destructive hover:opacity-90 text-background shadow-[3px_3px_0px_0px_var(--border)]",
-        outline: "border-foreground/40 border-4 bg-background hover:border-primary text-foreground/70",
+        default: "bg-primary hover:bg-primary-hover text-[#E9D8C8] shadow-[3px_3px_0px_0px_var(--border)]",
+        secondary: "bg-secondary hover:bg-secondary-hover text-[#E9D8C8] shadow-[3px_3px_0px_0px_var(--border)]",
+        tertiary: "bg-tertiary hover:bg-tertiary-hover text-[#E9D8C8] shadow-[3px_3px_0px_0px_var(--border)]",
+        destructive: "bg-destructive hover:opacity-90 text-[#E9D8C8] shadow-[3px_3px_0px_0px_var(--border)]",
+        outline: "border-foreground/40 border-4 bg-background hover:border-primary text-foreground",
         ghost: "bg-transparent hover:bg-foreground/10 text-foreground/70",
         link: "text-primary underline-offset-4 hover:underline p-0 h-auto",
       },

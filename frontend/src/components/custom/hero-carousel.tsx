@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { CaretLeft, CaretRight } from '@phosphor-icons/react';
 
 export interface CarouselSlide {
   id: string;
@@ -36,80 +36,86 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({ slides }) => {
   const nextSlide = slides[currentIndex === slides.length - 1 ? 0 : currentIndex + 1];
 
   const getAgeRatingBg = (rating?: string) => {
-    if (rating === 'L') return 'bg-[#34A853]';
-    if (rating === '18') return 'bg-[#DC3545]';
-    if (rating === '16') return 'bg-[#FF9900]';
+    if (rating === 'L') return 'bg-[#16A34A]';
+    if (rating === '18') return 'bg-[#DC2626]';
+    if (rating === '16') return 'bg-[#DBA212]';
     if (rating === '14') return 'bg-[#D4A338]';
-    return 'bg-[#3B82F6]';
+    return 'bg-[#205BC2]';
   };
 
   return (
-    <div className="w-full font-display space-y-4 select-none">
-      {/* 1. Main Carousel Stage (Left Peek | Center Stage | Right Peek) */}
-      <div className="relative flex items-center justify-center overflow-hidden py-4">
+    <div className="w-full font-display space-y-3 sm:space-y-4 select-none">
+      {/* 1. Full-Width Stage Container (Screen edge to screen edge) */}
+      <div className="relative flex items-center justify-between w-full overflow-hidden py-1 sm:py-2 px-0 gap-1.5 sm:gap-4">
         
-        {/* Left Side Peeking Slide */}
+        {/* Left Side Peeking Card */}
         <div
           onClick={handlePrev}
-          className="hidden md:block w-1/5 aspect-[16/9] lg:aspect-[21/9] shrink-0 opacity-40 hover:opacity-75 transition-opacity cursor-pointer border-4 border-foreground/30 relative overflow-hidden mr-4"
+          className="w-[8%] sm:w-[12%] lg:w-[10%] h-[330px] sm:h-[400px] lg:h-[460px] shrink-0 opacity-40 hover:opacity-75 transition-opacity cursor-pointer border-4 border-l-0 border-foreground relative overflow-hidden -ml-2 shadow-[4px_4px_0px_0px_var(--border)]"
         >
           <img
             src={prevSlide.backdropUrl}
             alt={prevSlide.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover opacity-80"
           />
-          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 handlePrev();
               }}
-              className="w-10 h-12 bg-black/70 border-2 border-white/50 text-white flex items-center justify-center hover:bg-black/90 cursor-pointer transition-all"
+              className="w-8 h-8 sm:w-11 sm:h-11 aspect-square bg-foreground/80 border-2 border-foreground text-background flex items-center justify-center hover:bg-primary cursor-pointer transition-all shadow-[2px_2px_0px_0px_var(--border)]"
               aria-label="Anterior"
             >
-              <ChevronLeft size={24} className="stroke-[3]" />
+              <CaretLeft size={18} weight="bold" />
             </button>
           </div>
         </div>
 
-        {/* Center Main Active Slide */}
-        <div className="w-full md:w-3/5 aspect-[16/9] sm:aspect-[21/9] shrink-0 border-4 border-foreground/40 bg-background shadow-[8px_8px_0px_0px_var(--border)] relative overflow-hidden">
-          {/* Backdrop Image */}
-          <img
-            src={currentSlide.backdropUrl}
-            alt={currentSlide.title}
-            className="w-full h-full object-cover object-center"
-          />
+        {/* Center Main Active Card (Vertical Stack on Mobile | Horizontal 38/62 Split on Desktop) */}
+        <div className="w-[82%] md:w-[60%] lg:w-[65%] h-[330px] sm:h-[400px] lg:h-[480px] shrink-0 border-4 border-foreground bg-background shadow-[6px_6px_0px_0px_var(--border)] sm:shadow-[8px_8px_0px_0px_var(--border)] relative overflow-hidden flex flex-col sm:flex-row mx-auto">
+          
+          {/* Top Image (Mobile) / Full Backdrop (Desktop) */}
+          <div className="relative w-full sm:absolute sm:inset-0 h-[180px] sm:h-full overflow-hidden">
+            <img
+              src={currentSlide.backdropUrl}
+              alt={currentSlide.title}
+              className="w-full h-full object-cover object-center"
+            />
+          </div>
 
-          {/* Left Gradient Overlay & Information Panel */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-transparent p-5 sm:p-8 flex flex-col justify-between w-full md:w-3/5 h-full text-white">
-            {/* Top Badge */}
-            <div>
-              <span className="inline-block border border-[#FF5C80] text-[#FF5C80] px-3 py-0.5 text-[10px] sm:text-xs font-black uppercase tracking-widest bg-black/40">
+          {/* Bottom Info Box (Mobile) / Left Info Box (Desktop) */}
+          <div className="relative z-10 w-full sm:w-[42%] lg:w-[38%] h-[150px] sm:h-full bg-black/85 sm:bg-black/75 backdrop-blur-xs border-t-4 sm:border-t-0 sm:border-r-4 border-foreground/40 p-3 sm:p-6 lg:p-7 flex flex-col justify-between items-center sm:items-start text-center sm:text-left text-white">
+            
+            {/* Top Badge (Desktop only) */}
+            <div className="hidden sm:block">
+              <span className="inline-block border-2 border-[#FF5C80] text-[#FF5C80] px-3 py-0.5 text-[10px] sm:text-xs font-black uppercase tracking-widest bg-black/60">
                 {currentSlide.badge || 'ESTREIA'}
               </span>
             </div>
 
-            {/* Title / Logo Area */}
-            <div className="my-2 space-y-2">
+            {/* Middle Section (Logo + Details + Synopsis) */}
+            <div className="my-auto space-y-1.5 sm:space-y-4 w-full flex flex-col items-center sm:items-start">
               {currentSlide.logoUrl ? (
-                <img
-                  src={currentSlide.logoUrl}
-                  alt={currentSlide.title}
-                  className="max-h-16 sm:max-h-20 object-contain drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]"
-                />
+                <div className="flex items-center justify-center sm:justify-start">
+                  <img
+                    src={currentSlide.logoUrl}
+                    alt={currentSlide.title}
+                    className="max-h-11 sm:max-h-24 w-auto object-contain drop-shadow-[0_4px_8px_rgba(0,0,0,0.9)]"
+                  />
+                </div>
               ) : (
-                <h2 className="text-2xl sm:text-4xl font-black uppercase tracking-tight text-white leading-none drop-shadow-md">
+                <h2 className="text-base sm:text-3xl lg:text-4xl font-black uppercase tracking-tight text-white leading-none drop-shadow-md">
                   {currentSlide.title}
                 </h2>
               )}
 
-              {/* Meta Category & Rating */}
-              <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-white/90">
+              {/* Meta Category & Age Rating */}
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-bold text-white/90">
                 <span>{currentSlide.category}</span>
                 {currentSlide.ageRating && (
                   <span
-                    className={`w-4 h-4 flex items-center justify-center text-[9px] font-black text-white ${getAgeRatingBg(
+                    className={`w-3.5 h-3.5 sm:w-4 sm:h-4 flex items-center justify-center text-[8px] sm:text-[9px] font-black text-white ${getAgeRatingBg(
                       currentSlide.ageRating
                     )}`}
                   >
@@ -118,53 +124,58 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({ slides }) => {
                 )}
               </div>
 
-              {/* Directors */}
+              {/* Directors (Desktop only) */}
               {currentSlide.directors && currentSlide.directors.length > 0 && (
-                <p className="text-[11px] font-bold text-white/80">
+                <p className="hidden sm:block text-[11px] sm:text-xs font-bold text-white/80">
                   Dir.{' '}
                   {currentSlide.directors.map((d, i) => (
-                    <span key={i} className="text-[#FF5C80] underline font-extrabold cursor-pointer hover:text-white">
+                    <span key={i} className="text-[#FF5C80] underline font-black cursor-pointer hover:text-white">
                       {d}{i < currentSlide.directors.length - 1 ? ', ' : ''}
                     </span>
                   ))}
                 </p>
               )}
 
-              {/* Synopsis */}
-              <p className="text-xs text-white/70 line-clamp-2 leading-relaxed">
+              {/* Synopsis (Desktop only) */}
+              <p className="hidden sm:block text-[11px] sm:text-xs text-white/70 line-clamp-3 leading-relaxed">
                 {currentSlide.synopsis}
               </p>
             </div>
 
-            {/* Ingressos Solid Button CTA */}
-            <div>
-              <button className="bg-[#6A1B4D] hover:bg-[#80205D] text-white px-6 py-2.5 font-black uppercase text-xs sm:text-sm tracking-wider cursor-pointer shadow-[3px_3px_0px_0px_var(--border)] transition-all">
+            {/* Bottom CTA Button */}
+            <div className="w-full pt-1 sm:pt-2 flex justify-center sm:justify-start">
+              <button className="bg-[#7E2553] hover:bg-[#983067] text-[#E9D8C8] px-5 sm:px-6 py-1.5 sm:py-2.5 font-display font-black uppercase text-[11px] sm:text-sm tracking-wider cursor-pointer shadow-[2px_2px_0px_0px_var(--border)] sm:shadow-[3px_3px_0px_0px_var(--border)] transition-all">
                 INGRESSOS
               </button>
             </div>
+
           </div>
+
+          {/* Right Area (Desktop only) */}
+          <div className="hidden sm:block w-[58%] lg:w-[62%] h-full pointer-events-none" />
+
         </div>
 
-        {/* Right Side Peeking Slide */}
+        {/* Right Side Peeking Card */}
         <div
           onClick={handleNext}
-          className="hidden md:block w-1/5 aspect-[16/9] lg:aspect-[21/9] shrink-0 opacity-40 hover:opacity-75 transition-opacity cursor-pointer border-4 border-foreground/30 relative overflow-hidden ml-4"
+          className="w-[8%] sm:w-[12%] lg:w-[10%] h-[330px] sm:h-[400px] lg:h-[460px] shrink-0 opacity-40 hover:opacity-75 transition-opacity cursor-pointer border-4 border-r-0 border-foreground relative overflow-hidden -mr-2 shadow-[4px_4px_0px_0px_var(--border)]"
         >
           <img
             src={nextSlide.backdropUrl}
             alt={nextSlide.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover opacity-80"
           />
-          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 handleNext();
               }}
-              className="w-10 h-12 bg-black/70 border-2 border-white/50 text-white flex items-center justify-center hover:bg-black/90 cursor-pointer transition-all"
+              className="w-8 h-8 sm:w-11 sm:h-11 aspect-square bg-foreground/80 border-2 border-foreground text-background flex items-center justify-center hover:bg-primary cursor-pointer transition-all shadow-[2px_2px_0px_0px_var(--border)]"
               aria-label="Próximo"
             >
-              <ChevronRight size={24} className="stroke-[3]" />
+              <CaretRight size={18} weight="bold" />
             </button>
           </div>
         </div>
@@ -172,7 +183,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({ slides }) => {
       </div>
 
       {/* 2. Bottom Indicator Bars (Figma Indicators) */}
-      <div className="flex items-center justify-center gap-1.5 pt-2">
+      <div className="flex items-center justify-center gap-2 pt-1">
         {slides.map((_, index) => {
           const isActive = index === currentIndex;
           return (
@@ -181,8 +192,8 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({ slides }) => {
               onClick={() => setCurrentIndex(index)}
               className={`transition-all cursor-pointer ${
                 isActive
-                  ? 'w-12 h-3 bg-[#6A1B4D] border-2 border-[#6A1B4D]'
-                  : 'w-3 h-3 bg-transparent border-2 border-foreground/40 hover:border-primary'
+                  ? 'w-10 sm:w-12 h-3.5 bg-[#7E2553] border-2 border-[#7E2553]'
+                  : 'w-3.5 h-3.5 bg-transparent border-2 border-foreground hover:border-primary'
               }`}
               aria-label={`Ir para slide ${index + 1}`}
             />

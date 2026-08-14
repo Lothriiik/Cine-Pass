@@ -9,6 +9,7 @@ import { api } from '../services/api';
 
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
+import { TooltipError } from '../components/ui/tooltip-error';
 
 const registerSchema = z
   .object({
@@ -81,8 +82,8 @@ export const Register = ({ onClose }: RegisterProps = {}) => {
         </button>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 p-5 sm:p-6">
-        <div>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-5 sm:p-6">
+        <div className="relative">
           <label className="block text-xs sm:text-sm text-foreground/40 font-bold font-display mb-1">Nome de Usuario</label>
           <Input
             type="text"
@@ -90,12 +91,10 @@ export const Register = ({ onClose }: RegisterProps = {}) => {
             {...register('username')}
             placeholder="Seu Usuario"
           />
-          {errors.username && (
-            <span className="text-xs text-destructive mt-1 block font-bold">{errors.username.message}</span>
-          )}
+          <TooltipError message={errors.username?.message} />
         </div>
 
-        <div>
+        <div className="relative">
           <label className="block text-xs sm:text-sm text-foreground/40 font-bold font-display mb-1">Endereço de e-mail</label>
           <Input
             type="text"
@@ -103,12 +102,10 @@ export const Register = ({ onClose }: RegisterProps = {}) => {
             {...register('email')}
             placeholder="Seu E-mail"
           />
-          {errors.email && (
-            <span className="text-xs text-destructive mt-1 block font-bold">{errors.email.message}</span>
-          )}
+          <TooltipError message={errors.email?.message} />
         </div>
 
-        <div>
+        <div className="relative">
           <label className="block text-xs sm:text-sm text-foreground/40 font-bold font-display mb-1">Senha</label>
           <Input
             type="password"
@@ -116,12 +113,10 @@ export const Register = ({ onClose }: RegisterProps = {}) => {
             {...register('password')}
             placeholder="••••••••"
           />
-          {errors.password && (
-            <span className="text-xs text-destructive mt-1 block font-bold">{errors.password.message}</span>
-          )}
+          <TooltipError message={errors.password?.message} />
         </div>
 
-        <div>
+        <div className="relative">
           <label className="block text-xs sm:text-sm text-foreground/40 font-bold font-display mb-1">Confirmação de Senha</label>
           <Input
             type="password"
@@ -129,9 +124,7 @@ export const Register = ({ onClose }: RegisterProps = {}) => {
             {...register('confirmPassword')}
             placeholder="••••••••"
           />
-          {errors.confirmPassword && (
-            <span className="text-xs text-destructive mt-1 block font-bold">{errors.confirmPassword.message}</span>
-          )}
+          <TooltipError message={errors.confirmPassword?.message} />
         </div>
 
         <div className="justify-between mt-3">
