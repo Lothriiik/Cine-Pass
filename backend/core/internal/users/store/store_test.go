@@ -20,6 +20,7 @@ func TestStore_Integracao(t *testing.T) {
 	}
 	db := testutil.SetupTestDB(t)
 
+	_ = db.Migrator().DropTable("user_favorite_movies", "movie_genres")
 	moviestore.AutoMigrate(db)
 	userstore.AutoMigrate(db)
 
@@ -102,12 +103,16 @@ func TestStore_Integracao(t *testing.T) {
 		db.Create(&genreAction)
 		db.Create(&genreDrama)
 
-		movie1 := moviestore.MovieRecord{TMDBID: 101, Title: "Action 1", ReleaseDate: time.Now(), Genres: []moviestore.GenreRecord{genreAction}}
-		movie2 := moviestore.MovieRecord{TMDBID: 102, Title: "Drama 1", ReleaseDate: time.Now(), Genres: []moviestore.GenreRecord{genreDrama}}
-		movie3 := moviestore.MovieRecord{TMDBID: 103, Title: "Action 2", ReleaseDate: time.Now(), Genres: []moviestore.GenreRecord{genreAction}}
+		movie1 := moviestore.MovieRecord{TMDBID: 101, Title: "Action 1", ReleaseDate: time.Now()}
+		movie2 := moviestore.MovieRecord{TMDBID: 102, Title: "Drama 1", ReleaseDate: time.Now()}
+		movie3 := moviestore.MovieRecord{TMDBID: 103, Title: "Action 2", ReleaseDate: time.Now()}
 		db.Create(&movie1)
 		db.Create(&movie2)
 		db.Create(&movie3)
+
+		db.Exec("INSERT INTO movie_genres (movie_id, genre_id) VALUES (?, ?)", movie1.ID, genreAction.ID)
+		db.Exec("INSERT INTO movie_genres (movie_id, genre_id) VALUES (?, ?)", movie2.ID, genreDrama.ID)
+		db.Exec("INSERT INTO movie_genres (movie_id, genre_id) VALUES (?, ?)", movie3.ID, genreAction.ID)
 
 		log1 := map[string]interface{}{"user_id": userID, "movie_id": movie1.ID, "watched": true, "rating": 0.0, "liked": false}
 		log2 := map[string]interface{}{"user_id": userID, "movie_id": movie2.ID, "watched": true, "rating": 0.0, "liked": false}

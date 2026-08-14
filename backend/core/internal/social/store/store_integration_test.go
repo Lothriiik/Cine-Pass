@@ -63,7 +63,7 @@ func Test_Store_ToggleLike(t *testing.T) {
 	user := userstore.UserRecord{ID: userID, Username: "testuser", Email: "test@test.com", Password: "hashedpassword"}
 	require.NoError(t, db.Create(&user).Error)
 
-	post := social.Post{
+	post := PostRecord{
 		UserID:   userID,
 		Content:  "Post Like Test",
 		PostType: social.PostTypeText,
@@ -74,7 +74,7 @@ func Test_Store_ToggleLike(t *testing.T) {
 	assert.NoError(t, err)
 	assert.True(t, liked)
 
-	var check social.Post
+	var check PostRecord
 	db.First(&check, post.ID)
 	assert.Equal(t, 1, check.LikesCount)
 }

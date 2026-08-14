@@ -9,7 +9,7 @@ import (
 
 type DailyCinemaStatsRecord struct {
 	ID            uint      `gorm:"primaryKey;autoIncrement"`
-	Date          time.Time `gorm:"not null;uniqueIndex:idx_date_cinema"`
+	Date          time.Time `gorm:"type:date;not null;uniqueIndex:idx_date_cinema"`
 	CinemaID      int       `gorm:"not null;uniqueIndex:idx_date_cinema"`
 	TotalRevenue  int64     `gorm:"not null;default:0"`
 	TicketsSold   int       `gorm:"not null;default:0"`
@@ -20,12 +20,15 @@ type DailyCinemaStatsRecord struct {
 }
 type DailyMovieStatsRecord struct {
 	ID           uint      `gorm:"primaryKey;autoIncrement"`
-	Date         time.Time `gorm:"not null;uniqueIndex:idx_date_movie"`
+	Date         time.Time `gorm:"type:date;not null;uniqueIndex:idx_date_movie"`
 	MovieID      int       `gorm:"not null;uniqueIndex:idx_date_movie"`
 	TotalRevenue int64     `gorm:"not null;default:0"`
 	TicketsSold  int       `gorm:"not null;default:0"`
 	CreatedAt    time.Time `gorm:"not null;default:now()"`
 }
+
+func (DailyCinemaStatsRecord) TableName() string { return "daily_cinema_stats" }
+func (DailyMovieStatsRecord) TableName() string  { return "daily_movie_stats" }
 
 func AutoMigrate(db *gorm.DB) error {
 	return db.AutoMigrate(&DailyCinemaStatsRecord{}, &DailyMovieStatsRecord{})

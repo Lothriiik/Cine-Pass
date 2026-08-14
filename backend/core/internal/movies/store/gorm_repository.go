@@ -14,9 +14,9 @@ import (
 var _ movies.MoviesRepository = (*Store)(nil)
 
 var (
-	ErrMovieNotFound       = errors.New("filme não achado")
-	ErrMovieCacheExpired   = errors.New("revalidar cache do filme")
-	ErrMovieIncompleteData = errors.New("filme incompleto, forçando busca de detalhes")
+	ErrMovieNotFound       = movies.ErrMovieNotFound
+	ErrMovieCacheExpired   = movies.ErrMovieCacheExpired
+	ErrMovieIncompleteData = movies.ErrMovieIncompleteData
 )
 
 type Store struct {
@@ -28,22 +28,31 @@ func NewStore(db *gorm.DB) *Store {
 }
 
 func (s *Store) SaveMovie(ctx context.Context, movie *movies.Movie) error {
-	result := s.db.WithContext(ctx).Where(movies.Movie{TMDBID: movie.TMDBID}).Assign(movies.Movie{
-		Title:       movie.Title,
-		Overview:    movie.Overview,
-		PosterURL:   movie.PosterURL,
-		ReleaseDate: movie.ReleaseDate,
-	}).FirstOrCreate(movie)
+	record := MovieToRecord(movie)
+	result := s.db.WithContext(ctx).Where(MovieRecord{TMDBID: record.TMDBID}).Assign(MovieRecord{
+		Title:       record.Title,
+		Overview:    record.Overview,
+		PosterURL:   record.PosterURL,
+		ReleaseDate: record.ReleaseDate,
+	}).FirstOrCreate(record)
 
+	if result.Error == nil {
+		movie.ID = record.ID
+	}
 	return result.Error
 }
 
 func (s *Store) GetMovieByTMDBID(ctx context.Context, tmdbID int) (*movies.Movie, error) {
-	var movie movies.Movie
-	result := s.db.WithContext(ctx).Preload("Genres").Preload("Credits").Preload("Credits.Person").Where("tmdb_id = ?", tmdbID).First(&movie)
+	var record MovieRecord
+	result := s.db.WithContext(ctx).Preload("Genres").Preload("Credits").Preload("Credits.Person").Where("tmdb_id = ?", tmdbID).First(&record)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, ErrMovieNotFound
 	}
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	movie := MovieToDomain(&record)
 	if time.Since(movie.UpdatedAt) > 7*24*time.Hour {
 		return nil, ErrMovieCacheExpired
 	}
@@ -52,16 +61,16 @@ func (s *Store) GetMovieByTMDBID(ctx context.Context, tmdbID int) (*movies.Movie
 		return nil, ErrMovieIncompleteData
 	}
 
-	return &movie, result.Error
+	return movie, nil
 }
 
 func (s *Store) SaveMovieDetails(ctx context.Context, tmdbData *movietmdb.TMDBMovieDetails) (*movies.Movie, error) {
-	var generosDoBanco []movies.Genre
-	var creditosDoBanco []movies.MovieCredit
+	var generosDoBanco []GenreRecord
+	var creditosDoBanco []MovieCreditRecord
 
 	for _, g := range tmdbData.Genres {
-		var dbGenre movies.Genre
-		s.db.WithContext(ctx).Where(movies.Genre{TMDBID: g.ID}).Assign(movies.Genre{Name: g.Name}).FirstOrCreate(&dbGenre)
+		var dbGenre GenreRecord
+		s.db.WithContext(ctx).Where(GenreRecord{TMDBID: g.ID}).Assign(GenreRecord{Name: g.Name}).FirstOrCreate(&dbGenre)
 		generosDoBanco = append(generosDoBanco, dbGenre)
 	}
 
@@ -73,13 +82,13 @@ func (s *Store) SaveMovieDetails(ctx context.Context, tmdbData *movietmdb.TMDBMo
 	for i := 0; i < castLimit; i++ {
 		actor := tmdbData.Credits.Cast[i]
 
-		var dbPerson movies.Person
-		s.db.WithContext(ctx).Where(movies.Person{TMDBID: actor.ID}).Assign(movies.Person{
+		var dbPerson PersonRecord
+		s.db.WithContext(ctx).Where(PersonRecord{TMDBID: actor.ID}).Assign(PersonRecord{
 			Name:       actor.Name,
 			ProfileURL: actor.ProfilePath,
 		}).FirstOrCreate(&dbPerson)
 
-		creditosDoBanco = append(creditosDoBanco, movies.MovieCredit{
+		creditosDoBanco = append(creditosDoBanco, MovieCreditRecord{
 			Role:      "Actor",
 			Character: actor.Character,
 			PersonID:  dbPerson.ID,
@@ -111,13 +120,13 @@ func (s *Store) SaveMovieDetails(ctx context.Context, tmdbData *movietmdb.TMDBMo
 
 	for _, crew := range tmdbData.Credits.Crew {
 		if cargosDesejados[crew.Job] {
-			var dbPerson movies.Person
-			s.db.WithContext(ctx).Where(movies.Person{TMDBID: crew.ID}).Assign(movies.Person{
+			var dbPerson PersonRecord
+			s.db.WithContext(ctx).Where(PersonRecord{TMDBID: crew.ID}).Assign(PersonRecord{
 				Name:       crew.Name,
 				ProfileURL: crew.ProfilePath,
 			}).FirstOrCreate(&dbPerson)
 
-			creditosDoBanco = append(creditosDoBanco, movies.MovieCredit{
+			creditosDoBanco = append(creditosDoBanco, MovieCreditRecord{
 				Role:     crew.Job,
 				PersonID: dbPerson.ID,
 				Person:   dbPerson,
@@ -133,7 +142,7 @@ func (s *Store) SaveMovieDetails(ctx context.Context, tmdbData *movietmdb.TMDBMo
 
 	parsedDate, _ := time.Parse("2006-01-02", tmdbData.ReleaseDate)
 
-	movie := movies.Movie{
+	movieRec := MovieRecord{
 		TMDBID:           tmdbData.ID,
 		Title:            tmdbData.Title,
 		Overview:         tmdbData.Overview,
@@ -146,52 +155,58 @@ func (s *Store) SaveMovieDetails(ctx context.Context, tmdbData *movietmdb.TMDBMo
 		Credits:          creditosDoBanco,
 	}
 
-	var existingMovie movies.Movie
-	result := s.db.WithContext(ctx).Where("tmdb_id = ?", movie.TMDBID).First(&existingMovie)
+	var existingMovie MovieRecord
+	result := s.db.WithContext(ctx).Where("tmdb_id = ?", movieRec.TMDBID).First(&existingMovie)
 	if result.Error == nil {
-		movie.ID = existingMovie.ID
-		s.db.WithContext(ctx).Where("movie_id = ?", movie.ID).Delete(&movies.MovieCredit{})
+		movieRec.ID = existingMovie.ID
+		s.db.WithContext(ctx).Where("movie_id = ?", movieRec.ID).Delete(&MovieCreditRecord{})
 	}
 
-	err := s.db.WithContext(ctx).Save(&movie).Error
-	return &movie, err
+	err := s.db.WithContext(ctx).Save(&movieRec).Error
+	if err != nil {
+		return nil, err
+	}
+	return MovieToDomain(&movieRec), nil
 }
 
 func (s *Store) GetPersonByTMDBID(ctx context.Context, tmdbID int) (*movies.Person, error) {
-	var person movies.Person
-	result := s.db.WithContext(ctx).Where("tmdb_id = ?", tmdbID).First(&person)
+	var record PersonRecord
+	result := s.db.WithContext(ctx).Where("tmdb_id = ?", tmdbID).First(&record)
 	if result.Error == nil {
-		return &person, nil
+		return PersonToDomain(&record), nil
 	}
 	return nil, result.Error
 }
 
 func (s *Store) SavePersonDetails(ctx context.Context, tmdbData *movietmdb.TMDBPersonDetails) (*movies.Person, error) {
-	var person movies.Person
-	result := s.db.WithContext(ctx).Where(movies.Person{TMDBID: tmdbData.ID}).Assign(movies.Person{
+	var record PersonRecord
+	result := s.db.WithContext(ctx).Where(PersonRecord{TMDBID: tmdbData.ID}).Assign(PersonRecord{
 		Name:       tmdbData.Name,
 		ProfileURL: tmdbData.ProfilePath,
-	}).FirstOrCreate(&person)
-	return &person, result.Error
+	}).FirstOrCreate(&record)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return PersonToDomain(&record), nil
 }
 
 func (s *Store) GetMovieByTitleAndYear(ctx context.Context, title string, year int) (*movies.Movie, error) {
-	var movie movies.Movie
+	var record MovieRecord
 	query := s.db.WithContext(ctx).Where("LOWER(title) = LOWER(?)", title)
 	if year > 0 {
 		query = query.Where("EXTRACT(YEAR FROM release_date) = ?", year)
 	}
-	if err := query.First(&movie).Error; err != nil {
+	if err := query.First(&record).Error; err != nil {
 		return nil, err
 	}
-	return &movie, nil
+	return MovieToDomain(&record), nil
 }
 
 func (s *Store) GetGenreName(ctx context.Context, genreID int) (string, error) {
-	var genre movies.Genre
-	err := s.db.WithContext(ctx).Where("tmdb_id = ?", genreID).First(&genre).Error
+	var record GenreRecord
+	err := s.db.WithContext(ctx).Where("tmdb_id = ?", genreID).First(&record).Error
 	if err != nil {
 		return "", err
 	}
-	return genre.Name, nil
+	return record.Name, nil
 }

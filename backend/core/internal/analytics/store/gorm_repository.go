@@ -2,11 +2,11 @@ package store
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/StartLivin/screek/backend/internal/analytics"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 var _ analytics.AnalyticsRepository = (*Store)(nil)
@@ -51,26 +51,34 @@ func (s *Store) CalculateDailyStats(ctx context.Context, date time.Time) ([]anal
 }
 
 func (s *Store) UpsertDailyStats(ctx context.Context, stats []analytics.DailyCinemaStats) error {
-	if len(stats) == 0 {
-		return nil
-	}
-
-	records := make([]DailyCinemaStatsRecord, len(stats))
-	for i, st := range stats {
-		records[i] = DailyCinemaStatsRecord{
-			Date:          st.Date,
-			CinemaID:      st.CinemaID,
-			TotalRevenue:  st.TotalRevenue,
-			TicketsSold:   st.TicketsSold,
-			OccupancyRate: st.OccupancyRate,
-			CreatedAt:     st.CreatedAt,
+	for _, st := range stats {
+		var record DailyCinemaStatsRecord
+		err := s.db.WithContext(ctx).Where("date = ? AND cinema_id = ?", st.Date, st.CinemaID).First(&record).Error
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			record = DailyCinemaStatsRecord{
+				Date:          st.Date,
+				CinemaID:      st.CinemaID,
+				TotalRevenue:  st.TotalRevenue,
+				TicketsSold:   st.TicketsSold,
+				OccupancyRate: st.OccupancyRate,
+				CreatedAt:     st.CreatedAt,
+			}
+			if err := s.db.WithContext(ctx).Create(&record).Error; err != nil {
+				return err
+			}
+		} else if err == nil {
+			if err := s.db.WithContext(ctx).Model(&record).Updates(map[string]interface{}{
+				"total_revenue":  st.TotalRevenue,
+				"tickets_sold":   st.TicketsSold,
+				"occupancy_rate": st.OccupancyRate,
+			}).Error; err != nil {
+				return err
+			}
+		} else {
+			return err
 		}
 	}
-
-	return s.db.WithContext(ctx).Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "date"}, {Name: "cinema_id"}},
-		DoUpdates: clause.AssignmentColumns([]string{"total_revenue", "tickets_sold", "occupancy_rate"}),
-	}).Create(&records).Error
+	return nil
 }
 
 func (s *Store) GetStatsByDateRange(ctx context.Context, start, end time.Time) ([]analytics.DailyCinemaStats, error) {
@@ -100,25 +108,32 @@ func (s *Store) CalculateDailyMovieStats(ctx context.Context, date time.Time) ([
 }
 
 func (s *Store) UpsertDailyMovieStats(ctx context.Context, stats []analytics.DailyMovieStats) error {
-	if len(stats) == 0 {
-		return nil
-	}
-
-	records := make([]DailyMovieStatsRecord, len(stats))
-	for i, st := range stats {
-		records[i] = DailyMovieStatsRecord{
-			Date:         st.Date,
-			MovieID:      st.MovieID,
-			TotalRevenue: st.TotalRevenue,
-			TicketsSold:  st.TicketsSold,
-			CreatedAt:    st.CreatedAt,
+	for _, st := range stats {
+		var record DailyMovieStatsRecord
+		err := s.db.WithContext(ctx).Where("date = ? AND movie_id = ?", st.Date, st.MovieID).First(&record).Error
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			record = DailyMovieStatsRecord{
+				Date:         st.Date,
+				MovieID:      st.MovieID,
+				TotalRevenue: st.TotalRevenue,
+				TicketsSold:  st.TicketsSold,
+				CreatedAt:    st.CreatedAt,
+			}
+			if err := s.db.WithContext(ctx).Create(&record).Error; err != nil {
+				return err
+			}
+		} else if err == nil {
+			if err := s.db.WithContext(ctx).Model(&record).Updates(map[string]interface{}{
+				"total_revenue": st.TotalRevenue,
+				"tickets_sold":  st.TicketsSold,
+			}).Error; err != nil {
+				return err
+			}
+		} else {
+			return err
 		}
 	}
-
-	return s.db.WithContext(ctx).Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "date"}, {Name: "movie_id"}},
-		DoUpdates: clause.AssignmentColumns([]string{"total_revenue", "tickets_sold"}),
-	}).Create(&records).Error
+	return nil
 }
 
 func (s *Store) GetTopMoviesByDateRange(ctx context.Context, start, end time.Time, limit int) ([]analytics.DailyMovieStats, error) {

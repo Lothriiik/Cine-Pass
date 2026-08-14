@@ -47,6 +47,10 @@ type FollowRecord struct {
 	Followee userstore.UserRecord `gorm:"foreignKey:FolloweeID"`
 }
 
+func (PostRecord) TableName() string     { return "posts" }
+func (PostLikeRecord) TableName() string { return "post_likes" }
+func (FollowRecord) TableName() string   { return "follows" }
+
 func AutoMigrate(db *gorm.DB) error {
 	return db.AutoMigrate(
 		&PostRecord{}, &PostLikeRecord{},

@@ -1,7 +1,7 @@
 package store
 
 import (
-	"github.com/StartLivin/screek/backend/internal/movies"
+	moviestore "github.com/StartLivin/screek/backend/internal/movies/store"
 	"github.com/StartLivin/screek/backend/internal/users"
 )
 
@@ -12,7 +12,11 @@ func ToDomain(r *UserRecord) *users.User {
 
 	var favMovieIDs []int
 	for _, movie := range r.FavoriteMovies {
-		favMovieIDs = append(favMovieIDs, movie.ID)
+		if movie.TMDBID != 0 {
+			favMovieIDs = append(favMovieIDs, movie.TMDBID)
+		} else {
+			favMovieIDs = append(favMovieIDs, movie.ID)
+		}
 	}
 
 	return &users.User{
@@ -45,9 +49,9 @@ func ToRecord(d *users.User) *UserRecord {
 		return nil
 	}
 
-	var gormMovies []movies.Movie
+	var gormMovies []moviestore.MovieRecord
 	for _, id := range d.FavoriteMovies {
-		gormMovies = append(gormMovies, movies.Movie{ID: int(id)})
+		gormMovies = append(gormMovies, moviestore.MovieRecord{ID: int(id)})
 	}
 
 	return &UserRecord{

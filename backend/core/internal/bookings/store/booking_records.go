@@ -50,6 +50,9 @@ type TicketRecord struct {
 	Seat          *cinemastore.SeatRecord   `json:"seat" gorm:"foreignKey:SeatID"`
 }
 
+func (TransactionRecord) TableName() string { return "transactions" }
+func (TicketRecord) TableName() string      { return "tickets" }
+
 func AutoMigrate(db *gorm.DB) error {
 	return db.AutoMigrate(
 		&TransactionRecord{}, &TicketRecord{},

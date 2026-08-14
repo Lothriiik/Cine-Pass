@@ -22,6 +22,8 @@ func Test_integ_analytics_consolidation(t *testing.T) {
 		t.Skip("Pulando teste de integração de banco de dados")
 	}
 	db := testutil.SetupTestDB(t)
+
+	_ = db.Migrator().DropTable("daily_cinema_stats", "daily_movie_stats", "tickets", "transactions", "sessions", "rooms", "cinemas", "movies", "users")
 	require.NoError(t, cinemastore.AutoMigrate(db))
 	require.NoError(t, moviestore.AutoMigrate(db))
 	require.NoError(t, userstore.AutoMigrate(db))
@@ -33,8 +35,7 @@ func Test_integ_analytics_consolidation(t *testing.T) {
 	svc := analytics.NewService(repo, nil, nil)
 	ctx := context.Background()
 
-	loc, _ := time.LoadLocation("America/Sao_Paulo")
-	yesterday := time.Now().In(loc).AddDate(0, 0, -1)
+	yesterday := time.Date(2026, 8, 12, 12, 0, 0, 0, time.UTC)
 	yesterdayStr := yesterday.Format("2006-01-02")
 
 	cin := &cinemastore.CinemaRecord{Name: "Cine Analytics", City: "Recife"}
@@ -51,7 +52,7 @@ func Test_integ_analytics_consolidation(t *testing.T) {
 		Price:     2000,
 	}
 	db.Create(session)
-	db.Exec("UPDATE sessions SET start_time = ?::timestamp", yesterdayStr+" 20:00:00")
+	db.Exec("UPDATE sessions SET start_time = ?::timestamp WHERE id = ?", yesterdayStr+" 20:00:00", session.ID)
 
 	user := &userstore.UserRecord{ID: uuid.New(), Email: "analytics@test.com", Username: "aluno", Password: "123"}
 	db.Create(user)
@@ -80,15 +81,15 @@ func Test_integ_analytics_consolidation(t *testing.T) {
 	err := svc.RunAnalyticsAggregation(ctx, yesterday)
 	require.NoError(t, err)
 
-	var cinemaStats []analytics.DailyCinemaStats
-	db.Where("cinema_id = ?", cin.ID).Find(&cinemaStats)
+	var cinemaStats []analyticsstore.DailyCinemaStatsRecord
+	db.Model(&analyticsstore.DailyCinemaStatsRecord{}).Find(&cinemaStats)
 	require.Len(t, cinemaStats, 1, "Deveria ter 1 registro de stats para o cinema")
 	assert.Equal(t, int64(20000), cinemaStats[0].TotalRevenue)
 	assert.Equal(t, 10, cinemaStats[0].TicketsSold)
 	assert.Equal(t, 0.1, cinemaStats[0].OccupancyRate)
 
-	var movieStats []analytics.DailyMovieStats
-	db.Where("movie_id = ?", movie.ID).Find(&movieStats)
+	var movieStats []analyticsstore.DailyMovieStatsRecord
+	db.Model(&analyticsstore.DailyMovieStatsRecord{}).Where("movie_id = ?", movie.ID).Find(&movieStats)
 	require.Len(t, movieStats, 1, "Deveria ter 1 registro de stats para o filme")
 	assert.Equal(t, int64(20000), movieStats[0].TotalRevenue)
 	assert.Equal(t, 10, movieStats[0].TicketsSold)

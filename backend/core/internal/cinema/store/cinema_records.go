@@ -77,6 +77,12 @@ type CinemaManagerRecord struct {
 	CreatedAt time.Time `gorm:"not null;default:now()"`
 }
 
+func (CinemaRecord) TableName() string        { return "cinemas" }
+func (RoomRecord) TableName() string          { return "rooms" }
+func (SeatRecord) TableName() string          { return "seats" }
+func (SessionRecord) TableName() string       { return "sessions" }
+func (CinemaManagerRecord) TableName() string { return "cinema_managers" }
+
 func AutoMigrate(db *gorm.DB) error {
 	return db.AutoMigrate(&CinemaRecord{}, &RoomRecord{}, &CinemaManagerRecord{}, &SeatRecord{}, &SessionRecord{})
 }

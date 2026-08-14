@@ -24,6 +24,7 @@ func NewStore(db *gorm.DB) *Store {
 func (s *Store) CreateCinema(ctx context.Context, cinema *cinema.Cinema) error {
 	record := ToCinemaRecord(cinema)
 	err := s.db.WithContext(ctx).Create(record).Error
+	cinema.ID = record.ID
 	cinema.CreatedAt = record.CreatedAt
 	return err
 }
@@ -56,15 +57,19 @@ func (s *Store) ListCinemas(ctx context.Context) ([]cinema.Cinema, error) {
 
 func (s *Store) CreateRoom(ctx context.Context, room *cinema.Room, seats []cinema.Seat) error {
 	return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		if err := tx.Create(room).Error; err != nil {
+		roomRecord := ToRoomRecord(room)
+		if err := tx.Create(roomRecord).Error; err != nil {
 			return err
 		}
+		room.ID = roomRecord.ID
 
 		if len(seats) > 0 {
+			var seatRecords []SeatRecord
 			for i := range seats {
 				seats[i].RoomID = room.ID
+				seatRecords = append(seatRecords, *ToSeatRecord(&seats[i]))
 			}
-			if err := tx.Create(&seats).Error; err != nil {
+			if err := tx.Create(&seatRecords).Error; err != nil {
 				return err
 			}
 		}
@@ -82,6 +87,7 @@ func (s *Store) GetRoomByID(ctx context.Context, roomID int) (*cinema.Room, erro
 func (s *Store) CreateSession(ctx context.Context, session *cinema.Session) error {
 	record := ToSessionRecord(session)
 	err := s.db.WithContext(ctx).Create(record).Error
+	session.ID = record.ID
 	return err
 }
 

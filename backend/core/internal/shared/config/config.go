@@ -17,7 +17,9 @@ type Config struct {
 	StripeKey           string
 	StripeWebhookSecret string
 	ResendKey           string
-	RunMigrations 		bool
+	MeiliHost           string
+	MeiliMasterKey      string
+	RunMigrations       bool
 }
 
 func LoadConfig() (Config, error) {
@@ -46,6 +48,16 @@ func LoadConfig() (Config, error) {
 		redisURL = "localhost:6379"
 	}
 
+	meiliHost := os.Getenv("MEILI_HOST")
+	if meiliHost == "" {
+		meiliHost = "http://localhost:7700"
+	}
+
+	meiliMasterKey := os.Getenv("MEILI_MASTER_KEY")
+	if meiliMasterKey == "" {
+		meiliMasterKey = "masterKey123"
+	}
+
 	runMigrationsEnv := os.Getenv("RUN_MIGRATIONS")
 	runMigrations := runMigrationsEnv != "false"
 
@@ -58,6 +70,8 @@ func LoadConfig() (Config, error) {
 		StripeKey:           os.Getenv("STRIPE_KEY"),
 		StripeWebhookSecret: os.Getenv("STRIPE_WEBHOOK_SECRET"),
 		ResendKey:           os.Getenv("RESEND_KEY"),
+		MeiliHost:           meiliHost,
+		MeiliMasterKey:      meiliMasterKey,
 		RunMigrations:       runMigrations,
 	}, nil
 }

@@ -2,6 +2,7 @@ package testutil
 
 import (
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -29,22 +30,18 @@ func SetupTestDB(t *testing.T) *gorm.DB {
 func CleanupDB(t *testing.T, db *gorm.DB) {
 	t.Helper()
 
-	err := db.Transaction(func(tx *gorm.DB) error {
-		// Desabilita as triggers para evitar problemas de FK durante o truncate
-		tx.Exec("SET CONSTRAINTS ALL DEFERRED")
+	var tables []string
+	db.Raw("SELECT tablename FROM pg_tables WHERE schemaname = 'public'").Scan(&tables)
 
-		// Busca todas as tabelas do esquema public
-		var tables []string
-		tx.Raw("SELECT tablename FROM pg_tables WHERE schemaname = 'public'").Scan(&tables)
-
-		for _, table := range tables {
-			if table == "spatial_ref_sys" { // Ignorar tabelas de sistema/extensões
-				continue
-			}
-			tx.Exec("TRUNCATE TABLE " + table + " RESTART IDENTITY CASCADE")
+	var validTables []string
+	for _, table := range tables {
+		if table != "spatial_ref_sys" {
+			validTables = append(validTables, table)
 		}
-		return nil
-	})
+	}
 
-	require.NoError(t, err, "falha ao limpar o banco de teste")
+	if len(validTables) > 0 {
+		query := "TRUNCATE TABLE " + strings.Join(validTables, ", ") + " RESTART IDENTITY CASCADE"
+		db.Exec(query)
+	}
 }

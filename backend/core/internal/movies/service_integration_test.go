@@ -19,6 +19,7 @@ func Test_integ_cache_aside_fluxo_real(t *testing.T) {
 		t.Skip("Pulando teste de integração de banco de dados")
 	}
 	db := testutil.SetupTestDB(t)
+	_ = db.Migrator().DropTable("movie_genres", "movie_credits", "people", "genres", "movies")
 	require.NoError(t, moviestore.AutoMigrate(db))
 	testutil.CleanupDB(t, db)
 	ctx := context.Background()

@@ -128,13 +128,19 @@ func (s *AnalyticsService) GetRevenueTrends(ctx context.Context, start, end time
 
 func (s *AnalyticsService) RunAnalyticsAggregation(ctx context.Context, date time.Time) error {
 	cinemaStats, err := s.repo.CalculateDailyStats(ctx, date)
-	if err == nil {
-		s.repo.UpsertDailyStats(ctx, cinemaStats)
+	if err != nil {
+		return err
+	}
+	if err := s.repo.UpsertDailyStats(ctx, cinemaStats); err != nil {
+		return err
 	}
 
 	movieStats, err := s.repo.CalculateDailyMovieStats(ctx, date)
-	if err == nil {
-		s.repo.UpsertDailyMovieStats(ctx, movieStats)
+	if err != nil {
+		return err
+	}
+	if err := s.repo.UpsertDailyMovieStats(ctx, movieStats); err != nil {
+		return err
 	}
 
 	slog.Info("[Job] Analytics consolidado", "cinemas", len(cinemaStats), "filmes", len(movieStats))

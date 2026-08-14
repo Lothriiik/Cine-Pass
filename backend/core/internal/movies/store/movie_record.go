@@ -19,7 +19,7 @@ type MovieRecord struct {
 	Runtime          int                 `gorm:"not null"`
 	OriginalLanguage string              
 	SpokenLanguages  string              
-	Genres           []GenreRecord       `gorm:"many2many:movie_genres;"`
+	Genres           []GenreRecord       `gorm:"many2many:movie_genres;joinForeignKey:movie_id;joinReferences:genre_id;"`
 	Credits          []MovieCreditRecord `gorm:"foreignKey:MovieID;references:ID"`
 }
 
@@ -27,7 +27,7 @@ type GenreRecord struct {
 	ID     int           `gorm:"primaryKey;autoIncrement"`
 	TMDBID int           `gorm:"not null;uniqueIndex"`
 	Name   string        `gorm:"not null"`
-	Movies []MovieRecord `gorm:"many2many:movie_genres;"`
+	Movies []MovieRecord `gorm:"many2many:movie_genres;joinForeignKey:genre_id;joinReferences:movie_id;"`
 }
 
 type PersonRecord struct {
@@ -48,6 +48,17 @@ type MovieCreditRecord struct {
 	Movie     *MovieRecord `gorm:"foreignKey:MovieID"`
 }
 
+type MovieGenre struct {
+	MovieID int `gorm:"primaryKey"`
+	GenreID int `gorm:"primaryKey"`
+}
+
+func (MovieRecord) TableName() string       { return "movies" }
+func (GenreRecord) TableName() string       { return "genres" }
+func (PersonRecord) TableName() string      { return "people" }
+func (MovieCreditRecord) TableName() string { return "movie_credits" }
+func (MovieGenre) TableName() string         { return "movie_genres" }
+
 func AutoMigrate(db *gorm.DB) error {
-	return db.AutoMigrate(&MovieRecord{}, &GenreRecord{}, &PersonRecord{}, &MovieCreditRecord{})
+	return db.AutoMigrate(&MovieGenre{}, &MovieRecord{}, &GenreRecord{}, &PersonRecord{}, &MovieCreditRecord{})
 }

@@ -65,6 +65,20 @@ services:
     networks:
       - screek-network
 
+  meilisearch:
+    image: getmeili/meilisearch:v1.9
+    container_name: screek-meilisearch
+    restart: always
+    ports:
+      - "7700:7700"
+    environment:
+      - MEILI_ENV=development
+      - MEILI_MASTER_KEY=masterKey123
+    volumes:
+      - meili_data:/meili_data
+    networks:
+      - screek-network
+
   frontend:
     build:
       context: ./frontend
@@ -87,3 +101,4 @@ networks:
 
 volumes:
   postgres_data:
+  meili_data:

@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/StartLivin/screek/backend/internal/bookings"
+	bookingstore "github.com/StartLivin/screek/backend/internal/bookings/store"
 	"github.com/StartLivin/screek/backend/internal/cinema"
 	cinemastore "github.com/StartLivin/screek/backend/internal/cinema/store"
-	"github.com/StartLivin/screek/backend/internal/movies"
+	moviestore "github.com/StartLivin/screek/backend/internal/movies/store"
 	"github.com/StartLivin/screek/backend/internal/shared/testutil"
-	"github.com/StartLivin/screek/backend/internal/users"
+	userstore "github.com/StartLivin/screek/backend/internal/users/store"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -23,6 +23,9 @@ func TestStore_Integracao(t *testing.T) {
 	db := testutil.SetupTestDB(t)
 
 	cinemastore.AutoMigrate(db)
+	moviestore.AutoMigrate(db)
+	userstore.AutoMigrate(db)
+	bookingstore.AutoMigrate(db)
 
 	testutil.CleanupDB(t, db)
 	store := cinemastore.NewStore(db)
@@ -34,6 +37,7 @@ func TestStore_Integracao(t *testing.T) {
 		require.NotZero(t, cin.ID)
 
 		userID := uuid.New()
+		db.Create(&userstore.UserRecord{ID: userID, Username: "manager_user", Email: "mgr@test.com", Password: "p"})
 		db.Create(&cinemastore.CinemaManagerRecord{UserID: userID, CinemaID: cin.ID})
 
 		isManager, err := store.IsManagerOfCinema(ctx, userID, cin.ID)
@@ -42,12 +46,12 @@ func TestStore_Integracao(t *testing.T) {
 	})
 
 	t.Run("Ciclo de Vida da Sessão", func(t *testing.T) {
-		cin2 := &cinema.Cinema{Name: "Sessao Cinema"}
+		cin2 := &cinemastore.CinemaRecord{Name: "Sessao Cinema", City: "City B"}
 		db.Create(cin2)
-		room := &cinema.Room{CinemaID: cin2.ID, Name: "Sala Sessao"}
+		room := &cinemastore.RoomRecord{CinemaID: cin2.ID, Name: "Sala Sessao", Capacity: 50}
 		db.Create(room)
 
-		movie := movies.Movie{Title: "Movie A", TMDBID: 999}
+		movie := moviestore.MovieRecord{Title: "Movie A", TMDBID: 999, Runtime: 120}
 		db.Create(&movie)
 
 		session := &cinema.Session{
@@ -63,16 +67,16 @@ func TestStore_Integracao(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, 0, count)
 
-		user := users.User{ID: uuid.New(), Email: "test@test.com", Username: "tester"}
+		user := userstore.UserRecord{ID: uuid.New(), Email: "test@test.com", Username: "tester", Password: "p"}
 		require.NoError(t, db.Create(&user).Error)
 
-		tx := bookings.Transaction{ID: uuid.New(), UserID: user.ID, Status: bookings.TicketStatusPaid}
+		tx := bookingstore.TransactionRecord{ID: uuid.New(), UserID: user.ID, Status: bookingstore.TicketStatusPaid, PaymentMethod: "STRIPE"}
 		require.NoError(t, db.Create(&tx).Error)
-		ticket := bookings.Ticket{
+		ticket := bookingstore.TicketRecord{
 			ID:            uuid.New(),
 			TransactionID: tx.ID,
 			SessionID:     session.ID,
-			Status:        bookings.TicketStatusPaid,
+			Status:        bookingstore.TicketStatusPaid,
 			QRCode:        uuid.New().String(),
 		}
 		require.NoError(t, db.Create(&ticket).Error)
@@ -89,7 +93,8 @@ func TestStore_Integracao(t *testing.T) {
 
 	t.Run("Limites de Capacidade da Sala (1 - 1000)", func(t *testing.T) {
 		cin3 := &cinema.Cinema{Name: "Mega Cine", City: "SP"}
-		db.Create(cin3)
+		db.Create(&cinemastore.CinemaRecord{Name: cin3.Name, City: cin3.City})
+		db.Where("name = ?", cin3.Name).First(&cin3)
 
 		numSeats := 1000
 		room := &cinema.Room{CinemaID: cin3.ID, Name: "Sala IMAX 1000", Capacity: numSeats}
@@ -107,7 +112,7 @@ func TestStore_Integracao(t *testing.T) {
 		assert.NotZero(t, room.ID)
 
 		var count int64
-		db.Model(&cinema.Seat{}).Where("room_id = ?", room.ID).Count(&count)
+		db.Model(&cinemastore.SeatRecord{}).Where("room_id = ?", room.ID).Count(&count)
 		assert.Equal(t, int64(numSeats), count)
 	})
 }

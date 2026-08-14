@@ -64,6 +64,8 @@ func Test_Store_CleanupExpired(t *testing.T) {
 		t.Skip("Pulando teste de integração de banco de dados")
 	}
 	db := testutil.SetupTestDB(t)
+	_ = db.Migrator().DropTable("tickets", "transactions")
+	userstore.AutoMigrate(db)
 	cinemastore.AutoMigrate(db)
 	AutoMigrate(db)
 	testutil.CleanupDB(t, db)
