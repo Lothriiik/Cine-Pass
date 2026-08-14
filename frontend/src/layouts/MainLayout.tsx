@@ -5,7 +5,6 @@ import {
   User, 
   SignOut, 
   MapPin,
-  CaretDown,
   YoutubeLogo,
   TwitterLogo,
   InstagramLogo,

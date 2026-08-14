@@ -13,12 +13,6 @@ import {
   Bar,
 } from 'recharts';
 
-// Theme Colors using tailwind design system palette & semantic colors
-const COLOR_WINE = 'var(--primary, #9B30FF)';
-const COLOR_TAUPE = '#8D7B75';
-const COLOR_PINK = '#FF5C80';
-const COLOR_NAVY = '#1E2B45';
-
 // 1. DONUT CHART (Receita por Tipo de Sala)
 export const DonutsChartPlaceholder: React.FC = () => {
   const data = [

@@ -9,13 +9,6 @@ import {
   SelectItem,
   Badge,
   Progress,
-  Card,
-
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
   Checkbox
 } from '../components/ui';
 
@@ -58,8 +51,6 @@ import {
   ReviewRow,
   OrderSummary,
   StatusModal,
-  StarRating, 
-  EmptyState, 
   KPICard,
   CircularProgress,
   Tag,
@@ -76,24 +67,16 @@ import {
 import { 
   Heart, 
   MagnifyingGlass, 
-  Ticket, 
   Popcorn, 
-  UserPlus, 
-  Info,
-  CheckCircle,
-  XCircle,
-  Clock,
-  WarningCircle
+  Info
 } from '@phosphor-icons/react';
 
 export const ComponentsShowcaseScreen = () => {
-  const [rating, setRating] = useState(4.5);
   const [selectedCity, setSelectedCity] = useState('Arapiraca');
   const [checkboxChecked, setCheckboxChecked] = useState(true);
   const [toggleChecked, setToggleChecked] = useState(true);
   const [radioSelected, setRadioSelected] = useState('pix');
   const [activeTab, setActiveTab] = useState<'cartaz' | 'breve' | 'catalogo'>('cartaz');
-  const [currentPage, setCurrentPage] = useState(1);
 
   // Modal State for Testing Modals
   const [activeModal, setActiveModal] = useState<'success' | 'error' | 'confirm' | 'expired' | null>(null);
@@ -439,7 +422,7 @@ export const ComponentsShowcaseScreen = () => {
             <div>
               <label className="block text-xs font-black uppercase text-foreground/50 mb-2">Circular Progress & Step Progress</label>
               <div className="flex items-center gap-6">
-                <CircularProgress percentage={78} size={64} label="Match 78%" />
+                <CircularProgress value={78} size={64} />
                 
                 {/* Step Progress */}
                 <div className="flex items-center gap-2">
@@ -461,8 +444,8 @@ export const ComponentsShowcaseScreen = () => {
             <div>
               <label className="block text-xs font-black uppercase text-foreground/50 mb-2">Tags & Badges & Tooltips</label>
               <div className="flex flex-wrap items-center gap-2">
-                <Tag label="SCI-FI" />
-                <Tag label="AVENTURA" />
+                <Tag>SCI-FI</Tag>
+                <Tag>AVENTURA</Tag>
                 <Badge variant="default">EM CARTAZ</Badge>
                 <Badge variant="secondary">VIP</Badge>
                 <Badge variant="destructive">ESGOTADO</Badge>
@@ -853,8 +836,8 @@ export const ComponentsShowcaseScreen = () => {
           </div>
 
           {/* Carrossel de Cartazes */}
-          <div className="pt-2">
-            <span className="block text-xs font-extrabold uppercase text-foreground/50 mb-3">Carrossel de Filmes em Cartaz (`Carousel`)</span>
+          <div className="space-y-2 pt-4 border-t-2 border-foreground/20">
+            <span className="block text-xs font-extrabold uppercase text-foreground/50">Carrossel de Cartazes (`Carousel`)</span>
             <Carousel title="Filmes Recomendados Para Você">
               <div className="w-48 shrink-0">
                 <MovieCard
@@ -862,8 +845,8 @@ export const ComponentsShowcaseScreen = () => {
                   title="Dune: Part Two"
                   posterUrl="https://image.tmdb.org/t/p/w500/1pdfLPoLMag8St8vRyTFiTJvMGE.jpg"
                   rating={4.8}
-                  releaseYear={2024}
-                  status="now_playing"
+                  genre="SCI-FI"
+                  duration="2h46"
                 />
               </div>
               <div className="w-48 shrink-0">
@@ -872,8 +855,9 @@ export const ComponentsShowcaseScreen = () => {
                   title="Deadpool & Wolverine"
                   posterUrl="https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg"
                   rating={4.6}
-                  releaseYear={2024}
-                  status="upcoming"
+                  genre="ACTION"
+                  duration="2h08"
+                  tagType="pre_sale"
                 />
               </div>
               <div className="w-48 shrink-0">
@@ -882,8 +866,8 @@ export const ComponentsShowcaseScreen = () => {
                   title="Spider-Man"
                   posterUrl="https://image.tmdb.org/t/p/w500/8Vt6mF92DMcBfs42BDaKiA2LDCe.jpg"
                   rating={4.9}
-                  releaseYear={2026}
-                  status="now_playing"
+                  genre="ACTION"
+                  duration="2h01"
                 />
               </div>
               <div className="w-48 shrink-0">
@@ -892,8 +876,8 @@ export const ComponentsShowcaseScreen = () => {
                   title="O Chefão Parte III"
                   posterUrl="https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg"
                   rating={4.4}
-                  releaseYear={2024}
-                  status="now_playing"
+                  genre="CRIME"
+                  duration="2h42"
                 />
               </div>
             </Carousel>

@@ -137,7 +137,7 @@ export default function PublicPrototypeV2() {
 
                             <div className="absolute inset-0 flex items-center px-12">
                                 <div className="max-w-xl">
-                                    <Badge variant="info" className="mb-4 text-xs">Destaque da Semana</Badge>
+                                    <Badge variant="secondary" className="mb-4 text-xs">Destaque da Semana</Badge>
                                     <h1 className="text-6xl font-black tracking-tighter leading-[0.9] mb-4 uppercase">
                                         Portrait of a<br />
                                         <span className="text-tertiary-400">Lady on Fire</span>

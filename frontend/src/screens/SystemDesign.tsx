@@ -1,11 +1,8 @@
-
-import React from 'react';
 import { cn } from "@/lib/utils";
 import { Button } from "../components/game-ui/Button";
 import { Input } from "../components/game-ui/Input";
 import { Checkbox, Radio, Switch, SelectMock } from "../components/game-ui/Selectors";
 import { Badge, CircularProgress } from "../components/game-ui/SmallElements";
-import { Cardv2, Alertv2, Accordionv2 } from "../components/game-ui/BigElements";
 
 /**
  * SystemDesign V2

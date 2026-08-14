@@ -558,7 +558,7 @@ export default function UIKitReference() {
                                 <Badge variant="success">Success</Badge>
                                 <Badge variant="warning">Warning</Badge>
                                 <Badge variant="destructive">Danger</Badge>
-                                <Badge variant="info">Info</Badge>
+                                <Badge variant="secondary">Info</Badge>
                             </div>
                         </div>
                     </div>
